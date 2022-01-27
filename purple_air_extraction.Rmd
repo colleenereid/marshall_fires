@@ -1,0 +1,225 @@
+---
+title: "purple_air"
+author: "Emma Rieves"
+date: "1/10/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(tidyverse)
+library(readr)
+library(plyr)
+library(sf)
+library(raster)
+library(rgdal)
+library(ggplot2)
+library(spacetime)
+
+# PM2.5 package recommended by Priyanka
+library(bjzresc)
+```
+
+# Filter and load data
+```{r}
+## use bjzresc package to get list of purple air sensors; save to df instead of csv
+pa_download = getPurpleairLst(output.path = NULL)
+```
+
+```{r}
+## Use boulder county shapefile to extract municipal boundaries for Louisville and Superior
+BO_CO = st_read("/Users/esrieves/Documents/GitHub/AQ/inputs/Boulder_county_munis/Municipalities.shp")
+
+fire_areas = BO_CO %>% filter(ZONEDESC == "Louisville" |ZONEDESC == "Superior")
+
+# creates variable for the projection of the BOCO shapefiles
+prg = crs(fire_areas,asText=TRUE)
+```
+
+```{r}
+## Intersect municipal boundaries with PA sensors
+
+# remove null Lat/Long PA sensors -- important to creating spatial dataframe
+pa_download = pa_download[complete.cases(pa_download[c("Lat","Lon")]),]
+
+# check that it worked
+sum(is.na(pa_download[c("Lat","Lon")]))
+
+# create spatial dataframe 
+pa_download_spatial = pa_download %>% 
+  st_as_sf(coords = c("Lon","Lat")) %>% 
+  st_set_crs(prg)
+
+# check CRS
+crs(pa_download_spatial)
+
+# intersect PA download area and fire affected area to download sensors
+fire_affected_sensors = st_intersection(pa_download_spatial,st_buffer(fire_areas,0))
+
+# get sensor IDs for sensors in fire affected area
+fire_area_sensor_IDs = fire_affected_sensors$ID
+
+# filter original dataframe to include only sensors in fire affected area
+fire_area_sensors = pa_download[pa_download$ID %in% fire_area_sensor_IDs, ]
+
+# preview data
+#fire_area_sensors
+```
+
+```{r}
+## plot sensors within fire affected areas
+
+# basemap = Superior and Louisville muni limits
+basemap = ggplot(data=fire_areas) + 
+  geom_sf()
+
+# add on stations
+sensor_map = basemap + geom_point(data=fire_area_sensors,aes(x=Lon,y=Lat))
+
+# show map
+sensor_map
+```
+
+
+```{r}
+# download purple air data -- TAKES A LONG TIME TO RUN SO BE READY FOR THAT
+## output path is a folder that stores a csv for each sensor for the target time period
+## average means that data is averaged for 10-minute intervals
+## indoor = TRUE includes indoor sensor observations
+
+purpleairDownload(site.csv = fire_area_sensors, start.date = "2021-12-30", end.date = "2022-01-26", output.path = "/Users/esrieves/Documents/GitHub/AQ/outputs/fires_AQ/sensors/", average = 10, time.zone = "America/Denver", indoor = TRUE)
+```
+
+
+# Process and clean data
+```{r}
+## Read downloaded PA files from their filepath and turn them into a DF
+
+# directory where files are stored
+dir = "/Users/esrieves/Documents/GitHub/AQ/outputs/fires_AQ/sensors/"
+
+# create a list of all file names in this directory
+file_names = list.files(path=dir, pattern="*.csv", full.names=TRUE)
+
+# read csvs for each filename in list --> results in a list of lists
+AQ_files = lapply(file_names, read_csv)
+
+# fewer than above because A and B sensors come in separately
+#length(AQ_files)
+```
+
+```{r}
+## Combine lists of sensor data into a single dataframe
+
+# combine AQ lists into single AQ dataframe
+AQ_df = rbind.fill(AQ_files) %>% as.data.frame()
+
+# preview data
+#AQ_df
+```
+
+```{r}
+## Clean data
+
+# create a date column in POSIX format to create time series
+AQ_df$datetime = as.POSIXct(AQ_df$created_at)
+
+# rename and select important columns 
+AQ_df = AQ_df %>% 
+  dplyr::rename(pm25_a = `PM2.5_CF_1_ug/m3_A`,
+                 pm25_b = `PM2.5_CF_1_ug/m3_B`,
+                 temp = Temperature_F_A,
+                 rh = `Humidity_%_A`) 
+
+# create hourly pm colum
+AQ_df$hour = as.POSIXlt(AQ_df$datetime)$hour
+
+# Convert numeric values to a numeric class
+AQ_df$pm25_a = as.numeric(AQ_df$pm25_a)
+AQ_df$pm25_b = as.numeric(AQ_df$pm25_b)
+AQ_df$temp = as.numeric(AQ_df$temp)
+AQ_df$rh = as.numeric(AQ_df$rh)
+
+# create hourly versions of temperature, pm, and rh
+AQ_df_hr = AQ_df %>%
+  group_by(ID, hour) %>%
+  summarise(hourly_pm=mean(pm25_a),hourly_temp=mean(temp),hourly_rh=mean(rh)) 
+
+# select columns that I need for each spacetime object
+AQ_df = AQ_df %>% 
+  dplyr::select(ID, datetime, pm25_a, pm25_b, temp, rh, Lon, Lat) %>% as.data.frame()
+  
+# AQ_df_hr = AQ_df %>% 
+#   dplyr::select(ID, hour, datetime, hourly_pm, hourly_temp, hourly_rh, Lon, Lat) %>% as.data.frame()
+```
+
+
+```{r}
+## Some summary stats
+AQ_df %>% group_by(ID) %>% summarise(count_A_na = sum(is.na(pm25_a)),
+                                     count_B_na = sum(is.na(pm25_b)),
+                                     pct_A_na = (count_A_na/length(pm25_a))*100,
+                                     pct_B_na = (count_B_na/length(pm25_b))*100)
+```
+
+## Create spatial objects
+```{r}
+## Create spacetime objects -- 10 minute
+
+# create spatial points object for each sensor
+PA_sensors = SpatialPoints(AQ_df[!duplicated(AQ_df$ID), c("Lon", "Lat")],proj4string = CRS(prg))
+summary(PA_sensors)
+
+# contruct spatiotemporal object
+PA_STFDF = stConstruct(AQ_df, space = c("Lon","Lat"), time = "datetime", crs = CRS(prg), SpatialObj = stations)
+#hrly_STFDF = stConstruct(AQ_df_hr, space = c("Lon","Lat"), time = "datetime", crs = CRS(prg), SpatialObj = stations)
+
+# turn ST object into a STFDF (stationary points)
+PA_STFDF = as(PA_STFDF,"STFDF")
+#hrly_STFDF = as(hrly_STFDF,"STFDF")
+
+# see summary of data
+summary(PA_STFDF)
+#summary(hrly_STFDF)
+
+# object class
+class(PA_STFDF)
+#class(hrly_STFDF)
+
+# object dimensions
+dim(PA_STFDF)
+#dim(hrly_STFDF)
+```
+
+# Time series plots
+```{r}
+## Time series plots
+non_null_stations = PA_STFDF[na.omit(stations)]
+
+# temp and rh ts
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","temp"],mode="ts")
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","rh"],mode="ts")
+
+# just using PM2.5_a for PM observations
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","pm25_a"],mode="ts")
+```
+
+```{r}
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","temp"],mode="xt")
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","rh"],mode="xt")
+
+# just using PM2.5_a for PM observations
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","pm25_a"],mode="xt")
+```
+
+```{r}
+# save output to enhance resolution
+jpeg(file = "/Users/esrieves/Documents/GitHub/AQ/outputs/fires_AQ/images/timeplot.jpeg")
+stplot(PA_STFDF["2021-12-30::2021-12-31","pm25_a"])
+dev.off()
+```
+
