@@ -1,7 +1,7 @@
 ---
 title: "purple_air"
 author: "Emma Rieves"
-date: "1/10/2022"
+date: "2/2/2022"
 output: html_document
 ---
 
@@ -22,6 +22,9 @@ library(spacetime)
 
 # PM2.5 package recommended by Priyanka
 library(bjzresc)
+
+# to make the spherical geometry errors go away
+sf::sf_use_s2(FALSE)
 ```
 
 # Filter and load data
@@ -32,7 +35,7 @@ pa_download = getPurpleairLst(output.path = NULL)
 
 ```{r}
 ## Use boulder county shapefile to extract municipal boundaries for Louisville and Superior
-BO_CO = st_read("/Users/esrieves/Documents/GitHub/AQ/inputs/Boulder_county_munis/Municipalities.shp")
+BO_CO = st_read("Boulder_county_munis/Municipalities.shp")
 
 fire_areas = BO_CO %>% filter(ZONEDESC == "Louisville" |ZONEDESC == "Superior")
 
@@ -85,13 +88,13 @@ sensor_map
 ```
 
 
-```{r}
+```{r eval=F}
 # download purple air data -- TAKES A LONG TIME TO RUN SO BE READY FOR THAT
 ## output path is a folder that stores a csv for each sensor for the target time period
 ## average means that data is averaged for 10-minute intervals
 ## indoor = TRUE includes indoor sensor observations
 
-purpleairDownload(site.csv = fire_area_sensors, start.date = "2021-12-30", end.date = "2022-01-26", output.path = "/Users/esrieves/Documents/GitHub/AQ/outputs/fires_AQ/sensors/", average = 10, time.zone = "America/Denver", indoor = TRUE)
+purpleairDownload(site.csv = fire_area_sensors, start.date = "2021-12-30", end.date = "2022-01-26", output.path = "sensors/", average = 10, time.zone = "America/Denver", indoor = TRUE, n.thread = 1)
 ```
 
 
@@ -100,7 +103,7 @@ purpleairDownload(site.csv = fire_area_sensors, start.date = "2021-12-30", end.d
 ## Read downloaded PA files from their filepath and turn them into a DF
 
 # directory where files are stored
-dir = "/Users/esrieves/Documents/GitHub/AQ/outputs/fires_AQ/sensors/"
+dir = "sensors/"
 
 # create a list of all file names in this directory
 file_names = list.files(path=dir, pattern="*.csv", full.names=TRUE)
@@ -198,14 +201,25 @@ dim(PA_STFDF)
 # Time series plots
 ```{r}
 ## Time series plots
-non_null_stations = PA_STFDF[na.omit(stations)]
+# non_null_stations = PA_STFDF[na.omit(stations)]
 
 # temp and rh ts
 stplot(PA_STFDF[,"2021-12-30::2021-12-31","temp"],mode="ts")
 stplot(PA_STFDF[,"2021-12-30::2021-12-31","rh"],mode="ts")
+```
 
+```{r}
 # just using PM2.5_a for PM observations
 stplot(PA_STFDF[,"2021-12-30::2021-12-31","pm25_a"],mode="ts")
+
+# add more descriptive id - town, outdoor/indoor, neighborhood
+
+# aggregate sensor data over the sensor_map geometries
+aggregate_spatial <- aggregate(PA_STFDF[, "2021-12-30::2021-12-31"], as_Spatial(sensor_map$data$geometry), mean, na.rm=TRUE)
+stplot(aggregate_spatial[, , "pm25_a"], mode="ts")
+# trying a spatial plot, aggregated by every 4 hours
+plot(sensor_map)
+stplot(aggregate(aggregate_spatial, "4 hours", mean, na.rm=TRUE)[, , "pm25_a"])
 ```
 
 ```{r}
@@ -215,11 +229,25 @@ stplot(PA_STFDF[,"2021-12-30::2021-12-31","rh"],mode="xt")
 # just using PM2.5_a for PM observations
 stplot(PA_STFDF[,"2021-12-30::2021-12-31","pm25_a"],mode="xt")
 ```
+```{r}
+# add in pm25_b, temp, humidity
+for (sensor in 1:30) {
+  one_sensor <- PA_STFDF[sensor,"2021-12-30::2021-12-31", "pm25_a"]
+  p <- ggplot(fortify(one_sensor), aes(x=Index, y=pm25_a)) +
+      geom_line() +
+      labs(x="date", title = paste("sensor", sensor, "pm2.5"))
+  print(p)
+  png(file=paste("images/sensor", sensor, "_ts.png"), width=500, height=500)
+  print(p)
+  dev.off()
+}
+# stplot(PA_STFDF[1:5,"2021-12-30::2021-12-31", "pm25_a"], mode="ts")
+```
 
 ```{r}
 # save output to enhance resolution
-jpeg(file = "/Users/esrieves/Documents/GitHub/AQ/outputs/fires_AQ/images/timeplot.jpeg")
-stplot(PA_STFDF["2021-12-30::2021-12-31","pm25_a"])
+jpeg(file = "images/timeplot.jpeg")
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","pm25_a"])
 dev.off()
 ```
 
