@@ -19,6 +19,7 @@ library(raster)
 library(rgdal)
 library(ggplot2)
 library(spacetime)
+library(gridExtra)
 
 # PM2.5 package recommended by Priyanka
 library(bjzresc)
@@ -254,19 +255,34 @@ for (sensor in 1:30) {
   # check that the sensor has some data for our time range
   sensor_xts <- PA_STFDF[PA_STFDF@data$ID == id]
   if(length(sensor_xts$ID) > 0) {
+    # plot pm2.5 on one graph for both channels
     sensor_pm25a <- sensor_xts["2021-12-30::2021-12-31", "pm25_a"]
     sensor_pm25b <- sensor_xts["2021-12-30::2021-12-31", "pm25_b"]
-    sensor_temp <- sensor_xts["2021-12-30::2021-12-31", "temp"]
-    sensor_rh <- sensor_xts["2021-12-30::2021-12-31", "rh"]
     p <- ggplot(fortify(sensor_pm25a), aes(x=Index, y=pm25_a, color="black")) +
       geom_line() +
       geom_line(data=fortify(sensor_pm25b), aes(y=pm25_b), color="tomato") +
       scale_color_manual(name = "Sensor Data", values = c("PM2.5 A Channel" = "black", "PM2.5 B Channel" = "tomato")) +
       labs(x="date",
            title = paste(sensor_info$Name, "- (", sensor_info$city, "-", sensor_info$Location,  ") : sensor", id, "pm2.5"))
+    # print(p)
+    png(file=paste("images/sensor", id, "_pm25_ts.png"), width=500, height=500)
     print(p)
+    dev.off()
+    # plot temperature and relative humidity on one plot !!! this doesn't seem possible with ggplot
+    sensor_temp <- sensor_xts["2021-12-30::2021-12-31", "temp"]
+    sensor_rh <- sensor_xts["2021-12-30::2021-12-31", "rh"]
+    p2 <- ggplot(fortify(sensor_temp), aes(x=Index, y=temp)) +
+      geom_line() +
+      labs(x="date",
+           title = paste(sensor_info$Name, "- (", sensor_info$city, "-", sensor_info$Location,  ") : sensor", id, "temperature"))
+    p3 <- ggplot(fortify(sensor_rh), aes(x=Index, y=rh)) +
+    geom_line() +
+    labs(x="date",
+         title = paste(sensor_info$Name, "- (", sensor_info$city, "-", sensor_info$Location,  ") : sensor", id, "relative humidity"))
+    plots <- gridExtra::grid.arrange(p, arrangeGrob(p2, p3, ncol=2), nrow=2)
+    print(plots)
     png(file=paste("images/sensor", id, "_ts.png"), width=500, height=500)
-    print(p)
+    print(plots)
     dev.off()
   }
 }
