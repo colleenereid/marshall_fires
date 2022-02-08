@@ -150,7 +150,13 @@ AQ_df$rh = as.numeric(AQ_df$rh)
 # create hourly versions of temperature, pm, and rh
 AQ_df_hr = AQ_df %>%
   group_by(ID, hour) %>%
-  summarise(hourly_pm=mean(pm25_a),hourly_temp=mean(temp),hourly_rh=mean(rh)) 
+  summarise(hourly_pm=mean(pm25_a),hourly_temp=mean(temp),hourly_rh=mean(rh))
+
+# create a key coordinating the sensor ID number to its lat/lon
+id_key <- AQ_df %>%
+  group_by(ID) %>%
+  dplyr::select(ID, Lon, Lat, Name, Location) %>%
+  unique()
 
 # select columns that I need for each spacetime object
 AQ_df = AQ_df %>% 
@@ -212,8 +218,6 @@ stplot(PA_STFDF[,"2021-12-30::2021-12-31","rh"],mode="ts")
 # just using PM2.5_a for PM observations
 stplot(PA_STFDF[,"2021-12-30::2021-12-31","pm25_a"],mode="ts")
 
-# add more descriptive id - town, outdoor/indoor, neighborhood
-
 # aggregate sensor data over the sensor_map geometries
 aggregate_spatial <- aggregate(PA_STFDF[, "2021-12-30::2021-12-31"], as_Spatial(sensor_map$data$geometry), mean, na.rm=TRUE)
 stplot(aggregate_spatial[, , "pm25_a"], mode="ts")
@@ -229,19 +233,43 @@ stplot(PA_STFDF[,"2021-12-30::2021-12-31","rh"],mode="xt")
 # just using PM2.5_a for PM observations
 stplot(PA_STFDF[,"2021-12-30::2021-12-31","pm25_a"],mode="xt")
 ```
-```{r}
+```{r warning=FALSE}
+get_sensor_info <- function(ID) {
+  info <- id_key[id_key$ID == ID,]
+  city_pt <- st_intersection(sensor_map$data, st_as_sf(info, coords=c("Lon", "Lat"), crs=4326))["ZONEDESC"]
+  city <- city_pt$ZONEDESC
+  # print(city)
+  info <- info %>%
+    mutate(city = ifelse(length(city) == 0, NA, city))
+  return(info)
+}
+```
+
+
+```{r warning=FALSE}
 # add in pm25_b, temp, humidity
 for (sensor in 1:30) {
-  one_sensor <- PA_STFDF[sensor,"2021-12-30::2021-12-31", "pm25_a"]
-  p <- ggplot(fortify(one_sensor), aes(x=Index, y=pm25_a)) +
+  id <- id_key$ID[sensor]
+  sensor_info <- get_sensor_info(id)
+  # check that the sensor has some data for our time range
+  sensor_xts <- PA_STFDF[PA_STFDF@data$ID == id]
+  if(length(sensor_xts$ID) > 0) {
+    sensor_pm25a <- sensor_xts["2021-12-30::2021-12-31", "pm25_a"]
+    sensor_pm25b <- sensor_xts["2021-12-30::2021-12-31", "pm25_b"]
+    sensor_temp <- sensor_xts["2021-12-30::2021-12-31", "temp"]
+    sensor_rh <- sensor_xts["2021-12-30::2021-12-31", "rh"]
+    p <- ggplot(fortify(sensor_pm25a), aes(x=Index, y=pm25_a, color="black")) +
       geom_line() +
-      labs(x="date", title = paste("sensor", sensor, "pm2.5"))
-  print(p)
-  png(file=paste("images/sensor", sensor, "_ts.png"), width=500, height=500)
-  print(p)
-  dev.off()
+      geom_line(data=fortify(sensor_pm25b), aes(y=pm25_b), color="tomato") +
+      scale_color_manual(name = "Sensor Data", values = c("PM2.5 A Channel" = "black", "PM2.5 B Channel" = "tomato")) +
+      labs(x="date",
+           title = paste(sensor_info$Name, "- (", sensor_info$city, "-", sensor_info$Location,  ") : sensor", id, "pm2.5"))
+    print(p)
+    png(file=paste("images/sensor", id, "_ts.png"), width=500, height=500)
+    print(p)
+    dev.off()
+  }
 }
-# stplot(PA_STFDF[1:5,"2021-12-30::2021-12-31", "pm25_a"], mode="ts")
 ```
 
 ```{r}
