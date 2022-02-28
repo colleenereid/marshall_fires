@@ -136,8 +136,8 @@ AQ_files = lapply(file_names, read_csv)
 
 # combine AQ lists into single AQ dataframe
 AQ_df = rbind.fill(AQ_files) %>% as.data.frame()
-# preview data
-AQ_df
+
+
 ```
 
 ```{r}
@@ -203,16 +203,16 @@ AQ_df = AQ_df %>%
   ) %>%
   pivot_wider(names_from = time_period, values_from = complete_a) %>%
   rowwise() %>%
-  mutate(status = case_when(
+  mutate(Status = case_when(
     fire_period >= 85 & post_fire_period >= 85 & pre_fire_period >= 95 ~ "Complete data throughout fire period",
-    fire_period < 75 & post_fire_period >= 75 & pre_fire_period >= 95 ~ "Sensor went offline during fire, (most data) returned online",
-    fire_period < 75 & post_fire_period <= 75 & pre_fire_period >= 95 ~ "Sensor went offline during fire, (most data) did not return online",
-    fire_period < 75 & post_fire_period <= 75 & is.na(pre_fire_period) ~ "Sensor added during fire without much data, (most data) did not return online",
+    fire_period < 75 & post_fire_period >= 75 & pre_fire_period >= 95 ~ "Sensor offline during fire, returned online",
+    fire_period < 75 & post_fire_period <= 75 & pre_fire_period >= 95 ~ "Sensor offline during fire, did not return online",
+    fire_period < 75 & post_fire_period <= 75 & is.na(pre_fire_period) ~ "Sensor added during fire, did not return online",
     is.na(fire_period) & is.na(pre_fire_period) ~ "Sensor came online after fire"
   ))
  ) 
 
-time_period_classification$status = factor(time_period_classification$status, levels = c("Complete data throughout fire period", "Sensor went offline during fire, (most data) returned online", "Sensor went offline during fire, (most data) did not return online", "Sensor added during fire without much data, (most data) did not return online", "Sensor came online after fire"))
+time_period_classification$Status = factor(time_period_classification$Status, levels = c("Complete data throughout fire period", "Sensor offline during fire, returned online", "Sensor offline during fire, did not return online", "Sensor added during fire, did not return online", "Sensor came online after fire"))
 
 # Create time period variable based on availability during fire, inside/outside status for mapping
 (plot_data = AQ_df %>%
@@ -240,9 +240,12 @@ AQ_df %>% group_by(ID) %>% dplyr::summarise(count_A_na = sum(is.na(pm25_a)),
 ```{r}
 # why is one showing up way off -- investigate, I wonder if this sensor moved during the process?
 # sensor 112606
-pdf(file = "images/fire_map2.pdf")
+png(file = "images/fire_map2.png", width = 4500, height = 3800, res = 300)
 (detailed_sensor_map = basemap + 
-    geom_point(data=(plot_data %>% filter(ID != "112606")), aes(x=Lon,y=Lat, label = ID, shape = Location, color = status, label = rownames(ID)))) + scale_color_manual(values = c("light green","light blue","red","orange","purple"))
+    geom_point(data=(plot_data %>% filter(ID != "112606")), aes(x=Lon,y=Lat, label = ID, shape = Location, color = Status, label = rownames(ID))) + 
+    scale_color_manual(values = c("light green","light blue","red","orange","purple")) +
+    theme(legend.position = "bottom", legend.box = "vertical") +
+    ggtitle("Map of sensors in Louisville and Superior, 12-30-21 to 2-26-22"))
 dev.off()
 
 # add sensors, check which sensor is off
