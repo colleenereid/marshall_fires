@@ -204,7 +204,7 @@ AQ_df = AQ_df %>%
   pivot_wider(names_from = time_period, values_from = complete_a) %>%
   rowwise() %>%
   mutate(Status = case_when(
-    fire_period >= 85 & post_fire_period >= 85 & pre_fire_period >= 95 ~ "Complete data throughout fire period",
+    fire_period >= 75 & post_fire_period >= 87 & pre_fire_period >= 95 ~ "Complete data throughout fire period",
     fire_period < 75 & post_fire_period >= 75 & pre_fire_period >= 95 ~ "Sensor offline during fire, returned online",
     fire_period < 75 & post_fire_period <= 75 & pre_fire_period >= 95 ~ "Sensor offline during fire, did not return online",
     fire_period < 75 & post_fire_period <= 75 & is.na(pre_fire_period) ~ "Sensor added during fire, did not return online",
@@ -235,6 +235,8 @@ AQ_df %>% group_by(ID) %>% dplyr::summarise(count_A_na = sum(is.na(pm25_a)),
                                      count_B_na = sum(is.na(pm25_b)),
                                      pct_A_na = (count_A_na/length(pm25_a))*100,
                                      pct_B_na = (count_B_na/length(pm25_b))*100)
+
+plot_data %>% group_by(Status) %>% dplyr::summarise(n = n())
 ```
 
 ```{r}
@@ -242,9 +244,11 @@ AQ_df %>% group_by(ID) %>% dplyr::summarise(count_A_na = sum(is.na(pm25_a)),
 # sensor 112606
 png(file = "images/fire_map2.png", width = 4500, height = 3800, res = 300)
 (detailed_sensor_map = basemap + 
-    geom_point(data=(plot_data %>% filter(ID != "112606")), aes(x=Lon,y=Lat, label = ID, shape = Location, color = Status, label = rownames(ID))) + 
-    scale_color_manual(values = c("light green","light blue","red","orange","purple")) +
+    geom_point(data=(plot_data %>% filter(ID != "112606")), aes(x=Lon,y=Lat, label = ID, shape = Location, color = Status, size = 3, label = rownames(ID))) + 
+    scale_color_manual(values = c("green","blue","red","orange","purple")) +
+    theme_light() +
     theme(legend.position = "bottom", legend.box = "vertical") +
+    guides(size = FALSE) +
     ggtitle("Map of sensors in Louisville and Superior, 12-30-21 to 2-26-22"))
 dev.off()
 
