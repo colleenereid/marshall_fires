@@ -136,9 +136,8 @@ AQ_files = lapply(file_names, read_csv)
 
 # combine AQ lists into single AQ dataframe
 AQ_df = rbind.fill(AQ_files) %>% as.data.frame()
-
 # preview data
-#AQ_df
+AQ_df
 ```
 
 ```{r}
@@ -163,6 +162,7 @@ AQ_df$pm25_b = as.numeric(AQ_df$pm25_b)
 AQ_df$temp = as.numeric(AQ_df$temp)
 AQ_df$rh = as.numeric(AQ_df$rh)
 
+
 # create hourly versions of temperature, pm, and rh
 AQ_df_hr = AQ_df %>%
   group_by(ID, hour) %>%
@@ -174,22 +174,134 @@ id_key <- AQ_df %>%
   dplyr::select(ID, Lon, Lat, Name, Location) %>%
   unique()
 
+
 # select columns that I need for each spacetime object
 AQ_df = AQ_df %>% 
-  dplyr::select(ID, datetime, pm25_a, pm25_b, temp, rh, Lon, Lat) %>% as.data.frame()
+  dplyr::select(ID, datetime, pm25_a, pm25_b, temp, rh, Lon, Lat, Location) %>% as.data.frame()
   
 # AQ_df_hr = AQ_df %>% 
 #   dplyr::select(ID, hour, datetime, hourly_pm, hourly_temp, hourly_rh, Lon, Lat) %>% as.data.frame()
 ```
 
+```{r}
+# prepare data for fire period mapping
+
+# dataframe with fire period stats
+fire_period = AQ_df %>%
+  dplyr::select(ID, Lon, Lat, Location, datetime, pm25_a, pm25_b, temp, rh) %>%
+  group_by(ID) %>%
+  # add in NAs to timeseries to calculate % complete (before missing time periods were just absent and not NAs in the dataset)
+  complete(datetime = seq(min(datetime), max(datetime), by = "10 min")) %>%
+  # define the fire period
+  mutate(fire_period = datetime>=as.POSIXct(strptime("2021-12-30 10:00:00", "%Y-%m-%d %H:%M:%S")) & datetime<= as.POSIXct(strptime("2022-01-01 11:59:59", "%Y-%m-%d %H:%M:%S")),
+         post_fire_period = datetime>=as.POSIXct(strptime("2022-1-2 00:00:00", "%Y-%m-%d %H:%M:%S"))) %>%
+  # filter by the fire period to create % completeness within the fire interval
+  filter(fire_period == TRUE) %>%
+  dplyr::summarize(
+    # calculate the % complete for a and b channels (if b channel is less than a channel, do nothing unless using b instead of a achieves appropriate completeness ratio)
+    fire_period_pct_complete_a = sum(!is.na(pm25_a))/length(pm25_a)*100,
+    fire_period_pct_complete_b = sum(!is.na(pm25_b))/length(pm25_b)*100
+  ) %>%
+  # create a variable that determines whether there is completeness during the fire period or not
+  mutate(fire_period_completeness = ifelse(fire_period_pct_complete_a >= 95 | fire_period_pct_complete_b >= 95,"complete","incomplete")) %>%
+  filter(post_fire_period == TRUE) %>%
+  dplyr::summarize(
+    # calculate the % complete for a and b channels (if b channel is less than a channel, do nothing unless using b instead of a achieves appropriate completeness ratio)
+    post_fire_period_pct_complete_a = sum(!is.na(pm25_a))/length(pm25_a)*100,
+    post_fire_period_pct_complete_b = sum(!is.na(pm25_b))/length(pm25_b)*100
+  ) %>%
+  # create a variable that determines whether there is completeness during the fire period or not
+  mutate(post_fire_period_completeness = ifelse(post_fire_period_pct_complete_a >= 95 | post_fire_period_pct_complete_b >= 95,"complete","incomplete")) 
+  
+fire_period
+
+# Create time period variable based on availability during fire, inside/outside status for mapping
+plot_data = AQ_df %>%
+  group_by(ID) %>%
+  dplyr::select(ID, Lon, Lat, Location, datetime) %>%
+  dplyr::summarize(first_date = datetime[1],
+                   Location = Location[1],
+                   Lat = Lat[1],
+                   Lon = Lon[1])
+
+
+# merge fire stats and plot data
+plot_data = merge(plot_data, fire_period, by = "ID", all=TRUE)
+
+# add status column to plot data based on first date of sensor measurements and fire period completeness; used 10 am because it was right before the fire started
+(plot_data = plot_data %>% 
+  mutate(status = ifelse(fire_period_pct_complete_a > 80 & first_date<=as.POSIXct("2021-12-30 10:00:00", "%Y-%m-%d %H:%M:%S"), "Complete data throughout the fire period",
+                                     ifelse(fire_period_pct_complete_a < 80 & first_date<=as.POSIXct("2021-12-30 10:00:00", "%Y-%m-%d %H:%M:%S"), "Sensor went offline during fire",
+                                            ifelse(fire_period_pct_complete_a < 80 & (first_date>=as.POSIXct("2021-12-30 10:00:00", "%Y-%m-%d %H:%M:%S") & first_date <= as.POSIXct("2021-12-31 11:59:59", "%Y-%m-%d %H:%M:%S")), "Sensor added during the fire",
+                                            ifelse(first_date>=as.POSIXct("2022-01-01 00:00:00", "%Y-%m-%d %H:%M:%S"), "Sensor added after the fire", NA))))))
+```
+
+```{r}
+# prepare data for fire period mapping
+
+# dataframe with fire period stats
+(time_period_classification = AQ_df %>%
+  dplyr::select(ID, Lon, Lat, Location, datetime, pm25_a, pm25_b, temp, rh) %>%
+  group_by(ID) %>%
+  # add in NAs to timeseries to calculate % complete (before missing time periods were just absent and not NAs in the dataset)
+  complete(datetime = seq(min(datetime), max(datetime), by = "10 min")) %>%
+  mutate(time_period = ifelse(datetime<as.POSIXct(strptime("2021-12-30 10:00:00", "%Y-%m-%d %H:%M:%S")), "pre_fire_period",
+                              ifelse(datetime>=as.POSIXct(strptime("2021-12-30 10:00:00", "%Y-%m-%d %H:%M:%S")) & datetime<= as.POSIXct(strptime("2022-01-01 11:59:59", "%Y-%m-%d %H:%M:%S")), "fire_period",
+                                     ifelse(datetime>as.POSIXct(strptime("2022-01-01 11:59:59", "%Y-%m-%d %H:%M:%S")), "post_fire_period", "other time")))) %>% 
+  group_by(ID,time_period) %>%
+  dplyr::summarize(
+    complete_a= sum(complete.cases(pm25_a))/n()*100
+    #complete_b = sum(complete.cases(pm25_b))/n()*100
+  ) %>%
+  pivot_wider(names_from = time_period, values_from = complete_a) %>%
+  rowwise() %>%
+  mutate(status = case_when(
+    fire_period >= 85 & post_fire_period >= 85 & pre_fire_period >= 95 ~ "Complete data throughout fire period",
+    fire_period < 75 & post_fire_period >= 75 & pre_fire_period >= 95 ~ "Sensor went offline during fire, (most data) returned online",
+    fire_period < 75 & post_fire_period <= 75 & pre_fire_period >= 95 ~ "Sensor went offline during fire, (most data) did not return online",
+    fire_period < 75 & post_fire_period <= 75 & is.na(pre_fire_period) ~ "Sensor added during fire without much data, (most data) did not return online",
+    is.na(fire_period) & is.na(pre_fire_period) ~ "Sensor came online after fire"
+  ))
+ ) 
+
+# Create time period variable based on availability during fire, inside/outside status for mapping
+(plot_data = AQ_df %>%
+  group_by(ID) %>%
+  dplyr::select(ID, Lon, Lat, Location) %>%
+  # use location[1] presuming indoor/outdoor doesn't change
+  dplyr::summarize(Location = Location[1],
+                   Lat = Lat[1],
+                   Lon = Lon[1]))
+
+
+# merge fire stats and plot data
+(plot_data = merge(plot_data, time_period_classification, by = "ID", all=TRUE))
+```
+
 
 ```{r}
 ## Some summary stats
-AQ_df %>% group_by(ID) %>% summarise(count_A_na = sum(is.na(pm25_a)),
+AQ_df %>% group_by(ID) %>% dplyr::summarise(count_A_na = sum(is.na(pm25_a)),
                                      count_B_na = sum(is.na(pm25_b)),
                                      pct_A_na = (count_A_na/length(pm25_a))*100,
                                      pct_B_na = (count_B_na/length(pm25_b))*100)
 ```
+
+```{r}
+# why is one showing up way off -- investigate, I wonder if this sensor moved during the process?
+# sensor 112606
+pdf(file = "images/fire_map2.pdf")
+(detailed_sensor_map = basemap + 
+    geom_point(data=(plot_data %>% filter(ID != "112606")), aes(x=Lon,y=Lat, label = ID, shape = Location, color = status, label = rownames(ID)))) + scale_color_manual(values = c("light green","light blue","red","orange","purple"))
+dev.off()
+
+# add sensors, check which sensor is off
+# (ggplot(plot_data, aes(x=Lon,y=Lat, label = ID, shape = Location, color = fire_period, label = ID))) + 
+#   geom_point() +
+#   geom_text(check_overlap = TRUE)
+```
+
+
 
 ## Create spatial objects
 ```{r}
