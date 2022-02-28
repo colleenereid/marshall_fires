@@ -72,7 +72,7 @@ fire_area_sensor_IDs = fire_affected_sensors$ID
 fire_area_sensors = pa_download[pa_download$ID %in% fire_area_sensor_IDs, ]
 
 # preview data
-#fire_area_sensors
+fire_area_sensors
 ```
 
 ```{r}
@@ -96,7 +96,7 @@ sensor_map
 ## average means that data is averaged for 10-minute intervals
 ## indoor = TRUE includes indoor sensor observations
 
-purpleairDownload(site.csv = fire_area_sensors, start.date = "2021-12-30", end.date = "2022-01-26", output.path = "sensors/", average = 10, time.zone = "America/Denver", indoor = TRUE, n.thread = 1)
+purpleairDownload(site.csv = fire_area_sensors, start.date = "2021-12-30", end.date = "2022-02-26", output.path = "sensors2/", average = 10, time.zone = "America/Denver", indoor = TRUE, n.thread = 1)
 ```
 # Function to help us get sensor info during analysis
 ```{r warning=FALSE}
@@ -183,58 +183,6 @@ AQ_df = AQ_df %>%
 #   dplyr::select(ID, hour, datetime, hourly_pm, hourly_temp, hourly_rh, Lon, Lat) %>% as.data.frame()
 ```
 
-```{r}
-# prepare data for fire period mapping
-
-# dataframe with fire period stats
-fire_period = AQ_df %>%
-  dplyr::select(ID, Lon, Lat, Location, datetime, pm25_a, pm25_b, temp, rh) %>%
-  group_by(ID) %>%
-  # add in NAs to timeseries to calculate % complete (before missing time periods were just absent and not NAs in the dataset)
-  complete(datetime = seq(min(datetime), max(datetime), by = "10 min")) %>%
-  # define the fire period
-  mutate(fire_period = datetime>=as.POSIXct(strptime("2021-12-30 10:00:00", "%Y-%m-%d %H:%M:%S")) & datetime<= as.POSIXct(strptime("2022-01-01 11:59:59", "%Y-%m-%d %H:%M:%S")),
-         post_fire_period = datetime>=as.POSIXct(strptime("2022-1-2 00:00:00", "%Y-%m-%d %H:%M:%S"))) %>%
-  # filter by the fire period to create % completeness within the fire interval
-  filter(fire_period == TRUE) %>%
-  dplyr::summarize(
-    # calculate the % complete for a and b channels (if b channel is less than a channel, do nothing unless using b instead of a achieves appropriate completeness ratio)
-    fire_period_pct_complete_a = sum(!is.na(pm25_a))/length(pm25_a)*100,
-    fire_period_pct_complete_b = sum(!is.na(pm25_b))/length(pm25_b)*100
-  ) %>%
-  # create a variable that determines whether there is completeness during the fire period or not
-  mutate(fire_period_completeness = ifelse(fire_period_pct_complete_a >= 95 | fire_period_pct_complete_b >= 95,"complete","incomplete")) %>%
-  filter(post_fire_period == TRUE) %>%
-  dplyr::summarize(
-    # calculate the % complete for a and b channels (if b channel is less than a channel, do nothing unless using b instead of a achieves appropriate completeness ratio)
-    post_fire_period_pct_complete_a = sum(!is.na(pm25_a))/length(pm25_a)*100,
-    post_fire_period_pct_complete_b = sum(!is.na(pm25_b))/length(pm25_b)*100
-  ) %>%
-  # create a variable that determines whether there is completeness during the fire period or not
-  mutate(post_fire_period_completeness = ifelse(post_fire_period_pct_complete_a >= 95 | post_fire_period_pct_complete_b >= 95,"complete","incomplete")) 
-  
-fire_period
-
-# Create time period variable based on availability during fire, inside/outside status for mapping
-plot_data = AQ_df %>%
-  group_by(ID) %>%
-  dplyr::select(ID, Lon, Lat, Location, datetime) %>%
-  dplyr::summarize(first_date = datetime[1],
-                   Location = Location[1],
-                   Lat = Lat[1],
-                   Lon = Lon[1])
-
-
-# merge fire stats and plot data
-plot_data = merge(plot_data, fire_period, by = "ID", all=TRUE)
-
-# add status column to plot data based on first date of sensor measurements and fire period completeness; used 10 am because it was right before the fire started
-(plot_data = plot_data %>% 
-  mutate(status = ifelse(fire_period_pct_complete_a > 80 & first_date<=as.POSIXct("2021-12-30 10:00:00", "%Y-%m-%d %H:%M:%S"), "Complete data throughout the fire period",
-                                     ifelse(fire_period_pct_complete_a < 80 & first_date<=as.POSIXct("2021-12-30 10:00:00", "%Y-%m-%d %H:%M:%S"), "Sensor went offline during fire",
-                                            ifelse(fire_period_pct_complete_a < 80 & (first_date>=as.POSIXct("2021-12-30 10:00:00", "%Y-%m-%d %H:%M:%S") & first_date <= as.POSIXct("2021-12-31 11:59:59", "%Y-%m-%d %H:%M:%S")), "Sensor added during the fire",
-                                            ifelse(first_date>=as.POSIXct("2022-01-01 00:00:00", "%Y-%m-%d %H:%M:%S"), "Sensor added after the fire", NA))))))
-```
 
 ```{r}
 # prepare data for fire period mapping
@@ -263,6 +211,8 @@ plot_data = merge(plot_data, fire_period, by = "ID", all=TRUE)
     is.na(fire_period) & is.na(pre_fire_period) ~ "Sensor came online after fire"
   ))
  ) 
+
+time_period_classification$status = factor(time_period_classification$status, levels = c("Complete data throughout fire period", "Sensor went offline during fire, (most data) returned online", "Sensor went offline during fire, (most data) did not return online", "Sensor added during fire without much data, (most data) did not return online", "Sensor came online after fire"))
 
 # Create time period variable based on availability during fire, inside/outside status for mapping
 (plot_data = AQ_df %>%
