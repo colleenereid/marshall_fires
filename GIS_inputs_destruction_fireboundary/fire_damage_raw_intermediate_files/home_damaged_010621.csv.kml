@@ -1,0 +1,4808 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>home_damaged_010621.csv</name>
+    <Style id="icon-1603-FFEA00-normal">
+      <IconStyle>
+        <color>ff00eaff</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1603-FFEA00-highlight">
+      <IconStyle>
+        <color>ff00eaff</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1603-FFEA00">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1603-FFEA00-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1603-FFEA00-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Placemark>
+      <name>1017 ARAPAHOE CIRCLE, Louisville, CO</name>
+      <address>1017 ARAPAHOE CIRCLE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 1017 ARAPAHOE CIRCLE<br>House Number: 1017<br>Street Name: ARAPAHOE CIRCLE<br>Street Name clean: ARAPAHOE CIRCLE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1017 ARAPAHOE CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1017.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ARAPAHOE CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ARAPAHOE CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>985 ARAPAHOE CIRCLE, Louisville, CO</name>
+      <address>985 ARAPAHOE CIRCLE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 985 ARAPAHOE CIRCLE<br>House Number: 985<br>Street Name: ARAPAHOE CIRCLE<br>Street Name clean: ARAPAHOE CIRCLE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>985 ARAPAHOE CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>985.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ARAPAHOE CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ARAPAHOE CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>115 CRESTVIEW COURT, Louisville, CO</name>
+      <address>115 CRESTVIEW COURT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 115 CRESTVIEW COURT<br>House Number: 115<br>Street Name: CRESTVIEW COURT<br>Street Name clean: CRESTVIEW COURT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>115 CRESTVIEW COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>115.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>CRESTVIEW COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>CRESTVIEW COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>116 CRESTVIEW COURT, Louisville, CO</name>
+      <address>116 CRESTVIEW COURT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 116 CRESTVIEW COURT<br>House Number: 116<br>Street Name: CRESTVIEW COURT<br>Street Name clean: CRESTVIEW COURT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>116 CRESTVIEW COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>116.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>CRESTVIEW COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>CRESTVIEW COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>117 CRESTVIEW COURT, Louisville, CO</name>
+      <address>117 CRESTVIEW COURT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 117 CRESTVIEW COURT<br>House Number: 117<br>Street Name: CRESTVIEW COURT<br>Street Name clean: CRESTVIEW COURT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>117 CRESTVIEW COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>117.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>CRESTVIEW COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>CRESTVIEW COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>457 FILLMORE COURT, Louisville, CO</name>
+      <address>457 FILLMORE COURT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 457 FILLMORE COURT<br>House Number: 457<br>Street Name: FILLMORE COURT<br>Street Name clean: FILLMORE COURT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>457 FILLMORE COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>457.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>FILLMORE COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>FILLMORE COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>802 FLATIRONS COURT, Louisville, CO</name>
+      <address>802 FLATIRONS COURT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 802 FLATIRONS COURT<br>House Number: 802<br>Street Name: FLATIRONS COURT<br>Street Name clean: FLATIRONS COURT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>802 FLATIRONS COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>802.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>FLATIRONS COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>FLATIRONS COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1100 HILLSIDE LANE, Louisville, CO</name>
+      <address>1100 HILLSIDE LANE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 1100 HILLSIDE LANE<br>House Number: 1100<br>Street Name: HILLSIDE LANE<br>Street Name clean: HILLSIDE LANE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1100 HILLSIDE LANE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1100.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>HILLSIDE LANE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>HILLSIDE LANE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1044 MEADOW COURT, Louisville, CO</name>
+      <address>1044 MEADOW COURT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 1044 MEADOW COURT<br>House Number: 1044<br>Street Name: MEADOW COURT<br>Street Name clean: MEADOW COURT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1044 MEADOW COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>1044.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MEADOW COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MEADOW COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>824 MOUNT EVANS COURT, Louisville, CO</name>
+      <address>824 MOUNT EVANS COURT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 824 MOUNT EVANS COURT<br>House Number: 824<br>Street Name: MOUNT EVANS COURT<br>Street Name clean: MOUNT EVANS COURT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>824 MOUNT EVANS COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>824.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MOUNT EVANS COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MOUNT EVANS COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>825 MOUNT EVANS COURT, Louisville, CO</name>
+      <address>825 MOUNT EVANS COURT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 825 MOUNT EVANS COURT<br>House Number: 825<br>Street Name: MOUNT EVANS COURT<br>Street Name clean: MOUNT EVANS COURT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>825 MOUNT EVANS COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>825.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MOUNT EVANS COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MOUNT EVANS COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>828 MOUNT EVANS COURT, Louisville, CO</name>
+      <address>828 MOUNT EVANS COURT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 828 MOUNT EVANS COURT<br>House Number: 828<br>Street Name: MOUNT EVANS COURT<br>Street Name clean: MOUNT EVANS COURT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>828 MOUNT EVANS COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>828.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MOUNT EVANS COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MOUNT EVANS COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>832 MOUNT EVANS COURT, Louisville, CO</name>
+      <address>832 MOUNT EVANS COURT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 832 MOUNT EVANS COURT<br>House Number: 832<br>Street Name: MOUNT EVANS COURT<br>Street Name clean: MOUNT EVANS COURT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>832 MOUNT EVANS COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>832.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MOUNT EVANS COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MOUNT EVANS COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>734 NIGHT HAWK CIRCLE, Louisville, CO</name>
+      <address>734 NIGHT HAWK CIRCLE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 734 NIGHT HAWK CIRCLE<br>House Number: 734<br>Street Name: NIGHT HAWK CIRCLE<br>Street Name clean: NIGHT HAWK CIRCLE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>734 NIGHT HAWK CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>734.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>NIGHT HAWK CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>NIGHT HAWK CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>424 OWL DRIVE, Louisville, CO</name>
+      <address>424 OWL DRIVE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 424 OWL DRIVE<br>House Number: 424<br>Street Name: OWL DRIVE<br>Street Name clean: OWL DRIVE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>424 OWL DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>424.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>OWL DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>OWL DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>436 OWL DRIVE 25, Louisville, CO</name>
+      <address>436 OWL DRIVE 25, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 436 OWL DRIVE 25<br>House Number: 436<br>Street Name: OWL DRIVE 25<br>Street Name clean: OWL DRIVE 25<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>436 OWL DRIVE 25</value>
+        </Data>
+        <Data name="House Number">
+          <value>436.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>OWL DRIVE 25</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>OWL DRIVE 25</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>800 PIKES PEAK COURT, Louisville, CO</name>
+      <address>800 PIKES PEAK COURT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 800 PIKES PEAK COURT<br>House Number: 800<br>Street Name: PIKES PEAK COURT<br>Street Name clean: PIKES PEAK COURT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>800 PIKES PEAK COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>800.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>PIKES PEAK COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>PIKES PEAK COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>804 PIKES PEAK COURT, Louisville, CO</name>
+      <address>804 PIKES PEAK COURT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 804 PIKES PEAK COURT<br>House Number: 804<br>Street Name: PIKES PEAK COURT<br>Street Name clean: PIKES PEAK COURT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>804 PIKES PEAK COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>804.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>PIKES PEAK COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>PIKES PEAK COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>808 PIKES PEAK COURT, Louisville, CO</name>
+      <address>808 PIKES PEAK COURT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 808 PIKES PEAK COURT<br>House Number: 808<br>Street Name: PIKES PEAK COURT<br>Street Name clean: PIKES PEAK COURT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>808 PIKES PEAK COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>808.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>PIKES PEAK COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>PIKES PEAK COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>903 PIKES PEAK LANE, Louisville, CO</name>
+      <address>903 PIKES PEAK LANE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 903 PIKES PEAK LANE<br>House Number: 903<br>Street Name: PIKES PEAK LANE<br>Street Name clean: PIKES PEAK LANE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>903 PIKES PEAK LANE</value>
+        </Data>
+        <Data name="House Number">
+          <value>903.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>PIKES PEAK LANE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>PIKES PEAK LANE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>907 PIKES PEAK LANE, Louisville, CO</name>
+      <address>907 PIKES PEAK LANE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 907 PIKES PEAK LANE<br>House Number: 907<br>Street Name: PIKES PEAK LANE<br>Street Name clean: PIKES PEAK LANE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>907 PIKES PEAK LANE</value>
+        </Data>
+        <Data name="House Number">
+          <value>907.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>PIKES PEAK LANE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>PIKES PEAK LANE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>813 ROCK ROSE COURT, Louisville, CO</name>
+      <address>813 ROCK ROSE COURT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 813 ROCK ROSE COURT<br>House Number: 813<br>Street Name: ROCK ROSE COURT<br>Street Name clean: ROCK ROSE COURT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>813 ROCK ROSE COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>813.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ROCK ROSE COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ROCK ROSE COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>671 SAINT ANDREWS LANE, Louisville, CO</name>
+      <address>671 SAINT ANDREWS LANE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 671 SAINT ANDREWS LANE<br>House Number: 671<br>Street Name: SAINT ANDREWS LANE<br>Street Name clean: SAINT ANDREWS LANE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>671 SAINT ANDREWS LANE</value>
+        </Data>
+        <Data name="House Number">
+          <value>671.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SAINT ANDREWS LANE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SAINT ANDREWS LANE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>983 SAINT ANDREWS LANE, Louisville, CO</name>
+      <address>983 SAINT ANDREWS LANE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 983 SAINT ANDREWS LANE<br>House Number: 983<br>Street Name: SAINT ANDREWS LANE<br>Street Name clean: SAINT ANDREWS LANE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>983 SAINT ANDREWS LANE</value>
+        </Data>
+        <Data name="House Number">
+          <value>983.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SAINT ANDREWS LANE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SAINT ANDREWS LANE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>123 SKY VIEW CT, Louisville, CO</name>
+      <address>123 SKY VIEW CT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 123 SKY VIEW CT<br>House Number: 123<br>Street Name: SKY VIEW CT<br>Street Name clean: SKY VIEW CT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>123 SKY VIEW CT</value>
+        </Data>
+        <Data name="House Number">
+          <value>123.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SKY VIEW CT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SKY VIEW CT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>125 SKY VIEW CT, Louisville, CO</name>
+      <address>125 SKY VIEW CT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 125 SKY VIEW CT<br>House Number: 125<br>Street Name: SKY VIEW CT<br>Street Name clean: SKY VIEW CT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>125 SKY VIEW CT</value>
+        </Data>
+        <Data name="House Number">
+          <value>125.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SKY VIEW CT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SKY VIEW CT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>124 SKYVIEW CT, Louisville, CO</name>
+      <address>124 SKYVIEW CT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 124 SKYVIEW CT<br>House Number: 124<br>Street Name: SKYVIEW CT<br>Street Name clean: SKYVIEW CT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>124 SKYVIEW CT</value>
+        </Data>
+        <Data name="House Number">
+          <value>124.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SKYVIEW CT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SKYVIEW CT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>800 SPYGLASS CIRCLE, Louisville, CO</name>
+      <address>800 SPYGLASS CIRCLE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 800 SPYGLASS CIRCLE<br>House Number: 800<br>Street Name: SPYGLASS CIRCLE<br>Street Name clean: SPYGLASS CIRCLE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>800 SPYGLASS CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>800.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SPYGLASS CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SPYGLASS CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>818 SPYGLASS CIRCLE, Louisville, CO</name>
+      <address>818 SPYGLASS CIRCLE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 818 SPYGLASS CIRCLE<br>House Number: 818<br>Street Name: SPYGLASS CIRCLE<br>Street Name clean: SPYGLASS CIRCLE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>818 SPYGLASS CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>818.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SPYGLASS CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SPYGLASS CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>822 SPYGLASS CIRCLE, Louisville, CO</name>
+      <address>822 SPYGLASS CIRCLE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 822 SPYGLASS CIRCLE<br>House Number: 822<br>Street Name: SPYGLASS CIRCLE<br>Street Name clean: SPYGLASS CIRCLE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>822 SPYGLASS CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>822.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SPYGLASS CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SPYGLASS CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>905 SUNFLOWER STREET, Louisville, CO</name>
+      <address>905 SUNFLOWER STREET, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 905 SUNFLOWER STREET<br>House Number: 905<br>Street Name: SUNFLOWER STREET<br>Street Name clean: SUNFLOWER STREET<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>905 SUNFLOWER STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>905.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SUNFLOWER STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SUNFLOWER STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>812 TRAIL RIDGE DRIVE, Louisville, CO</name>
+      <address>812 TRAIL RIDGE DRIVE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 812 TRAIL RIDGE DRIVE<br>House Number: 812<br>Street Name: TRAIL RIDGE DRIVE<br>Street Name clean: TRAIL RIDGE DRIVE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>812 TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>812.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>816 TRAIL RIDGE DRIVE, Louisville, CO</name>
+      <address>816 TRAIL RIDGE DRIVE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 816 TRAIL RIDGE DRIVE<br>House Number: 816<br>Street Name: TRAIL RIDGE DRIVE<br>Street Name clean: TRAIL RIDGE DRIVE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>816 TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>816.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>821 TRAIL RIDGE DRIVE, Louisville, CO</name>
+      <address>821 TRAIL RIDGE DRIVE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 821 TRAIL RIDGE DRIVE<br>House Number: 821<br>Street Name: TRAIL RIDGE DRIVE<br>Street Name clean: TRAIL RIDGE DRIVE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>821 TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>821.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>823 TRAIL RIDGE DRIVE, Louisville, CO</name>
+      <address>823 TRAIL RIDGE DRIVE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 823 TRAIL RIDGE DRIVE<br>House Number: 823<br>Street Name: TRAIL RIDGE DRIVE<br>Street Name clean: TRAIL RIDGE DRIVE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>823 TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>823.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>849 TRAIL RIDGE DRIVE, Louisville, CO</name>
+      <address>849 TRAIL RIDGE DRIVE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 849 TRAIL RIDGE DRIVE<br>House Number: 849<br>Street Name: TRAIL RIDGE DRIVE<br>Street Name clean: TRAIL RIDGE DRIVE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>849 TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>849.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>856 TRAIL RIDGE DRIVE, Louisville, CO</name>
+      <address>856 TRAIL RIDGE DRIVE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 856 TRAIL RIDGE DRIVE<br>House Number: 856<br>Street Name: TRAIL RIDGE DRIVE<br>Street Name clean: TRAIL RIDGE DRIVE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>856 TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>856.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>TRAIL RIDGE DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>352 TROON COURT, Louisville, CO</name>
+      <address>352 TROON COURT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 352 TROON COURT<br>House Number: 352<br>Street Name: TROON COURT<br>Street Name clean: TROON COURT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>352 TROON COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>352.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>TROON COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>TROON COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1134 WEST ENCLAVE CIRCLE, Louisville, CO</name>
+      <address>1134 WEST ENCLAVE CIRCLE, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 1134 WEST ENCLAVE CIRCLE<br>House Number: 1134<br>Street Name: WEST ENCLAVE CIRCLE<br>Street Name clean: WEST ENCLAVE CIRCLE<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1134 WEST ENCLAVE CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1134.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>WEST ENCLAVE CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>WEST ENCLAVE CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>757 WEST MULBERRY STREET, Louisville, CO</name>
+      <address>757 WEST MULBERRY STREET, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 757 WEST MULBERRY STREET<br>House Number: 757<br>Street Name: WEST MULBERRY STREET<br>Street Name clean: WEST MULBERRY STREET<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>757 WEST MULBERRY STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>757.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>WEST MULBERRY STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>WEST MULBERRY STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>826 WEST MULBERRY STREET, Louisville, CO</name>
+      <address>826 WEST MULBERRY STREET, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 826 WEST MULBERRY STREET<br>House Number: 826<br>Street Name: WEST MULBERRY STREET<br>Street Name clean: WEST MULBERRY STREET<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>826 WEST MULBERRY STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>826.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>WEST MULBERRY STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>WEST MULBERRY STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>841 WEST MULBERRY STREET, Louisville, CO</name>
+      <address>841 WEST MULBERRY STREET, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 841 WEST MULBERRY STREET<br>House Number: 841<br>Street Name: WEST MULBERRY STREET<br>Street Name clean: WEST MULBERRY STREET<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>841 WEST MULBERRY STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>841.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>WEST MULBERRY STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>WEST MULBERRY STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1226 WEST PINE COURT, Louisville, CO</name>
+      <address>1226 WEST PINE COURT, Louisville, CO</address>
+      <description><![CDATA[Street HouseNum: 1226 WEST PINE COURT<br>House Number: 1226<br>Street Name: WEST PINE COURT<br>Street Name clean: WEST PINE COURT<br>City: Louisville<br>State: CO<br>Status: Damaged<br>JURISDICTION: Louisville]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1226 WEST PINE COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>1226.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>WEST PINE COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>WEST PINE COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>2334 ALPHA COURT, Superior, CO</name>
+      <address>2334 ALPHA COURT, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 2334 ALPHA COURT<br>House Number: 2334<br>Street Name: ALPHA COURT<br>Street Name clean: ALPHA COURT<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>2334 ALPHA COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>2334.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ALPHA COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ALPHA COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>2325 ANDREW DRIVE, Superior, CO</name>
+      <address>2325 ANDREW DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 2325 ANDREW DRIVE<br>House Number: 2325<br>Street Name: ANDREW DRIVE<br>Street Name clean: ANDREW DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>2325 ANDREW DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>2325.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ANDREW DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ANDREW DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>2335 ANDREW DRIVE, Superior, CO</name>
+      <address>2335 ANDREW DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 2335 ANDREW DRIVE<br>House Number: 2335<br>Street Name: ANDREW DRIVE<br>Street Name clean: ANDREW DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>2335 ANDREW DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>2335.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ANDREW DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ANDREW DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>2345 ANDREW DRIVE, Superior, CO</name>
+      <address>2345 ANDREW DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 2345 ANDREW DRIVE<br>House Number: 2345<br>Street Name: ANDREW DRIVE<br>Street Name clean: ANDREW DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>2345 ANDREW DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>2345.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ANDREW DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ANDREW DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>2355 ANDREW DRIVE, Superior, CO</name>
+      <address>2355 ANDREW DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 2355 ANDREW DRIVE<br>House Number: 2355<br>Street Name: ANDREW DRIVE<br>Street Name clean: ANDREW DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>2355 ANDREW DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>2355.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ANDREW DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ANDREW DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>2365 ANDREW DRIVE, Superior, CO</name>
+      <address>2365 ANDREW DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 2365 ANDREW DRIVE<br>House Number: 2365<br>Street Name: ANDREW DRIVE<br>Street Name clean: ANDREW DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>2365 ANDREW DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>2365.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ANDREW DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ANDREW DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>2420 ANDREW DRIVE, Superior, CO</name>
+      <address>2420 ANDREW DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 2420 ANDREW DRIVE<br>House Number: 2420<br>Street Name: ANDREW DRIVE<br>Street Name clean: ANDREW DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>2420 ANDREW DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>2420.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ANDREW DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ANDREW DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>2535 ANDREW DRIVE, Superior, CO</name>
+      <address>2535 ANDREW DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 2535 ANDREW DRIVE<br>House Number: 2535<br>Street Name: ANDREW DRIVE<br>Street Name clean: ANDREW DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>2535 ANDREW DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>2535.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ANDREW DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ANDREW DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>2575 ANDREW DRIVE, Superior, CO</name>
+      <address>2575 ANDREW DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 2575 ANDREW DRIVE<br>House Number: 2575<br>Street Name: ANDREW DRIVE<br>Street Name clean: ANDREW DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>2575 ANDREW DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>2575.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ANDREW DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ANDREW DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>2367 BRISTOL STREET, Superior, CO</name>
+      <address>2367 BRISTOL STREET, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 2367 BRISTOL STREET<br>House Number: 2367<br>Street Name: BRISTOL STREET<br>Street Name clean: BRISTOL STREET<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>2367 BRISTOL STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>2367.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>BRISTOL STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>BRISTOL STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>2457 BRISTOL STREET, Superior, CO</name>
+      <address>2457 BRISTOL STREET, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 2457 BRISTOL STREET<br>House Number: 2457<br>Street Name: BRISTOL STREET<br>Street Name clean: BRISTOL STREET<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>2457 BRISTOL STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>2457.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>BRISTOL STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>BRISTOL STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>2495 CLAYTON CIRCLE, Superior, CO</name>
+      <address>2495 CLAYTON CIRCLE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 2495 CLAYTON CIRCLE<br>House Number: 2495<br>Street Name: CLAYTON CIRCLE<br>Street Name clean: CLAYTON CIRCLE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>2495 CLAYTON CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>2495.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>CLAYTON CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>CLAYTON CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>206 COAL CREEK DRIVE, Superior, CO</name>
+      <address>206 COAL CREEK DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 206 COAL CREEK DRIVE<br>House Number: 206<br>Street Name: COAL CREEK DRIVE<br>Street Name clean: COAL CREEK DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>206 COAL CREEK DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>206.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>COAL CREEK DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>COAL CREEK DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>208 COAL CREEK DRIVE, Superior, CO</name>
+      <address>208 COAL CREEK DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 208 COAL CREEK DRIVE<br>House Number: 208<br>Street Name: COAL CREEK DRIVE<br>Street Name clean: COAL CREEK DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>208 COAL CREEK DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>208.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>COAL CREEK DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>COAL CREEK DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>124 EAST COAL CREEK DRIVE, Superior, CO</name>
+      <address>124 EAST COAL CREEK DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 124 EAST COAL CREEK DRIVE<br>House Number: 124<br>Street Name: EAST COAL CREEK DRIVE<br>Street Name clean: EAST COAL CREEK DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>124 EAST COAL CREEK DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>124.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>EAST COAL CREEK DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>EAST COAL CREEK DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>618 EATON CIRCLE, Superior, CO</name>
+      <address>618 EATON CIRCLE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 618 EATON CIRCLE<br>House Number: 618<br>Street Name: EATON CIRCLE<br>Street Name clean: EATON CIRCLE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>618 EATON CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>618.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>EATON CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>EATON CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1022 ELDORADO DRIVE, Superior, CO</name>
+      <address>1022 ELDORADO DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1022 ELDORADO DRIVE<br>House Number: 1022<br>Street Name: ELDORADO DRIVE<br>Street Name clean: ELDORADO DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1022 ELDORADO DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1022.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ELDORADO DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ELDORADO DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1042 ELDORADO DRIVE, Superior, CO</name>
+      <address>1042 ELDORADO DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1042 ELDORADO DRIVE<br>House Number: 1042<br>Street Name: ELDORADO DRIVE<br>Street Name clean: ELDORADO DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1042 ELDORADO DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1042.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ELDORADO DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ELDORADO DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1222 ELDORADO DRIVE, Superior, CO</name>
+      <address>1222 ELDORADO DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1222 ELDORADO DRIVE<br>House Number: 1222<br>Street Name: ELDORADO DRIVE<br>Street Name clean: ELDORADO DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1222 ELDORADO DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1222.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ELDORADO DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ELDORADO DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1382 ELDORADO DRIVE, Superior, CO</name>
+      <address>1382 ELDORADO DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1382 ELDORADO DRIVE<br>House Number: 1382<br>Street Name: ELDORADO DRIVE<br>Street Name clean: ELDORADO DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1382 ELDORADO DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1382.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ELDORADO DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ELDORADO DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>782 ELDORADO DRIVE, Superior, CO</name>
+      <address>782 ELDORADO DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 782 ELDORADO DRIVE<br>House Number: 782<br>Street Name: ELDORADO DRIVE<br>Street Name clean: ELDORADO DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>782 ELDORADO DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>782.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ELDORADO DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ELDORADO DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>857 ELDORADO DRIVE, Superior, CO</name>
+      <address>857 ELDORADO DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 857 ELDORADO DRIVE<br>House Number: 857<br>Street Name: ELDORADO DRIVE<br>Street Name clean: ELDORADO DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>857 ELDORADO DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>857.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ELDORADO DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ELDORADO DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>882 ELDORADO DRIVE, Superior, CO</name>
+      <address>882 ELDORADO DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 882 ELDORADO DRIVE<br>House Number: 882<br>Street Name: ELDORADO DRIVE<br>Street Name clean: ELDORADO DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>882 ELDORADO DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>882.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ELDORADO DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ELDORADO DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1677 HIGH PLAINS COURT, Superior, CO</name>
+      <address>1677 HIGH PLAINS COURT, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1677 HIGH PLAINS COURT<br>House Number: 1677<br>Street Name: HIGH PLAINS COURT<br>Street Name clean: HIGH PLAINS COURT<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1677 HIGH PLAINS COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>1677.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>HIGH PLAINS COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>HIGH PLAINS COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1717 HIGH PLAINS COURT, Superior, CO</name>
+      <address>1717 HIGH PLAINS COURT, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1717 HIGH PLAINS COURT<br>House Number: 1717<br>Street Name: HIGH PLAINS COURT<br>Street Name clean: HIGH PLAINS COURT<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1717 HIGH PLAINS COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>1717.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>HIGH PLAINS COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>HIGH PLAINS COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1727 HIGH PLAINS COURT, Superior, CO</name>
+      <address>1727 HIGH PLAINS COURT, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1727 HIGH PLAINS COURT<br>House Number: 1727<br>Street Name: HIGH PLAINS COURT<br>Street Name clean: HIGH PLAINS COURT<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1727 HIGH PLAINS COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>1727.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>HIGH PLAINS COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>HIGH PLAINS COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1712 HIGH PLAINS DRIVE, Superior, CO</name>
+      <address>1712 HIGH PLAINS DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1712 HIGH PLAINS DRIVE<br>House Number: 1712<br>Street Name: HIGH PLAINS DRIVE<br>Street Name clean: HIGH PLAINS DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1712 HIGH PLAINS DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1712.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>HIGH PLAINS DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>HIGH PLAINS DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1742 HIGH PLAINS DRIVE, Superior, CO</name>
+      <address>1742 HIGH PLAINS DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1742 HIGH PLAINS DRIVE<br>House Number: 1742<br>Street Name: HIGH PLAINS DRIVE<br>Street Name clean: HIGH PLAINS DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1742 HIGH PLAINS DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1742.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>HIGH PLAINS DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>HIGH PLAINS DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>2232 HOLYOKE LANE, Superior, CO</name>
+      <address>2232 HOLYOKE LANE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 2232 HOLYOKE LANE<br>House Number: 2232<br>Street Name: HOLYOKE LANE<br>Street Name clean: HOLYOKE LANE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>2232 HOLYOKE LANE</value>
+        </Data>
+        <Data name="House Number">
+          <value>2232.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>HOLYOKE LANE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>HOLYOKE LANE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>2252 HOLYOKE LANE, Superior, CO</name>
+      <address>2252 HOLYOKE LANE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 2252 HOLYOKE LANE<br>House Number: 2252<br>Street Name: HOLYOKE LANE<br>Street Name clean: HOLYOKE LANE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>2252 HOLYOKE LANE</value>
+        </Data>
+        <Data name="House Number">
+          <value>2252.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>HOLYOKE LANE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>HOLYOKE LANE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>442 MERIDIAN LANE, Superior, CO</name>
+      <address>442 MERIDIAN LANE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 442 MERIDIAN LANE<br>House Number: 442<br>Street Name: MERIDIAN LANE<br>Street Name clean: MERIDIAN LANE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>442 MERIDIAN LANE</value>
+        </Data>
+        <Data name="House Number">
+          <value>442.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MERIDIAN LANE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MERIDIAN LANE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>444 MERIDIAN LANE, Superior, CO</name>
+      <address>444 MERIDIAN LANE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 444 MERIDIAN LANE<br>House Number: 444<br>Street Name: MERIDIAN LANE<br>Street Name clean: MERIDIAN LANE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>444 MERIDIAN LANE</value>
+        </Data>
+        <Data name="House Number">
+          <value>444.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MERIDIAN LANE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MERIDIAN LANE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>446 MERIDIAN LANE, Superior, CO</name>
+      <address>446 MERIDIAN LANE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 446 MERIDIAN LANE<br>House Number: 446<br>Street Name: MERIDIAN LANE<br>Street Name clean: MERIDIAN LANE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>446 MERIDIAN LANE</value>
+        </Data>
+        <Data name="House Number">
+          <value>446.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MERIDIAN LANE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MERIDIAN LANE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>502 MERIDIAN LANE, Superior, CO</name>
+      <address>502 MERIDIAN LANE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 502 MERIDIAN LANE<br>House Number: 502<br>Street Name: MERIDIAN LANE<br>Street Name clean: MERIDIAN LANE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>502 MERIDIAN LANE</value>
+        </Data>
+        <Data name="House Number">
+          <value>502.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MERIDIAN LANE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MERIDIAN LANE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>504 MERIDIAN LANE, Superior, CO</name>
+      <address>504 MERIDIAN LANE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 504 MERIDIAN LANE<br>House Number: 504<br>Street Name: MERIDIAN LANE<br>Street Name clean: MERIDIAN LANE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>504 MERIDIAN LANE</value>
+        </Data>
+        <Data name="House Number">
+          <value>504.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MERIDIAN LANE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MERIDIAN LANE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>506 MERIDIAN LANE, Superior, CO</name>
+      <address>506 MERIDIAN LANE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 506 MERIDIAN LANE<br>House Number: 506<br>Street Name: MERIDIAN LANE<br>Street Name clean: MERIDIAN LANE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>506 MERIDIAN LANE</value>
+        </Data>
+        <Data name="House Number">
+          <value>506.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MERIDIAN LANE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MERIDIAN LANE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>508 MERIDIAN LANE, Superior, CO</name>
+      <address>508 MERIDIAN LANE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 508 MERIDIAN LANE<br>House Number: 508<br>Street Name: MERIDIAN LANE<br>Street Name clean: MERIDIAN LANE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>508 MERIDIAN LANE</value>
+        </Data>
+        <Data name="House Number">
+          <value>508.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MERIDIAN LANE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MERIDIAN LANE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>936 MONROE WAY, Superior, CO</name>
+      <address>936 MONROE WAY, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 936 MONROE WAY<br>House Number: 936<br>Street Name: MONROE WAY<br>Street Name clean: MONROE WAY<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>936 MONROE WAY</value>
+        </Data>
+        <Data name="House Number">
+          <value>936.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MONROE WAY</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MONROE WAY</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>941 MONROE WAY, Superior, CO</name>
+      <address>941 MONROE WAY, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 941 MONROE WAY<br>House Number: 941<br>Street Name: MONROE WAY<br>Street Name clean: MONROE WAY<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>941 MONROE WAY</value>
+        </Data>
+        <Data name="House Number">
+          <value>941.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MONROE WAY</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MONROE WAY</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>888 NORTHERN WAY, Superior, CO</name>
+      <address>888 NORTHERN WAY, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 888 NORTHERN WAY<br>House Number: 888<br>Street Name: NORTHERN WAY<br>Street Name clean: NORTHERN WAY<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>888 NORTHERN WAY</value>
+        </Data>
+        <Data name="House Number">
+          <value>888.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>NORTHERN WAY</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>NORTHERN WAY</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1645 ROCKVIEW CIRCLE, Superior, CO</name>
+      <address>1645 ROCKVIEW CIRCLE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1645 ROCKVIEW CIRCLE<br>House Number: 1645<br>Street Name: ROCKVIEW CIRCLE<br>Street Name clean: ROCKVIEW CIRCLE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1645 ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1645.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1695 ROCKVIEW CIRCLE, Superior, CO</name>
+      <address>1695 ROCKVIEW CIRCLE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1695 ROCKVIEW CIRCLE<br>House Number: 1695<br>Street Name: ROCKVIEW CIRCLE<br>Street Name clean: ROCKVIEW CIRCLE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1695 ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1695.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1700 ROCKVIEW CIRCLE, Superior, CO</name>
+      <address>1700 ROCKVIEW CIRCLE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1700 ROCKVIEW CIRCLE<br>House Number: 1700<br>Street Name: ROCKVIEW CIRCLE<br>Street Name clean: ROCKVIEW CIRCLE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1700 ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1700.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1705 ROCKVIEW CIRCLE, Superior, CO</name>
+      <address>1705 ROCKVIEW CIRCLE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1705 ROCKVIEW CIRCLE<br>House Number: 1705<br>Street Name: ROCKVIEW CIRCLE<br>Street Name clean: ROCKVIEW CIRCLE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1705 ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1705.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1710 ROCKVIEW CIRCLE, Superior, CO</name>
+      <address>1710 ROCKVIEW CIRCLE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1710 ROCKVIEW CIRCLE<br>House Number: 1710<br>Street Name: ROCKVIEW CIRCLE<br>Street Name clean: ROCKVIEW CIRCLE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1710 ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1710.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1720 ROCKVIEW CIRCLE, Superior, CO</name>
+      <address>1720 ROCKVIEW CIRCLE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1720 ROCKVIEW CIRCLE<br>House Number: 1720<br>Street Name: ROCKVIEW CIRCLE<br>Street Name clean: ROCKVIEW CIRCLE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1720 ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1720.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1730 ROCKVIEW CIRCLE, Superior, CO</name>
+      <address>1730 ROCKVIEW CIRCLE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1730 ROCKVIEW CIRCLE<br>House Number: 1730<br>Street Name: ROCKVIEW CIRCLE<br>Street Name clean: ROCKVIEW CIRCLE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1730 ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1730.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1740 ROCKVIEW CIRCLE, Superior, CO</name>
+      <address>1740 ROCKVIEW CIRCLE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1740 ROCKVIEW CIRCLE<br>House Number: 1740<br>Street Name: ROCKVIEW CIRCLE<br>Street Name clean: ROCKVIEW CIRCLE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1740 ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1740.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1775 ROCKVIEW CIRCLE, Superior, CO</name>
+      <address>1775 ROCKVIEW CIRCLE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 1775 ROCKVIEW CIRCLE<br>House Number: 1775<br>Street Name: ROCKVIEW CIRCLE<br>Street Name clean: ROCKVIEW CIRCLE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1775 ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1775.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ROCKVIEW CIRCLE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>220 S 2ND AVE, Superior, CO</name>
+      <address>220 S 2ND AVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 220 S 2ND AVE<br>House Number: 220<br>Street Name: S 2ND AVE<br>Street Name clean: S 2ND AVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>220 S 2ND AVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>220.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>S 2ND AVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>S 2ND AVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>404 S 2ND AVE, Superior, CO</name>
+      <address>404 S 2ND AVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 404 S 2ND AVE<br>House Number: 404<br>Street Name: S 2ND AVE<br>Street Name clean: S 2ND AVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>404 S 2ND AVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>404.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>S 2ND AVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>S 2ND AVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>406 S 2ND AVE, Superior, CO</name>
+      <address>406 S 2ND AVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 406 S 2ND AVE<br>House Number: 406<br>Street Name: S 2ND AVE<br>Street Name clean: S 2ND AVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>406 S 2ND AVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>406.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>S 2ND AVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>S 2ND AVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>410 S 2ND AVE, Superior, CO</name>
+      <address>410 S 2ND AVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 410 S 2ND AVE<br>House Number: 410<br>Street Name: S 2ND AVE<br>Street Name clean: S 2ND AVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>410 S 2ND AVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>410.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>S 2ND AVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>S 2ND AVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>208 SOUTH 3RD AVENUE, Superior, CO</name>
+      <address>208 SOUTH 3RD AVENUE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 208 SOUTH 3RD AVENUE<br>House Number: 208<br>Street Name: SOUTH 3RD AVENUE<br>Street Name clean: SOUTH 3RD AVENUE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>208 SOUTH 3RD AVENUE</value>
+        </Data>
+        <Data name="House Number">
+          <value>208.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SOUTH 3RD AVENUE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SOUTH 3RD AVENUE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>410 SUPERIOR DR, Superior, CO</name>
+      <address>410 SUPERIOR DR, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 410 SUPERIOR DR<br>House Number: 410<br>Street Name: SUPERIOR DR<br>Street Name clean: SUPERIOR DR<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>410 SUPERIOR DR</value>
+        </Data>
+        <Data name="House Number">
+          <value>410.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SUPERIOR DR</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SUPERIOR DR</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>420 SUPERIOR DRIVE, Superior, CO</name>
+      <address>420 SUPERIOR DRIVE, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 420 SUPERIOR DRIVE<br>House Number: 420<br>Street Name: SUPERIOR DRIVE<br>Street Name clean: SUPERIOR DRIVE<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>420 SUPERIOR DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>420.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SUPERIOR DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SUPERIOR DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>111 WEST WILLIAM STREET, Superior, CO</name>
+      <address>111 WEST WILLIAM STREET, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 111 WEST WILLIAM STREET<br>House Number: 111<br>Street Name: WEST WILLIAM STREET<br>Street Name clean: WEST WILLIAM STREET<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>111 WEST WILLIAM STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>111.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>WEST WILLIAM STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>WEST WILLIAM STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>211 WEST WILLIAM STREET, Superior, CO</name>
+      <address>211 WEST WILLIAM STREET, Superior, CO</address>
+      <description><![CDATA[Street HouseNum: 211 WEST WILLIAM STREET<br>House Number: 211<br>Street Name: WEST WILLIAM STREET<br>Street Name clean: WEST WILLIAM STREET<br>City: Superior<br>State: CO<br>Status: Damaged<br>JURISDICTION: Superior]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>211 WEST WILLIAM STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>211.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>WEST WILLIAM STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>WEST WILLIAM STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>526 APOLLO DRIVE, Boulder, CO</name>
+      <address>526 APOLLO DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 526 APOLLO DRIVE<br>House Number: 526<br>Street Name: APOLLO DRIVE<br>Street Name clean: APOLLO DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>526 APOLLO DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>526.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>APOLLO DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>APOLLO DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>556 APOLLO DRIVE, Boulder, CO</name>
+      <address>556 APOLLO DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 556 APOLLO DRIVE<br>House Number: 556<br>Street Name: APOLLO DRIVE<br>Street Name clean: APOLLO DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>556 APOLLO DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>556.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>APOLLO DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>APOLLO DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>539 BARI COURT, Boulder, CO</name>
+      <address>539 BARI COURT, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 539 BARI COURT<br>House Number: 539<br>Street Name: BARI COURT<br>Street Name clean: BARI COURT<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>539 BARI COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>539.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>BARI COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>BARI COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1369 CHERRYVALE ROAD, Boulder, CO</name>
+      <address>1369 CHERRYVALE ROAD, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 1369 CHERRYVALE ROAD<br>House Number: 1369<br>Street Name: CHERRYVALE ROAD<br>Street Name clean: CHERRYVALE ROAD<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1369 CHERRYVALE ROAD</value>
+        </Data>
+        <Data name="House Number">
+          <value>1369.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>CHERRYVALE ROAD</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>CHERRYVALE ROAD</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>169 CORDOVA COURT, Boulder, CO</name>
+      <address>169 CORDOVA COURT, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 169 CORDOVA COURT<br>House Number: 169<br>Street Name: CORDOVA COURT<br>Street Name clean: CORDOVA COURT<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>169 CORDOVA COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>169.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>CORDOVA COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>CORDOVA COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>5325 ELDORADO SPRINGS DRIVE, Boulder, CO</name>
+      <address>5325 ELDORADO SPRINGS DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 5325 ELDORADO SPRINGS DRIVE<br>House Number: 5325<br>Street Name: ELDORADO SPRINGS DRIVE<br>Street Name clean: ELDORADO SPRINGS DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>5325 ELDORADO SPRINGS DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>5325.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>ELDORADO SPRINGS DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>ELDORADO SPRINGS DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>7210 EMPIRE DR , Boulder, CO</name>
+      <address>7210 EMPIRE DR , Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 7210 EMPIRE DR UNINCORPORATED<br>House Number: 7210<br>Street Name: EMPIRE DR UNINCORPORATED<br>Street Name clean: EMPIRE DR <br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>7210 EMPIRE DR UNINCORPORATED</value>
+        </Data>
+        <Data name="House Number">
+          <value>7210.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>EMPIRE DR UNINCORPORATED</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>EMPIRE DR </value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>7487 EMPIRE DR , Boulder, CO</name>
+      <address>7487 EMPIRE DR , Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 7487 EMPIRE DR UNINCORPORATED<br>House Number: 7487<br>Street Name: EMPIRE DR UNINCORPORATED<br>Street Name clean: EMPIRE DR <br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>7487 EMPIRE DR UNINCORPORATED</value>
+        </Data>
+        <Data name="House Number">
+          <value>7487.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>EMPIRE DR UNINCORPORATED</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>EMPIRE DR </value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>5321 MARSHALL DRIVE, Boulder, CO</name>
+      <address>5321 MARSHALL DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 5321 MARSHALL DRIVE<br>House Number: 5321<br>Street Name: MARSHALL DRIVE<br>Street Name clean: MARSHALL DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>5321 MARSHALL DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>5321.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MARSHALL DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MARSHALL DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>5501 MARSHALL DRIVE, Boulder, CO</name>
+      <address>5501 MARSHALL DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 5501 MARSHALL DRIVE<br>House Number: 5501<br>Street Name: MARSHALL DRIVE<br>Street Name clean: MARSHALL DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>5501 MARSHALL DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>5501.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MARSHALL DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MARSHALL DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>6937 MARSHALL DRIVE, Boulder, CO</name>
+      <address>6937 MARSHALL DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 6937 MARSHALL DRIVE<br>House Number: 6937<br>Street Name: MARSHALL DRIVE<br>Street Name clean: MARSHALL DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>6937 MARSHALL DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>6937.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MARSHALL DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MARSHALL DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>7440 MARSHALL DRIVE, Boulder, CO</name>
+      <address>7440 MARSHALL DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 7440 MARSHALL DRIVE<br>House Number: 7440<br>Street Name: MARSHALL DRIVE<br>Street Name clean: MARSHALL DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>7440 MARSHALL DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>7440.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MARSHALL DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MARSHALL DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>7482 MARSHALL DRIVE, Boulder, CO</name>
+      <address>7482 MARSHALL DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 7482 MARSHALL DRIVE<br>House Number: 7482<br>Street Name: MARSHALL DRIVE<br>Street Name clean: MARSHALL DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>7482 MARSHALL DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>7482.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MARSHALL DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MARSHALL DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1568 MARSHALL ROAD, Boulder, CO</name>
+      <address>1568 MARSHALL ROAD, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 1568 MARSHALL ROAD<br>House Number: 1568<br>Street Name: MARSHALL ROAD<br>Street Name clean: MARSHALL ROAD<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1568 MARSHALL ROAD</value>
+        </Data>
+        <Data name="House Number">
+          <value>1568.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MARSHALL ROAD</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MARSHALL ROAD</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>5420 MARSHALL ROAD, Boulder, CO</name>
+      <address>5420 MARSHALL ROAD, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 5420 MARSHALL ROAD<br>House Number: 5420<br>Street Name: MARSHALL ROAD<br>Street Name clean: MARSHALL ROAD<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>5420 MARSHALL ROAD</value>
+        </Data>
+        <Data name="House Number">
+          <value>5420.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MARSHALL ROAD</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MARSHALL ROAD</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>6071 MARSHALL ROAD, Boulder, CO</name>
+      <address>6071 MARSHALL ROAD, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 6071 MARSHALL ROAD<br>House Number: 6071<br>Street Name: MARSHALL ROAD<br>Street Name clean: MARSHALL ROAD<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>6071 MARSHALL ROAD</value>
+        </Data>
+        <Data name="House Number">
+          <value>6071.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>MARSHALL ROAD</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>MARSHALL ROAD</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>777 PANORAMA COURT, Boulder, CO</name>
+      <address>777 PANORAMA COURT, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 777 PANORAMA COURT<br>House Number: 777<br>Street Name: PANORAMA COURT<br>Street Name clean: PANORAMA COURT<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>777 PANORAMA COURT</value>
+        </Data>
+        <Data name="House Number">
+          <value>777.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>PANORAMA COURT</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>PANORAMA COURT</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>7420 PANORAMA DRIVE, Boulder, CO</name>
+      <address>7420 PANORAMA DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 7420 PANORAMA DRIVE<br>House Number: 7420<br>Street Name: PANORAMA DRIVE<br>Street Name clean: PANORAMA DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>7420 PANORAMA DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>7420.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>PANORAMA DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>PANORAMA DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>7572 PANORAMA DRIVE, Boulder, CO</name>
+      <address>7572 PANORAMA DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 7572 PANORAMA DRIVE<br>House Number: 7572<br>Street Name: PANORAMA DRIVE<br>Street Name clean: PANORAMA DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>7572 PANORAMA DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>7572.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>PANORAMA DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>PANORAMA DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>753 PARAGON DRIVE, Boulder, CO</name>
+      <address>753 PARAGON DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 753 PARAGON DRIVE<br>House Number: 753<br>Street Name: PARAGON DRIVE<br>Street Name clean: PARAGON DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>753 PARAGON DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>753.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>PARAGON DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>PARAGON DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>866 PARAGON DRIVE, Boulder, CO</name>
+      <address>866 PARAGON DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 866 PARAGON DRIVE<br>House Number: 866<br>Street Name: PARAGON DRIVE<br>Street Name clean: PARAGON DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>866 PARAGON DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>866.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>PARAGON DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>PARAGON DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>895 PARAGON DRIVE, Boulder, CO</name>
+      <address>895 PARAGON DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 895 PARAGON DRIVE<br>House Number: 895<br>Street Name: PARAGON DRIVE<br>Street Name clean: PARAGON DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>895 PARAGON DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>895.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>PARAGON DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>PARAGON DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>940 PARAGON DRIVE, Boulder, CO</name>
+      <address>940 PARAGON DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 940 PARAGON DRIVE<br>House Number: 940<br>Street Name: PARAGON DRIVE<br>Street Name clean: PARAGON DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>940 PARAGON DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>940.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>PARAGON DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>PARAGON DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1221 RED ASH LANE, Boulder, CO</name>
+      <address>1221 RED ASH LANE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 1221 RED ASH LANE<br>House Number: 1221<br>Street Name: RED ASH LANE<br>Street Name clean: RED ASH LANE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1221 RED ASH LANE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1221.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>RED ASH LANE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>RED ASH LANE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1351 RED ASH LANE, Boulder, CO</name>
+      <address>1351 RED ASH LANE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 1351 RED ASH LANE<br>House Number: 1351<br>Street Name: RED ASH LANE<br>Street Name clean: RED ASH LANE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1351 RED ASH LANE</value>
+        </Data>
+        <Data name="House Number">
+          <value>1351.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>RED ASH LANE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>RED ASH LANE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>1223 S CHERRYVALE RD , Boulder, CO</name>
+      <address>1223 S CHERRYVALE RD , Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 1223 S CHERRYVALE RD UNINCORPORATED<br>House Number: 1223<br>Street Name: S CHERRYVALE RD UNINCORPORATED<br>Street Name clean: S CHERRYVALE RD <br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>1223 S CHERRYVALE RD UNINCORPORATED</value>
+        </Data>
+        <Data name="House Number">
+          <value>1223.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>S CHERRYVALE RD UNINCORPORATED</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>S CHERRYVALE RD </value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>200 SOUTH 68TH STREET, Boulder, CO</name>
+      <address>200 SOUTH 68TH STREET, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 200 SOUTH 68TH STREET<br>House Number: 200<br>Street Name: SOUTH 68TH STREET<br>Street Name clean: SOUTH 68TH STREET<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>200 SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>200.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>222 SOUTH 68TH STREET, Boulder, CO</name>
+      <address>222 SOUTH 68TH STREET, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 222 SOUTH 68TH STREET<br>House Number: 222<br>Street Name: SOUTH 68TH STREET<br>Street Name clean: SOUTH 68TH STREET<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>222 SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>222.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>262 SOUTH 68TH STREET, Boulder, CO</name>
+      <address>262 SOUTH 68TH STREET, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 262 SOUTH 68TH STREET<br>House Number: 262<br>Street Name: SOUTH 68TH STREET<br>Street Name clean: SOUTH 68TH STREET<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>262 SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>262.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>340 SOUTH 68TH STREET, Boulder, CO</name>
+      <address>340 SOUTH 68TH STREET, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 340 SOUTH 68TH STREET<br>House Number: 340<br>Street Name: SOUTH 68TH STREET<br>Street Name clean: SOUTH 68TH STREET<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>340 SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>340.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>344 SOUTH 68TH STREET, Boulder, CO</name>
+      <address>344 SOUTH 68TH STREET, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 344 SOUTH 68TH STREET<br>House Number: 344<br>Street Name: SOUTH 68TH STREET<br>Street Name clean: SOUTH 68TH STREET<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>344 SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>344.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>348 SOUTH 68TH STREET, Boulder, CO</name>
+      <address>348 SOUTH 68TH STREET, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 348 SOUTH 68TH STREET<br>House Number: 348<br>Street Name: SOUTH 68TH STREET<br>Street Name clean: SOUTH 68TH STREET<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>348 SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>348.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>360 SOUTH 68TH STREET, Boulder, CO</name>
+      <address>360 SOUTH 68TH STREET, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 360 SOUTH 68TH STREET<br>House Number: 360<br>Street Name: SOUTH 68TH STREET<br>Street Name clean: SOUTH 68TH STREET<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>360 SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>360.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>37 SOUTH 68TH STREET, Boulder, CO</name>
+      <address>37 SOUTH 68TH STREET, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 37 SOUTH 68TH STREET<br>House Number: 37<br>Street Name: SOUTH 68TH STREET<br>Street Name clean: SOUTH 68TH STREET<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>37 SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>37.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>390 SOUTH 68TH STREET, Boulder, CO</name>
+      <address>390 SOUTH 68TH STREET, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 390 SOUTH 68TH STREET<br>House Number: 390<br>Street Name: SOUTH 68TH STREET<br>Street Name clean: SOUTH 68TH STREET<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>390 SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>390.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>395 SOUTH 68TH STREET, Boulder, CO</name>
+      <address>395 SOUTH 68TH STREET, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 395 SOUTH 68TH STREET<br>House Number: 395<br>Street Name: SOUTH 68TH STREET<br>Street Name clean: SOUTH 68TH STREET<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>395 SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>395.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>640 SOUTH 68TH STREET, Boulder, CO</name>
+      <address>640 SOUTH 68TH STREET, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 640 SOUTH 68TH STREET<br>House Number: 640<br>Street Name: SOUTH 68TH STREET<br>Street Name clean: SOUTH 68TH STREET<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>640 SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>640.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>800 SOUTH 68TH STREET, Boulder, CO</name>
+      <address>800 SOUTH 68TH STREET, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 800 SOUTH 68TH STREET<br>House Number: 800<br>Street Name: SOUTH 68TH STREET<br>Street Name clean: SOUTH 68TH STREET<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>800 SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="House Number">
+          <value>800.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SOUTH 68TH STREET</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>6510 SOUTH BOULDER ROAD, Boulder, CO</name>
+      <address>6510 SOUTH BOULDER ROAD, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 6510 SOUTH BOULDER ROAD<br>House Number: 6510<br>Street Name: SOUTH BOULDER ROAD<br>Street Name clean: SOUTH BOULDER ROAD<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>6510 SOUTH BOULDER ROAD</value>
+        </Data>
+        <Data name="House Number">
+          <value>6510.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SOUTH BOULDER ROAD</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SOUTH BOULDER ROAD</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>6996 SOUTH BOULDER ROAD, Boulder, CO</name>
+      <address>6996 SOUTH BOULDER ROAD, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 6996 SOUTH BOULDER ROAD<br>House Number: 6996<br>Street Name: SOUTH BOULDER ROAD<br>Street Name clean: SOUTH BOULDER ROAD<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>6996 SOUTH BOULDER ROAD</value>
+        </Data>
+        <Data name="House Number">
+          <value>6996.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SOUTH BOULDER ROAD</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SOUTH BOULDER ROAD</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>5927 SOUTH VALE ROAD, Boulder, CO</name>
+      <address>5927 SOUTH VALE ROAD, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 5927 SOUTH VALE ROAD<br>House Number: 5927<br>Street Name: SOUTH VALE ROAD<br>Street Name clean: SOUTH VALE ROAD<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>5927 SOUTH VALE ROAD</value>
+        </Data>
+        <Data name="House Number">
+          <value>5927.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SOUTH VALE ROAD</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SOUTH VALE ROAD</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>7509 SPRING DRIVE, Boulder, CO</name>
+      <address>7509 SPRING DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 7509 SPRING DRIVE<br>House Number: 7509<br>Street Name: SPRING DRIVE<br>Street Name clean: SPRING DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>7509 SPRING DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>7509.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SPRING DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SPRING DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>7526 SPRING DRIVE, Boulder, CO</name>
+      <address>7526 SPRING DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 7526 SPRING DRIVE<br>House Number: 7526<br>Street Name: SPRING DRIVE<br>Street Name clean: SPRING DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>7526 SPRING DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>7526.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SPRING DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SPRING DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>7538 SPRING DRIVE, Boulder, CO</name>
+      <address>7538 SPRING DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 7538 SPRING DRIVE<br>House Number: 7538<br>Street Name: SPRING DRIVE<br>Street Name clean: SPRING DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>7538 SPRING DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>7538.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SPRING DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SPRING DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>7630 SPRING DRIVE, Boulder, CO</name>
+      <address>7630 SPRING DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 7630 SPRING DRIVE<br>House Number: 7630<br>Street Name: SPRING DRIVE<br>Street Name clean: SPRING DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>7630 SPRING DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>7630.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SPRING DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SPRING DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>7666 SPRING DRIVE, Boulder, CO</name>
+      <address>7666 SPRING DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 7666 SPRING DRIVE<br>House Number: 7666<br>Street Name: SPRING DRIVE<br>Street Name clean: SPRING DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>7666 SPRING DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>7666.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>SPRING DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>SPRING DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>194 VAQUERO DRIVE, Boulder, CO</name>
+      <address>194 VAQUERO DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 194 VAQUERO DRIVE<br>House Number: 194<br>Street Name: VAQUERO DRIVE<br>Street Name clean: VAQUERO DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>194 VAQUERO DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>194.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>VAQUERO DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>VAQUERO DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>223 VAQUERO DRIVE, Boulder, CO</name>
+      <address>223 VAQUERO DRIVE, Boulder, CO</address>
+      <description><![CDATA[Street HouseNum: 223 VAQUERO DRIVE<br>House Number: 223<br>Street Name: VAQUERO DRIVE<br>Street Name clean: VAQUERO DRIVE<br>City: Boulder<br>State: CO<br>Status: Damaged<br>JURISDICTION: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1603-FFEA00</styleUrl>
+      <ExtendedData>
+        <Data name="Street HouseNum">
+          <value>223 VAQUERO DRIVE</value>
+        </Data>
+        <Data name="House Number">
+          <value>223.0</value>
+        </Data>
+        <Data name="Street Name">
+          <value>VAQUERO DRIVE</value>
+        </Data>
+        <Data name="Street Name clean">
+          <value>VAQUERO DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="JURISDICTION">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+  </Document>
+</kml>

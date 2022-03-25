@@ -1,0 +1,910 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>biz_damaged_010621.csv</name>
+    <Style id="icon-1686-FFD600-normal">
+      <IconStyle>
+        <color>ff00d6ff</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1686-FFD600-highlight">
+      <IconStyle>
+        <color>ff00d6ff</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1686-FFD600">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1686-FFD600-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1686-FFD600-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Placemark>
+      <name>Uber</name>
+      <address>400 CENTENNIAL PARKWAY, Louisville, CO</address>
+      <description><![CDATA[Number: 400<br>Street: CENTENNIAL PARKWAY<br>City: Louisville<br>State: CO<br>Address: 400 CENTENNIAL PARKWAY, Louisville, CO<br>Status: Damaged<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>400</value>
+        </Data>
+        <Data name="Street">
+          <value>CENTENNIAL PARKWAY</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>400 CENTENNIAL PARKWAY, Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Bestop</name>
+      <address>333 CENTENNIAL PKWY, Louisville, CO</address>
+      <description><![CDATA[Number: 333<br>Street: CENTENNIAL PKWY<br>City: Louisville<br>State: CO<br>Address: 333 CENTENNIAL PKWY, Louisville, CO<br>Status: Damaged<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>333</value>
+        </Data>
+        <Data name="Street">
+          <value>CENTENNIAL PKWY</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>333 CENTENNIAL PKWY, Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Amazon</name>
+      <address>335-C CENTENNIAL PKWY., Louisville, CO</address>
+      <description><![CDATA[Number: 335-C<br>Street: CENTENNIAL PKWY.<br>City: Louisville<br>State: CO<br>Address: 335-C CENTENNIAL PKWY., Louisville, CO<br>Status: Damaged<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>335-C</value>
+        </Data>
+        <Data name="Street">
+          <value>CENTENNIAL PKWY.</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>335-C CENTENNIAL PKWY., Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Unoccupied</name>
+      <address>1157 CENTURY DRIVE, Louisville, CO</address>
+      <description><![CDATA[Number: 1157<br>Street: CENTURY DRIVE<br>City: Louisville<br>State: CO<br>Address: 1157 CENTURY DRIVE, Louisville, CO<br>Status: Damaged<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>1157</value>
+        </Data>
+        <Data name="Street">
+          <value>CENTURY DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>1157 CENTURY DRIVE, Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Louisville Kindercare</name>
+      <address>107 MCCASLIN BLVD, Louisville, CO</address>
+      <description><![CDATA[Number: 107<br>Street: MCCASLIN BLVD<br>City: Louisville<br>State: CO<br>Address: 107 MCCASLIN BLVD, Louisville, CO<br>Status: Damaged<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>107</value>
+        </Data>
+        <Data name="Street">
+          <value>MCCASLIN BLVD</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>107 MCCASLIN BLVD, Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Office Evolution/Davis Phinney</name>
+      <address>357 MCCASLIN BOULEVARD, Louisville, CO</address>
+      <description><![CDATA[Number: 357<br>Street: MCCASLIN BOULEVARD<br>City: Louisville<br>State: CO<br>Address: 357 MCCASLIN BOULEVARD, Louisville, CO<br>Status: Damaged<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>357</value>
+        </Data>
+        <Data name="Street">
+          <value>MCCASLIN BOULEVARD</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>357 MCCASLIN BOULEVARD, Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name><![CDATA[La Quinta Inn & Suites]]></name>
+      <address>902 W DILLON, Louisville, CO</address>
+      <description><![CDATA[Number: 902<br>Street: W DILLON<br>City: Louisville<br>State: CO<br>Address: 902 W DILLON, Louisville, CO<br>Status: Damaged<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>902</value>
+        </Data>
+        <Data name="Street">
+          <value>W DILLON</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>902 W DILLON, Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>The Rotary</name>
+      <address>1116-5 W DILLON RD, Louisville, CO</address>
+      <description><![CDATA[Number: 1116-5<br>Street: W DILLON RD<br>City: Louisville<br>State: CO<br>Address: 1116-5 W DILLON RD, Louisville, CO<br>Status: Damaged<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>1116-5</value>
+        </Data>
+        <Data name="Street">
+          <value>W DILLON RD</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>1116-5 W DILLON RD, Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Youth Bar</name>
+      <address>1124-1 W DILLON RD, Louisville, CO</address>
+      <description><![CDATA[Number: 1124-1<br>Street: W DILLON RD<br>City: Louisville<br>State: CO<br>Address: 1124-1 W DILLON RD, Louisville, CO<br>Status: Damaged<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>1124-1</value>
+        </Data>
+        <Data name="Street">
+          <value>W DILLON RD</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>1124-1 W DILLON RD, Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Havana Manor</name>
+      <address>1124-4 W DILLON RD, Louisville, CO</address>
+      <description><![CDATA[Number: 1124-4<br>Street: W DILLON RD<br>City: Louisville<br>State: CO<br>Address: 1124-4 W DILLON RD, Louisville, CO<br>Status: Damaged<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>1124-4</value>
+        </Data>
+        <Data name="Street">
+          <value>W DILLON RD</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>1124-4 W DILLON RD, Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Building at 1156 W Dillon</name>
+      <address>1156 W DILLON RD, Louisville, CO</address>
+      <description><![CDATA[Number: 1156<br>Street: W DILLON RD<br>City: Louisville<br>State: CO<br>Address: 1156 W DILLON RD, Louisville, CO<br>Status: Damaged<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>1156</value>
+        </Data>
+        <Data name="Street">
+          <value>W DILLON RD</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>1156 W DILLON RD, Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>La Quinta</name>
+      <address>902 W DILLON RD, Louisville, CO</address>
+      <description><![CDATA[Number: 902<br>Street: W DILLON RD<br>City: Louisville<br>State: CO<br>Address: 902 W DILLON RD, Louisville, CO<br>Status: Damaged<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>902</value>
+        </Data>
+        <Data name="Street">
+          <value>W DILLON RD</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>902 W DILLON RD, Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Hampton Inn</name>
+      <address>912 W DILLON RD, Louisville, CO</address>
+      <description><![CDATA[Number: 912<br>Street: W DILLON RD<br>City: Louisville<br>State: CO<br>Address: 912 W DILLON RD, Louisville, CO<br>Status: Damaged<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>912</value>
+        </Data>
+        <Data name="Street">
+          <value>W DILLON RD</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>912 W DILLON RD, Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Courtyard by Marriott</name>
+      <address>948 W DILLON RD, Louisville, CO</address>
+      <description><![CDATA[Number: 948<br>Street: W DILLON RD<br>City: Louisville<br>State: CO<br>Address: 948 W DILLON RD, Louisville, CO<br>Status: Damaged<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>948</value>
+        </Data>
+        <Data name="Street">
+          <value>W DILLON RD</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>948 W DILLON RD, Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Petsmart</name>
+      <address>402 CENTER DR, Superior, CO</address>
+      <description><![CDATA[Number: 402<br>Street: CENTER DR<br>City: Superior<br>State: CO<br>Address: 402 CENTER DR, Superior, CO<br>Status: Damaged<br>Jurisdiction: Superior]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>402</value>
+        </Data>
+        <Data name="Street">
+          <value>CENTER DR</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>402 CENTER DR, Superior, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Boulder  county sheriff substation</name>
+      <address>405 CENTER DRIVE, Superior, CO</address>
+      <description><![CDATA[Number: 405<br>Street: CENTER DRIVE<br>City: Superior<br>State: CO<br>Address: 405 CENTER DRIVE, Superior, CO<br>Status: Damaged<br>Jurisdiction: Superior]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>405</value>
+        </Data>
+        <Data name="Street">
+          <value>CENTER DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>405 CENTER DRIVE, Superior, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Office Max</name>
+      <address>410 CENTER DRIVE, Superior, CO</address>
+      <description><![CDATA[Number: 410<br>Street: CENTER DRIVE<br>City: Superior<br>State: CO<br>Address: 410 CENTER DRIVE, Superior, CO<br>Status: Damaged<br>Jurisdiction: Superior]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>410</value>
+        </Data>
+        <Data name="Street">
+          <value>CENTER DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>410 CENTER DRIVE, Superior, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>SUPERIOR SELF STORAGE MANAGEMENT COMPANY LLC</name>
+      <address>7542 COAL CREEK DRIVE, Superior, CO</address>
+      <description><![CDATA[Number: 7542<br>Street: COAL CREEK DRIVE<br>City: Superior<br>State: CO<br>Address: 7542 COAL CREEK DRIVE, Superior, CO<br>Status: Damaged<br>Jurisdiction: Superior]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>7542</value>
+        </Data>
+        <Data name="Street">
+          <value>COAL CREEK DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>7542 COAL CREEK DRIVE, Superior, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Chuck E Cheese</name>
+      <address>305 MARSHALL RD, Superior, CO</address>
+      <description><![CDATA[Number: 305<br>Street: MARSHALL RD<br>City: Superior<br>State: CO<br>Address: 305 MARSHALL RD, Superior, CO<br>Status: Damaged<br>Jurisdiction: Superior]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>305</value>
+        </Data>
+        <Data name="Street">
+          <value>MARSHALL RD</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>305 MARSHALL RD, Superior, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Costco</name>
+      <address>600 MARSHALL RD, Superior, CO</address>
+      <description><![CDATA[Number: 600<br>Street: MARSHALL RD<br>City: Superior<br>State: CO<br>Address: 600 MARSHALL RD, Superior, CO<br>Status: Damaged<br>Jurisdiction: Superior]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>600</value>
+        </Data>
+        <Data name="Street">
+          <value>MARSHALL RD</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>600 MARSHALL RD, Superior, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Target</name>
+      <address>400 MARSHALL ROAD, Superior, CO</address>
+      <description><![CDATA[Number: 400<br>Street: MARSHALL ROAD<br>City: Superior<br>State: CO<br>Address: 400 MARSHALL ROAD, Superior, CO<br>Status: Damaged<br>Jurisdiction: Superior]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>400</value>
+        </Data>
+        <Data name="Street">
+          <value>MARSHALL ROAD</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>400 MARSHALL ROAD, Superior, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Hpma</name>
+      <address>1100 MCASLIN, Superior, CO</address>
+      <description><![CDATA[Number: 1100<br>Street: MCASLIN<br>City: Superior<br>State: CO<br>Address: 1100 MCASLIN, Superior, CO<br>Status: Damaged<br>Jurisdiction: Superior]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>1100</value>
+        </Data>
+        <Data name="Street">
+          <value>MCASLIN</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>1100 MCASLIN, Superior, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Phillips 66</name>
+      <address>191 MCASLIN BLVD, Superior, CO</address>
+      <description><![CDATA[Number: 191<br>Street: MCASLIN BLVD<br>City: Superior<br>State: CO<br>Address: 191 MCASLIN BLVD, Superior, CO<br>Status: Damaged<br>Jurisdiction: Superior]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>191</value>
+        </Data>
+        <Data name="Street">
+          <value>MCASLIN BLVD</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>191 MCASLIN BLVD, Superior, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Key Bank</name>
+      <address>1000 MCCASLIN, Superior, CO</address>
+      <description><![CDATA[Number: 1000<br>Street: MCCASLIN<br>City: Superior<br>State: CO<br>Address: 1000 MCCASLIN, Superior, CO<br>Status: Damaged<br>Jurisdiction: Superior]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>1000</value>
+        </Data>
+        <Data name="Street">
+          <value>MCCASLIN</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>1000 MCCASLIN, Superior, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Superior Metro District</name>
+      <address>1300 MCCASLIN, Superior, CO</address>
+      <description><![CDATA[Number: 1300<br>Street: MCCASLIN<br>City: Superior<br>State: CO<br>Address: 1300 MCCASLIN, Superior, CO<br>Status: Damaged<br>Jurisdiction: Superior]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>1300</value>
+        </Data>
+        <Data name="Street">
+          <value>MCCASLIN</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>1300 MCCASLIN, Superior, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>The support stable</name>
+      <address>1 SUPERIOR DRIVE, Superior, CO</address>
+      <description><![CDATA[Number: 1<br>Street: SUPERIOR DRIVE<br>City: Superior<br>State: CO<br>Address: 1 SUPERIOR DRIVE, Superior, CO<br>Status: Damaged<br>Jurisdiction: Superior]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>1</value>
+        </Data>
+        <Data name="Street">
+          <value>SUPERIOR DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>1 SUPERIOR DRIVE, Superior, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Boulder community health</name>
+      <address>3 SUPERIOR DRIVE, Superior, CO</address>
+      <description><![CDATA[Number: 3<br>Street: SUPERIOR DRIVE<br>City: Superior<br>State: CO<br>Address: 3 SUPERIOR DRIVE, Superior, CO<br>Status: Damaged<br>Jurisdiction: Superior]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>3</value>
+        </Data>
+        <Data name="Street">
+          <value>SUPERIOR DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>3 SUPERIOR DRIVE, Superior, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Superior liquor etc</name>
+      <address>100 SUPERIOR PLAZA WAY, Superior, CO</address>
+      <description><![CDATA[Number: 100<br>Street: SUPERIOR PLAZA WAY<br>City: Superior<br>State: CO<br>Address: 100 SUPERIOR PLAZA WAY, Superior, CO<br>Status: Damaged<br>Jurisdiction: Superior]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>100</value>
+        </Data>
+        <Data name="Street">
+          <value>SUPERIOR PLAZA WAY</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>100 SUPERIOR PLAZA WAY, Superior, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>WILDFLOWER RANCH LLC</name>
+      <address>1401 CHERRYVALE ROAD, Boulder, CO</address>
+      <description><![CDATA[Number: 1401<br>Street: CHERRYVALE ROAD<br>City: Boulder<br>State: CO<br>Address: 1401 CHERRYVALE ROAD, Boulder, CO<br>Status: Damaged<br>Jurisdiction: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>1401</value>
+        </Data>
+        <Data name="Street">
+          <value>CHERRYVALE ROAD</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>1401 CHERRYVALE ROAD, Boulder, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>ELRAY REVOCABLE TRUST</name>
+      <address>7262 SOUTH BOULDER ROAD, Boulder, CO</address>
+      <description><![CDATA[Number: 7262<br>Street: SOUTH BOULDER ROAD<br>City: Boulder<br>State: CO<br>Address: 7262 SOUTH BOULDER ROAD, Boulder, CO<br>Status: Damaged<br>Jurisdiction: Unincorporated Boulder County]]></description>
+      <styleUrl>#icon-1686-FFD600</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>7262</value>
+        </Data>
+        <Data name="Street">
+          <value>SOUTH BOULDER ROAD</value>
+        </Data>
+        <Data name="City">
+          <value>Boulder</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>7262 SOUTH BOULDER ROAD, Boulder, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Damaged</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Unincorporated Boulder County</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+  </Document>
+</kml>
