@@ -1,0 +1,131 @@
+---
+title: "fire_PA_clean"
+author: "esr"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Packages
+```{r}
+library(tidyverse)
+library(stringr)
+library(readr)
+library(plyr)
+```
+
+
+Cleaning/correction information: https://fire.airnow.gov/#correction-equation
+
+# Load data
+```{r}
+# directory where sensor data is stored
+dir = "/Users/quentinmorse/Documents/GitHub/marshall_fires/sensors"
+
+# create a list of all file names in this directory
+file_names = list.files(path=dir, pattern="*.csv", full.names=TRUE)
+
+# read csvs for each filename in list --> results in a list of lists
+AQ_files = lapply(file_names, read_csv)
+
+# combine AQ lists into single AQ dataframe
+(AQ_df = rbind.fill(AQ_files) %>% as.data.frame())
+```
+
+
+# Cleaning
+For 10-min averaged data
+
+    * The data point is valid if the A and B channel PM2.5 measurements are within either 5 micrograms per cubic meter or 70% relative percent difference
+    * The A and B channels are averaged
+```{r}
+# create a date column in POSIX format to create time series
+AQ_df$datetime = as.POSIXct(AQ_df$created_at)
+
+AQ_df = AQ_df %>% 
+  dplyr::rename(pm25_a = `PM2.5_CF_ATM_ug/m3_A`,
+                 pm25_b = `PM2.5_CF_ATM_ug/m3_B`,
+                 temp = Temperature_F_A,
+                 rh = `Humidity_%_A`) 
+
+# create hourly pm colum
+AQ_df$hour = as.POSIXlt(AQ_df$datetime)$hour
+
+# Convert numeric values to a numeric class
+AQ_df$pm25_a = as.numeric(AQ_df$pm25_a)
+AQ_df$pm25_b = as.numeric(AQ_df$pm25_b)
+AQ_df$temp = as.numeric(AQ_df$temp)
+AQ_df$rh = as.numeric(AQ_df$rh)
+
+
+# determine if data points are valid based on EPA logic
+AQ_df = AQ_df %>%
+  rowwise() %>% 
+  mutate(
+    a_b_agree = 
+      # if eiher pm25_a or pm25_b is NA, disagree
+      ifelse(is.na(pm25_a) | is.na(pm25_b), "disagree",
+          # if pm25_a is less than pm25_b + 5
+          ifelse(pm25_a <= pm25_b + 5,"agree",
+                 # if pm25_a is more than pm25_b - 5
+                 ifelse(pm25_a >= pm25_b - 5, "agree",
+                        # if pm25_a is within 70% relative difference
+                        ifelse(
+                          abs(((pm25_a - pm25_b)/pm25_b)*100) >= 70 | abs(((pm25_b - pm25_a)/pm25_a)*100) >= 70, "agree","disagree")))))
+
+
+# select only valid points, average a and b channels for those data
+AQ_df_valid = AQ_df %>% 
+  dplyr::filter(a_b_agree == "agree") %>% 
+  rowwise() %>% 
+  mutate(pm_avg = mean(c(pm25_a,pm25_b)))
+```
+
+```{r}
+# summary stats
+AQ_df %>% group_by(ID) %>% summarise(count_A_na = sum(is.na(pm25_a)),
+                                     count_B_na = sum(is.na(pm25_b)),
+                                     pct_A_na = (count_A_na/length(pm25_a))*100,
+                                     pct_B_na = (count_B_na/length(pm25_b))*100)
+
+# overall percent valid
+AQ_df %>% group_by(ID) %>% summarise(pct_valid = sum(a_b_agree == "agree")/length(pm25_a) * 100)
+
+
+
+## work on the cross table -- maybe add in time period and municipality as organizing vars
+library(crosstable)
+
+crosstable(AQ_df$a_b_agree, by = ID) %>%
+  as_flextable(keep_id=TRUE)
+```
+
+
+# Correction
+
+    * Low Concentration
+    PAcf_atm < 50 µg/m3 	
+    PM2.5 = 0.52 x (PAcf_atm) - 0.086 x RH + 5.75
+    
+    * Mid Concentration 
+    50 µg/m3 > (PAcf_atm) <229 	
+    PM2.5 = 0.786 x (PAcf_atm) - 0.086 x RH + 5.75
+    
+    * High Concentration
+    PAcf_atm > 229 µg/m3 	
+    PM2.5 = 0.69 x (PAcf_atm) + 8.84 x 10^(-4) x PAcf_atm^2 + 2.97
+    
+    
+```{r}
+# linear piecewise correction from the EPA
+## question about using the pm avg or just the a channel
+## confirm that this is the best correction
+test = test %>% rowwise() %>% mutate(
+  corrected_pm = ifelse(pm_avg < 50, (0.52 * pm_avg - 0.088 * rh + 5.75),
+                        ifelse(pm_avg >= 50 | pm_avg < 299, (0.786 * pm_avg - 0.086 * rh + 5.75),
+                               ifelse(pm_avg >= 229, (0.69 * pm_avg + 8.84 * 0.001 * pm_avg^2 + 2.97), NA))))
+```
+
