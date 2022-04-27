@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>biz_destroyed_010621.csv</name>
+    <Style id="icon-1686-E65100-normal">
+      <IconStyle>
+        <color>ff0051e6</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1686-E65100-highlight">
+      <IconStyle>
+        <color>ff0051e6</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1686-E65100">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1686-E65100-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1686-E65100-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="icon-1686-FF5252-normal">
+      <IconStyle>
+        <color>ff5252ff</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1686-FF5252-highlight">
+      <IconStyle>
+        <color>ff5252ff</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1686-FF5252">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1686-FF5252-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1686-FF5252-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Placemark>
+      <name>Royalty Nails</name>
+      <address>1116-6 W DILLON RD, Louisville, CO</address>
+      <description><![CDATA[Number: 1116-6<br>Street: W DILLON RD<br>City: Louisville<br>State: CO<br>Address: 1116-6 W DILLON RD, Louisville, CO<br>Status: Destroyed<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-E65100</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>1116-6</value>
+        </Data>
+        <Data name="Street">
+          <value>W DILLON RD</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>1116-6 W DILLON RD, Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Destroyed</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>You you Massage</name>
+      <address>1116-7 W DILLON RD, Louisville, CO</address>
+      <description><![CDATA[Number: 1116-7<br>Street: W DILLON RD<br>City: Louisville<br>State: CO<br>Address: 1116-7 W DILLON RD, Louisville, CO<br>Status: Destroyed<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-FF5252</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>1116-7</value>
+        </Data>
+        <Data name="Street">
+          <value>W DILLON RD</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>1116-7 W DILLON RD, Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Destroyed</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Subway</name>
+      <address>1116-8 W DILLON RD, Louisville, CO</address>
+      <description><![CDATA[Number: 1116-8<br>Street: W DILLON RD<br>City: Louisville<br>State: CO<br>Address: 1116-8 W DILLON RD, Louisville, CO<br>Status: Destroyed<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-FF5252</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>1116-8</value>
+        </Data>
+        <Data name="Street">
+          <value>W DILLON RD</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>1116-8 W DILLON RD, Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Destroyed</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>At The Beach</name>
+      <address>1124-2 W DILLON RD, Louisville, CO</address>
+      <description><![CDATA[Number: 1124-2<br>Street: W DILLON RD<br>City: Louisville<br>State: CO<br>Address: 1124-2 W DILLON RD, Louisville, CO<br>Status: Destroyed<br>Jurisdiction: Louisville]]></description>
+      <styleUrl>#icon-1686-FF5252</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>1124-2</value>
+        </Data>
+        <Data name="Street">
+          <value>W DILLON RD</value>
+        </Data>
+        <Data name="City">
+          <value>Louisville</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>1124-2 W DILLON RD, Louisville, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Destroyed</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Louisville</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>KUPFNER GEORGE D ESTATE</name>
+      <address>7517 COAL CREEK DRIVE, Superior, CO</address>
+      <description><![CDATA[Number: 7517<br>Street: COAL CREEK DRIVE<br>City: Superior<br>State: CO<br>Address: 7517 COAL CREEK DRIVE, Superior, CO<br>Status: Destroyed<br>Jurisdiction: Superior]]></description>
+      <styleUrl>#icon-1686-FF5252</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>7517</value>
+        </Data>
+        <Data name="Street">
+          <value>COAL CREEK DRIVE</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>7517 COAL CREEK DRIVE, Superior, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Destroyed</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Tesla</name>
+      <address>2 S MARSHALL ROAD, Superior, CO</address>
+      <description><![CDATA[Number: 2<br>Street: S MARSHALL ROAD<br>City: Superior<br>State: CO<br>Address: 2 S MARSHALL ROAD, Superior, CO<br>Status: Destroyed<br>Jurisdiction: Superior]]></description>
+      <styleUrl>#icon-1686-FF5252</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>2</value>
+        </Data>
+        <Data name="Street">
+          <value>S MARSHALL ROAD</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>2 S MARSHALL ROAD, Superior, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Destroyed</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+    <Placemark>
+      <name>Element Boulder hotel</name>
+      <address>1 SOUTH MARSHALL ROAD, Superior, CO</address>
+      <description><![CDATA[Number: 1<br>Street: SOUTH MARSHALL ROAD<br>City: Superior<br>State: CO<br>Address: 1 SOUTH MARSHALL ROAD, Superior, CO<br>Status: Destroyed<br>Jurisdiction: Superior]]></description>
+      <styleUrl>#icon-1686-FF5252</styleUrl>
+      <ExtendedData>
+        <Data name="Number">
+          <value>1</value>
+        </Data>
+        <Data name="Street">
+          <value>SOUTH MARSHALL ROAD</value>
+        </Data>
+        <Data name="City">
+          <value>Superior</value>
+        </Data>
+        <Data name="State">
+          <value>CO</value>
+        </Data>
+        <Data name="Address">
+          <value>1 SOUTH MARSHALL ROAD, Superior, CO</value>
+        </Data>
+        <Data name="Status">
+          <value>Destroyed</value>
+        </Data>
+        <Data name="Jurisdiction">
+          <value>Superior</value>
+        </Data>
+      </ExtendedData>
+    </Placemark>
+  </Document>
+</kml>
