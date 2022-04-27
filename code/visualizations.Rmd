@@ -1,0 +1,533 @@
+---
+title: "marshall_visualizations"
+author: "Emma Rieves"
+date: "4/27/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## bring in data
+```{r}
+
+```
+
+
+
+
+```{r}
+# prepare data for fire period mapping
+
+
+# merge fire stats and plot data
+plot_data = merge(plot_data, time_period_classification, by = "ID", all=TRUE)
+
+# create status location column for subsequent mapping
+(plot_data = plot_data %>% mutate(location_status = paste(Location, "-", Status)))
+```
+
+```{r}
+(month_added_plot = AQ_df %>%
+  group_by(ID) %>%
+  dplyr::select(ID, Lon, Lat, Location, datetime) %>%
+  # use location[1] presuming indoor/outdoor doesn't change
+  dplyr::summarize(Location = Location[1],
+                   Lat = Lat[1],
+                   Lon = Lon[1],
+                   Month = ifelse(format(datetime[1], "%m-%Y") == "12-2021","Before or during 12-2021",format(datetime[1], "%m-%Y"))))
+
+month_added_plot$Month = factor(month_added_plot$Month, levels = c("Before or during 12-2021","01-2022","02-2022","03-2022"))
+```
+
+```{r}
+## Some summary stats
+AQ_df %>% group_by(ID) %>% dplyr::summarise(count_A_na = sum(is.na(pm25_a)),
+                                     count_B_na = sum(is.na(pm25_b)),
+                                     pct_A_na = (count_A_na/length(pm25_a))*100,
+                                     pct_B_na = (count_B_na/length(pm25_b))*100)
+
+# look at sensors based on indoor/outdoor position
+plot_data %>% group_by(location_status) %>% dplyr::summarise(n = n())
+```
+
+```{r}
+# why is one showing up way off -- investigate, I wonder if this sensor moved during the process?
+# sensor 112606
+# png(file = "images/fire_map2.png", width = 4500, height = 3800, res = 300)
+# (detailed_sensor_map = basemap + 
+#     geom_point(data=(plot_data %>% filter(ID != "112606")), aes(x=Lon,y=Lat, label = ID, shape = Location, color = Status, label = rownames(ID))) +
+#     scale_colour_brewer(palette = "Set1") +
+#     theme_light() +
+#     theme(legend.position = "bottom", legend.box = "vertical") +
+#     #guides(scale = FALSE) +
+#     ggtitle("Map of sensors in Louisville and Superior, 12-30-21 to 2-26-22"))
+# dev.off()
+
+# add sensors, check which sensor is off
+# (ggplot(plot_data, aes(x=Lon,y=Lat, label = ID, shape = Location, color = fire_period, label = ID))) + 
+#   geom_point() +
+#   geom_text(check_overlap = TRUE)
+
+
+# Create time period variable based on availability during fire, inside/outside status for mapping
+# (plot_data = AQ_df %>%
+#   group_by(ID) %>%
+#   dplyr::select(ID, Lon, Lat, Location) %>%
+#   # use location[1] presuming indoor/outdoor doesn't change
+#   dplyr::summarize(Location = Location[1],
+#                    Lat = Lat[1],
+#                    Lon = Lon[1]))
+```
+
+```{r}
+# png(file = "images/month_map.png", width = 6000, height = 3800, res = 300)
+# (month_plot = basemap +
+#   geom_point(data = month_added_plot, aes(x=Lon,y=Lat, label = ID, shape = Location, color = Month)) +
+#    facet_grid(cols = vars(Month)))
+# dev.off()
+```
+
+```{r}
+# set factors to false
+options(stringsAsFactors = FALSE)
+
+# create pallete for destroyed and damaged building colors
+pal = colorFactor(c("red","orange","magenta","light pink"), domain = unique(destroyed_damaged$type))
+
+
+## create indoor/outdoor icons
+sensorIcon = awesomeIconList(
+  "inside" = makeAwesomeIcon(
+    icon = "home",
+    iconColor = "white",
+    markerColor = "blue",
+    library = "fa"
+  ),
+  "outside" = makeAwesomeIcon(
+    icon = "tree",
+    iconColor = "white",
+    markerColor = "green",
+    library = "fa"
+  ))
+
+
+timeSensorIcon = awesomeIconList(
+  "inside - Complete data throughout fire period" = makeAwesomeIcon(
+    icon = "home",
+    iconColor = "white",
+    markerColor = "green",
+    library = "fa"
+  ),
+  "inside - Sensor added during fire, returned online" = makeAwesomeIcon(
+    icon = "home",
+    iconColor = "white",
+    markerColor = "blue",
+    library = "fa"
+  ),
+  "inside - Sensor came online after fire" = makeAwesomeIcon(
+    icon = "home",
+    iconColor = "white",
+    markerColor = "light purple",
+    library = "fa"
+  ),
+  "inside - Sensor offline during fire, returned online" = makeAwesomeIcon(
+    icon = "home",
+    iconColor = "white",
+    markerColor = "blue",
+    library = "fa"
+  ),
+   "outside - Complete data throughout fire period" = makeAwesomeIcon(
+    icon = "home",
+    iconColor = "white",
+    markerColor = "green",
+    library = "fa"
+  ),
+  "outside - Sensor added during fire, did not return online" = makeAwesomeIcon(
+    icon = "tree",
+    iconColor = "white",
+    markerColor = "gray",
+    library = "fa"
+  ),
+  "outside - Sensor came online after fire" = makeAwesomeIcon(
+    icon = "tree",
+    iconColor = "white",
+    markerColor = "light purple",
+    library = "fa"
+  ),
+  "outside - Sensor offline during fire, did not return online" = makeAwesomeIcon(
+    icon = "tree",
+    iconColor = "white",
+    markerColor = "gray",
+    library = "fa"
+  ),
+  "outside - Sensor offline during fire, returned online" = makeAwesomeIcon(
+    icon = "tree",
+    iconColor = "white",
+    markerColor = "blue",
+    library = "fa"
+  ))
+
+
+
+# map of damaged/destroyed buildings and AQ sensors (indoor/outdoor)
+# chose not to do icons for destroyed/damaged buildings because the map got really busy
+(fire_destruction_and_AQ_plot = leaflet(plot_data) %>%
+    addTiles() %>% 
+    addAwesomeMarkers(icon = ~sensorIcon[Location],
+                      lng = plot_data$Lon, lat = plot_data$Lat) %>% 
+    addCircleMarkers(color = ~pal(destroyed_damaged$type),
+                     radius = 3.5,
+                     opacity = 1,
+                     lng = destroyed_damaged$long, lat = destroyed_damaged$lat) %>%
+    addLegend("topright", pal = pal, values = ~destroyed_damaged$type,
+              title = "Fire damage"))
+
+
+
+# map based on when sensor was added
+(fire_destruction_and_AQ_plot = leaflet(plot_data) %>%
+    addTiles() %>% 
+    addAwesomeMarkers(icon = ~timeSensorIcon[location_status],
+                      lng = plot_data$Lon, lat = plot_data$Lat) %>% 
+    addCircleMarkers(color = ~pal(destroyed_damaged$type),
+                     radius = 3.5,
+                     opacity = 1,
+                     lng = destroyed_damaged$long, lat = destroyed_damaged$lat) %>%
+    addLegend("topright", pal = pal, values = ~destroyed_damaged$type,
+              title = "Fire damage"))
+
+
+```
+
+
+
+
+## Create spatial objects
+```{r}
+## Create spacetime objects -- 10 minute
+
+# create spatial points object for each sensor
+PA_sensors = SpatialPoints(AQ_df[!duplicated(AQ_df$ID), c("Lon", "Lat")],proj4string = CRS(prg))
+summary(PA_sensors)
+
+# contruct spatiotemporal object
+PA_STFDF = stConstruct(AQ_df, space = c("Lon","Lat"), time = "datetime", crs = CRS(prg), SpatialObj = stations)
+#hrly_STFDF = stConstruct(AQ_df_hr, space = c("Lon","Lat"), time = "datetime", crs = CRS(prg), SpatialObj = stations)
+
+# turn ST object into a STFDF (stationary points)
+PA_STFDF = as(PA_STFDF,"STFDF")
+#hrly_STFDF = as(hrly_STFDF,"STFDF")
+
+# see summary of data
+summary(PA_STFDF)
+#summary(hrly_STFDF)
+
+# object class
+class(PA_STFDF)
+#class(hrly_STFDF)
+
+# object dimensions
+dim(PA_STFDF)
+#dim(hrly_STFDF)
+```
+
+# Time series plots
+```{r}
+## Time series plots
+# non_null_stations = PA_STFDF[na.omit(stations)]
+
+# temp and rh ts
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","temp"],mode="ts")
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","rh"],mode="ts")
+```
+
+```{r}
+# just using PM2.5_a for PM observations
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","pm25_a"],mode="ts")
+
+# aggregate sensor data over the sensor_map geometries
+aggregate_spatial <- aggregate(PA_STFDF[, "2021-12-30::2021-12-31"], as_Spatial(sensor_map$data$geometry), mean, na.rm=TRUE)
+stplot(aggregate_spatial[, , "pm25_a"], mode="ts")
+# trying a spatial plot, aggregated by every 4 hours
+plot(sensor_map)
+stplot(aggregate(aggregate_spatial, "4 hours", mean, na.rm=TRUE)[, , "pm25_a"])
+```
+
+```{r}
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","temp"],mode="xt")
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","rh"],mode="xt")
+
+# just using PM2.5_a for PM observations
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","pm25_a"],mode="xt")
+```
+
+# Individual sensor plots
+The plots are labeled in the form "sensor name - (city - in/outside) sensor id#" before the type of plot (pm2.5, temperature, or relative humidity.)
+
+```{r warning=FALSE}
+# add in pm25_b, temp, humidity
+for (sensor in 1:30) {
+  id <- id_key$ID[sensor]
+  sensor_info <- get_sensor_info(id)
+  # check that the sensor has some data for our time range
+  sensor_xts <- PA_STFDF[PA_STFDF@data$ID == id]
+  if(length(sensor_xts$ID) > 0) {
+    # plot pm2.5 on one graph for both channels
+    sensor_pm25a <- sensor_xts["2021-12-30::2021-12-31", "pm25_a"]
+    sensor_pm25b <- sensor_xts["2021-12-30::2021-12-31", "pm25_b"]
+    p <- ggplot(fortify(sensor_pm25a), aes(x=Index, y=pm25_a, color="black")) +
+      geom_line() +
+      geom_line(data=fortify(sensor_pm25b), aes(y=pm25_b), color="tomato") +
+      scale_color_manual(name = "Sensor Data", values = c("PM2.5 A Channel" = "black", "PM2.5 B Channel" = "tomato")) +
+      labs(x="date",
+           y="PM2.5",
+           title = paste(sensor_info$city, "-", sensor_info$Location,
+                         "\nsensor", id, "pm2.5"))
+    # print(p)
+    png(file=paste("images/sensor", id, "_pm25_ts.png"), width=500, height=500)
+    print(p)
+    dev.off()
+    # plot temperature and relative humidity on one plot !!! this doesn't seem possible with ggplot
+    sensor_temp <- sensor_xts["2021-12-30::2021-12-31", "temp"]
+    sensor_rh <- sensor_xts["2021-12-30::2021-12-31", "rh"]
+    
+    p2 <- ggplot(fortify(sensor_temp), aes(x=Index, y=temp)) +
+      geom_line() +
+      labs(x="date",
+           title = paste(sensor_info$city, "-", sensor_info$Location,
+                         "\nsensor", id, "temperature"))
+    
+    p3 <- ggplot(fortify(sensor_rh), aes(x=Index, y=rh)) +
+    geom_line() + 
+      labs(x="date",
+      title = paste(sensor_info$city, "-", sensor_info$Location,
+                    "\nsensor", id, "relative humidity"))
+
+    plots <- gridExtra::grid.arrange(p, arrangeGrob(p2, p3, ncol=2), nrow=2)
+    print(plots)
+    png(file=paste("images/sensor", id, "_ts.png"), width=500, height=500)
+    print(plots)
+    dev.off()
+  }
+}
+```
+
+
+```{r}
+# save output to enhance resolution
+jpeg(file = "images/timeplot.jpeg")
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","pm25_a"])
+dev.off()
+```
+
+
+# Sensors with no data
+Sensors with 0 data for the time period downloaded (12/30/2021 00:00:00 to 1/26/2022 12:30:00):
+-119691
+-120657
+-120859
+-125725
+-128981
+-129321
+-130295
+-130807
+-131279
+-134408
+-134430
+-137686
+-142064
+-142664
+-142666
+-75373
+```{r}
+stplot(PA_STFDF[,,"ID"], mode="ts")
+```
+
+## Something looks weird here!!
+I'm (Zac) not sure what's going on here, but it's possible the data is a bit funky and needs more work.
+There are 78761 NA's in the ID column of the data, so it's possible we're just seeing sensors that existed in the time period but weren't collecting any data for some reason.
+
+# Inside vs. Outside Comparisons
+Pairs gotten by looking at the purpleair sensor map, not every sensor has a close one, so I just picked the closest outdoor one we have data for. Generally on the same street, just a few houses down.
+
+```{r}
+# sensor 103724 - Louisville inside
+id <- 103724
+sensor_info <- get_sensor_info(id)
+sensor_xts <- PA_STFDF[PA_STFDF@data$ID == id]
+# plot pm2.5 on one graph for both channels
+sensor_pm25a <- sensor_xts["2021-12-30::2021-12-31", "pm25_a"]
+sensor_pm25b <- sensor_xts["2021-12-30::2021-12-31", "pm25_b"]
+p <- ggplot(fortify(sensor_pm25a), aes(x=Index, y=pm25_a, color="black")) +
+  geom_line() +
+  geom_line(data=fortify(sensor_pm25b), aes(y=pm25_b), color="tomato") +
+  scale_color_manual(name = "Sensor Data", values = c("PM2.5 A Channel" = "black", "PM2.5 B Channel" = "tomato")) +
+  labs(x="date",
+       y="PM2.5",
+       title = paste(sensor_info$city, "-", sensor_info$Location, sensor_info$Lon,",", sensor_info$Lat,
+                     "\nsensor", id, "pm2.5"))
+# sensor 134408 - Louisville outside
+id <- 65669
+sensor_info <- get_sensor_info(id)
+sensor_xts <- PA_STFDF[PA_STFDF@data$ID == id]
+# plot pm2.5 on one graph for both channels
+sensor_pm25a <- sensor_xts["2021-12-30::2021-12-31", "pm25_a"]
+sensor_pm25b <- sensor_xts["2021-12-30::2021-12-31", "pm25_b"]
+p1 <- ggplot(fortify(sensor_pm25a), aes(x=Index, y=pm25_a, color="black")) +
+  geom_line() +
+  geom_line(data=fortify(sensor_pm25b), aes(y=pm25_b), color="tomato") +
+  scale_color_manual(name = "Sensor Data", values = c("PM2.5 A Channel" = "black", "PM2.5 B Channel" = "tomato")) +
+  labs(x="date",
+       y="PM2.5",
+       title = paste(sensor_info$city, "-", sensor_info$Location, sensor_info$Lon,",", sensor_info$Lat,
+                     "\nsensor", id, "pm2.5"))
+
+plots <- gridExtra::grid.arrange(p, p1, nrow=2)
+print(plots)
+
+# sensor 141956 - Louisville inside
+id <- 141956
+sensor_info <- get_sensor_info(id)
+sensor_xts <- PA_STFDF[PA_STFDF@data$ID == id]
+# plot pm2.5 on one graph for both channels
+sensor_pm25a <- sensor_xts["2021-12-30::2021-12-31", "pm25_a"]
+sensor_pm25b <- sensor_xts["2021-12-30::2021-12-31", "pm25_b"]
+p <- ggplot(fortify(sensor_pm25a), aes(x=Index, y=pm25_a, color="black")) +
+  geom_line() +
+  geom_line(data=fortify(sensor_pm25b), aes(y=pm25_b), color="tomato") +
+  scale_color_manual(name = "Sensor Data", values = c("PM2.5 A Channel" = "black", "PM2.5 B Channel" = "tomato")) +
+  labs(x="date",
+       y="PM2.5",
+       title = paste(sensor_info$city, "-", sensor_info$Location, sensor_info$Lon,",", sensor_info$Lat,
+                     "\nsensor", id, "pm2.5"))
+# sensor 81149 - Louisville outside
+id <- 81149
+sensor_info <- get_sensor_info(id)
+sensor_xts <- PA_STFDF[PA_STFDF@data$ID == id]
+# plot pm2.5 on one graph for both channels
+sensor_pm25a <- sensor_xts["2021-12-30::2021-12-31", "pm25_a"]
+sensor_pm25b <- sensor_xts["2021-12-30::2021-12-31", "pm25_b"]
+p1 <- ggplot(fortify(sensor_pm25a), aes(x=Index, y=pm25_a, color="black")) +
+  geom_line() +
+  geom_line(data=fortify(sensor_pm25b), aes(y=pm25_b), color="tomato") +
+  scale_color_manual(name = "Sensor Data", values = c("PM2.5 A Channel" = "black", "PM2.5 B Channel" = "tomato")) +
+  labs(x="date",
+       y="PM2.5",
+       title = paste(sensor_info$city, "-", sensor_info$Location, sensor_info$Lon,",", sensor_info$Lat,
+                     "\nsensor", id, "pm2.5"))
+
+plots <- gridExtra::grid.arrange(p, p1, nrow=2)
+print(plots)
+
+# sensor 79097 - Louisville inside
+id <- 79097
+sensor_info <- get_sensor_info(id)
+sensor_xts <- PA_STFDF[PA_STFDF@data$ID == id]
+# plot pm2.5 on one graph for both channels
+sensor_pm25a <- sensor_xts["2021-12-30::2021-12-31", "pm25_a"]
+sensor_pm25b <- sensor_xts["2021-12-30::2021-12-31", "pm25_b"]
+p <- ggplot(fortify(sensor_pm25a), aes(x=Index, y=pm25_a, color="black")) +
+  geom_line() +
+  geom_line(data=fortify(sensor_pm25b), aes(y=pm25_b), color="tomato") +
+  scale_color_manual(name = "Sensor Data", values = c("PM2.5 A Channel" = "black", "PM2.5 B Channel" = "tomato")) +
+  labs(x="date",
+       y="PM2.5",
+       title = paste(sensor_info$city, "-", sensor_info$Location, sensor_info$Lon,",", sensor_info$Lat,
+                     "\nsensor", id, "pm2.5"))
+# sensor 81149 - Lousiville outside
+id <- 81149
+sensor_info <- get_sensor_info(id)
+sensor_xts <- PA_STFDF[PA_STFDF@data$ID == id]
+# plot pm2.5 on one graph for both channels
+sensor_pm25a <- sensor_xts["2021-12-30::2021-12-31", "pm25_a"]
+sensor_pm25b <- sensor_xts["2021-12-30::2021-12-31", "pm25_b"]
+p1 <- ggplot(fortify(sensor_pm25a), aes(x=Index, y=pm25_a, color="black")) +
+  geom_line() +
+  geom_line(data=fortify(sensor_pm25b), aes(y=pm25_b), color="tomato") +
+  scale_color_manual(name = "Sensor Data", values = c("PM2.5 A Channel" = "black", "PM2.5 B Channel" = "tomato")) +
+  labs(x="date",
+       y="PM2.5",
+       title = paste(sensor_info$city, "-", sensor_info$Location, sensor_info$Lon,",", sensor_info$Lat,
+                     "\nsensor", id, "pm2.5"))
+
+plots <- gridExtra::grid.arrange(p, p1, nrow=2)
+print(plots)
+
+# sensor 88533 - Louisville inside
+id <- 88533
+sensor_info <- get_sensor_info(id)
+sensor_xts <- PA_STFDF[PA_STFDF@data$ID == id]
+# plot pm2.5 on one graph for both channels
+sensor_pm25a <- sensor_xts["2021-12-30::2021-12-31", "pm25_a"]
+sensor_pm25b <- sensor_xts["2021-12-30::2021-12-31", "pm25_b"]
+p <- ggplot(fortify(sensor_pm25a), aes(x=Index, y=pm25_a, color="black")) +
+  geom_line() +
+  geom_line(data=fortify(sensor_pm25b), aes(y=pm25_b), color="tomato") +
+  scale_color_manual(name = "Sensor Data", values = c("PM2.5 A Channel" = "black", "PM2.5 B Channel" = "tomato")) +
+  labs(x="date",
+       y="PM2.5",
+       title = paste(sensor_info$city, "-", sensor_info$Location, sensor_info$Lon,",", sensor_info$Lat,
+                     "\nsensor", id, "pm2.5"))
+# sensor 92321 - Louisville outside
+id <- 92321
+sensor_info <- get_sensor_info(id)
+sensor_xts <- PA_STFDF[PA_STFDF@data$ID == id]
+# plot pm2.5 on one graph for both channels
+sensor_pm25a <- sensor_xts["2021-12-30::2021-12-31", "pm25_a"]
+sensor_pm25b <- sensor_xts["2021-12-30::2021-12-31", "pm25_b"]
+p1 <- ggplot(fortify(sensor_pm25a), aes(x=Index, y=pm25_a, color="black")) +
+  geom_line() +
+  geom_line(data=fortify(sensor_pm25b), aes(y=pm25_b), color="tomato") +
+  scale_color_manual(name = "Sensor Data", values = c("PM2.5 A Channel" = "black", "PM2.5 B Channel" = "tomato")) +
+  labs(x="date",
+       y="PM2.5",
+       title = paste(sensor_info$city, "-", sensor_info$Location, sensor_info$Lon,",", sensor_info$Lat,
+                     "\nsensor", id, "pm2.5"))
+
+plots <- gridExtra::grid.arrange(p, p1, nrow=2)
+print(plots)
+```
+
+
+# Full Time Series Plots
+```{r}
+# pm2.5 of full time period
+stplot(PA_STFDF[,,"pm25_a"], mode="ts")
+
+for (sensor in 1:30) {
+  id <- id_key$ID[sensor]
+  sensor_info <- get_sensor_info(id)
+  # check that the sensor has some data for our time range
+  sensor_xts <- PA_STFDF[PA_STFDF@data$ID == id]
+  # print(id)
+  # print(length(sensor_xts$ID))
+  if(length(sensor_xts$ID) > 0) {
+    # plot pm2.5 on one graph for both channels
+    sensor_pm25a <- sensor_xts[, "pm25_a"]
+    sensor_pm25b <- sensor_xts[, "pm25_b"]
+    p <- ggplot(fortify(sensor_pm25a), aes(x=Index, y=pm25_a, color="black")) +
+      geom_line() +
+      geom_line(data=fortify(sensor_pm25b), aes(y=pm25_b), color="tomato") +
+      scale_color_manual(name = "Sensor Data", values = c("PM2.5 A Channel" = "black",
+                                                          "PM2.5 B Channel" = "tomato")) +
+      labs(x="date",
+           y="PM2.5",
+           title = paste(sensor_info$city, "-", sensor_info$Location,
+                         "\nsensor", id, "pm2.5"))
+    print(p)
+  }
+}
+```
+
+
+# To do
+- add columns to data - offline during fire, added after fire
+- ~~pm25 of full time period~~
+- points of all sensors, color coded by time period (before, burned, added after)
+- ~~look at paired inside/outside~~
+- map of sensors by area & time period
+- two columns of time series sensor plots for fire period, inside vs outside
+
