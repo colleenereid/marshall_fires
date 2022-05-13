@@ -32,8 +32,6 @@ AQ_df = read_csv("/Users/esrieves/Documents/GitHub/marshall_fires/intermediary_o
 # drop the index columns
 AQ_df = AQ_df[,-1]
 
-# rename name to city
-AQ_df = AQ_df %>% dplyr::rename(city = Name)
 ```
 
 
@@ -63,12 +61,13 @@ AQ_df = AQ_df %>%
 (AQ_df_valid = AQ_df %>% 
   dplyr::filter(a_b_agree == "agree") %>%
   rowwise() %>% 
-  mutate(pm_avg = mean(c(pm25_a,pm25_b))))
+  mutate(pm_avg = mean(c(pm25_a,pm25_b)),
+         ab_difference = pm25_a-pm25_b))
 ```
 
 ## Cleaning summary stats
 ```{r}
-# summary stats
+# summary stats -- pct NA for each channel
 AQ_df %>% group_by(ID) %>% summarise(count_A_na = sum(is.na(pm25_a)),
                                      count_B_na = sum(is.na(pm25_b)),
                                      pct_A_na = (count_A_na/length(pm25_a))*100,
@@ -76,6 +75,10 @@ AQ_df %>% group_by(ID) %>% summarise(count_A_na = sum(is.na(pm25_a)),
 
 # overall percent valid
 AQ_df %>% group_by(ID) %>% summarise(pct_valid = sum(a_b_agree == "agree")/length(pm25_a) * 100)
+
+# average difference between A and B channels for each sensor
+# typically good agreement between the A and B channels..
+AQ_df_valid %>% group_by(ID) %>% dplyr::summarise(ab_diff_summary = format(mean(ab_difference),scientific=FALSE))
 ```
 
 ```{r}
@@ -86,6 +89,7 @@ AQ_df %>% tbl_cross(row = ID, col = a_b_agree, percent = "row") %>% as_gt()
 
 
 # Correction
+equation found here: https://fire.airnow.gov/#correction-equation
 
     * Low Concentration
     PAcf_atm < 50 µg/m3 	
@@ -107,10 +111,49 @@ AQ_df %>% tbl_cross(row = ID, col = a_b_agree, percent = "row") %>% as_gt()
 (corrected_AQ = AQ_df_valid %>% 
    rowwise() %>% 
    mutate(
-  corrected_pm = ifelse(pm_avg < 50, (0.52 * pm_avg - 0.088 * rh + 5.75),
-                        ifelse(pm_avg >= 50 | pm_avg < 299, (0.786 * pm_avg - 0.086 * rh + 5.75),
-                               ifelse(pm_avg >= 229, (0.69 * pm_avg + 8.84 * 0.001 * pm_avg^2 + 2.97), NA)))))
+  corrected_pm = ifelse(pm_avg < 50, ((0.52 * pm_avg) - (0.088 * rh) + 5.75),
+                        ifelse(pm_avg >= 50 | pm_avg < 299, ((0.786 * pm_avg) - (0.086 * rh) + 5.75),
+                               ifelse(pm_avg >= 229, ((0.69 * pm_avg) + 8.84 * (0.001 * pm_avg^2) + 2.97), NA)))))
 ```
+```{r}
+# STATS
+# summary stats -- AB difference (for corrected channels)
+## this could be helpful in determining whether the step of removing observations in cleaning is important
+summary(corrected_AQ$ab_difference)
+
+# mean difference between A and B channels per sensor
+(mean_sensor_AB_diff = corrected_AQ %>% group_by(ID) %>% dplyr::summarise(mean_ab_diff = mean(ab_difference)))
+
+# distribution of differences between sensors -- indicates that some sensor differenes are > 3000 on average! will investigate further
+hist(mean_sensor_AB_diff$mean_ab_diff)
+
+# create a new version exploring AB differences, but excluding outliers
+mean_sensor_AB_diff_sub1000 = mean_sensor_AB_diff %>% filter(mean_ab_diff < 1000)
+
+# most AB differences are small
+hist(mean_sensor_AB_diff_sub1000$mean_ab_diff,breaks = 20)
+```
+
+```{r}
+# STATS
+# summary stats -- corrected pm
+# weird that this contains negatives.. the EPA info doesn't mention anything about that
+summary(corrected_AQ$corrected_pm)
+
+# mean corrected PM
+(mean_AQ = corrected_AQ %>% group_by(ID) %>% dplyr::summarise(mean_pm = mean(corrected_pm)))
+
+# distribution of differences between sensors -- indicates that some sensor differenes are > 3000 on average! will investigate further
+hist(mean_sensor_AB_diff$mean_ab_diff)
+
+# create a new version exploring AB differences, but excluding outliers
+mean_sensor_AB_diff_sub1000 = mean_sensor_AB_diff %>% filter(mean_ab_diff < 1000)
+
+# most AB differences are small
+hist(mean_sensor_AB_diff_sub1000$mean_ab_diff,breaks = 20)
+```
+
+
 
 # Export data
 ```{r}

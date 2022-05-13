@@ -12,89 +12,70 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## bring in data
 ```{r}
+# AIR QUALITY
+## corrected air quality
+AQ_df = read.csv("/Users/esrieves/Documents/GitHub/marshall_fires/intermediary_outputs/corrected_AQ_data.csv")
 
+## sensor info
+sensors = read.csv("/Users/esrieves/Documents/GitHub/marshall_fires/intermediary_outputs/sensor_data_full.csv")
+```
+
+```{r}
+# BOUNDARIES
+# Boulder boundaries
+BO_CO = st_read("/Users/esrieves/Documents/GitHub/marshall_fires/GIS_inputs_destruction_fireboundary/Boulder_county_munis/Municipalities.shp")
+(fire_counties = BO_CO %>% filter(ZONEDESC == "Louisville" | ZONEDESC == "Superior" | ZONEDESC == "Broomfield" | ZONEDESC == "Lafayette" | ZONEDESC == "Boulder"))
+
+# save proj string for fire-affected counties to use for other transformations
+prg = raster::crs(fire_counties,asText=TRUE)
+
+# Marshall fire boundary
+wfigs_fire = st_read("/Users/esrieves/Documents/GitHub/marshall_fires/GIS_inputs_destruction_fireboundary/WFIGS_-_Wildland_Fire_Perimeters_Full_History/FH_Perimeter.shp")
+
+# filter fire to marshall fire only; update crs
+(marshall_fire = wfigs_fire %>% filter(poly_Incid == "Marshall") %>% st_transform(crs = st_crs(prg)))
+```
+
+```{r}
+# BUILDINGS
+# Read in destroyed home and building sites
+destroyed_homes = st_read("/Users/esrieves/Documents/GitHub/marshall_fires/GIS_inputs_destruction_fireboundary/output_damage_files/destroyed_homes.shp")
+damaged_homes = st_read("/Users/esrieves/Documents/GitHub/marshall_fires/GIS_inputs_destruction_fireboundary/output_damage_files/damaged_homes.shp")
+destroyed_businesses = st_read("/Users/esrieves/Documents/GitHub/marshall_fires/GIS_inputs_destruction_fireboundary/output_damage_files/destroyed_businesses.shp")
+damaged_businesses = st_read("/Users/esrieves/Documents/GitHub/marshall_fires/GIS_inputs_destruction_fireboundary/output_damage_files/damaged_businesses.shp")
+
+
+# create 'type' column; select only the columns needed; make projection string match
+(destroyed_homes = destroyed_homes %>% mutate(type = "destroyed - residential") %>% dplyr::rename(jurisdiction = JURISDICTI) %>% dplyr::select(jurisdiction, type, latlong, geometry) %>% st_transform(crs = st_crs(prg)))
+(destroyed_businesses = destroyed_businesses  %>% mutate(type = "destroyed - non-residential") %>% dplyr::rename(jurisdiction = Jurisdicti) %>% dplyr::select(jurisdiction, type, latlong, geometry) %>% st_transform(crs = st_crs(prg)))
+(damaged_homes = damaged_homes %>% mutate(type = "damaged - residential") %>% dplyr::rename(jurisdiction = JURISDICTI) %>% dplyr::select(jurisdiction, type, latlong, geometry) %>% st_transform(crs = st_crs(prg)))
+(damaged_business = damaged_businesses %>% mutate(type = "damaged - non-residential") %>% dplyr::rename(jurisdiction = Jurisdicti) %>% dplyr::select(jurisdiction, type, latlong, geometry) %>% st_transform(crs = st_crs(prg)))
+
+# combine into one df, using the "," indicator keeps decimal points
+(destroyed_damaged =rbind(destroyed_homes,destroyed_businesses,damaged_homes,damaged_business) %>% separate(latlong, c("lat","long"), ",", convert = FALSE))
+
+# change lat and long to floats
+destroyed_damaged$lat = as.double(destroyed_damaged$lat)
+destroyed_damaged$long = as.double(destroyed_damaged$long)
 ```
 
 
 
-
+# Maps
 ```{r}
-# prepare data for fire period mapping
+# create "location status" column for mapping
+library(stringr)
+sensors$loc_status = str_c(sensors$Location, " - ", sensors$Status)
 
-
-# merge fire stats and plot data
-plot_data = merge(plot_data, time_period_classification, by = "ID", all=TRUE)
-
-# create status location column for subsequent mapping
-(plot_data = plot_data %>% mutate(location_status = paste(Location, "-", Status)))
-```
-
-```{r}
-(month_added_plot = AQ_df %>%
-  group_by(ID) %>%
-  dplyr::select(ID, Lon, Lat, Location, datetime) %>%
-  # use location[1] presuming indoor/outdoor doesn't change
-  dplyr::summarize(Location = Location[1],
-                   Lat = Lat[1],
-                   Lon = Lon[1],
-                   Month = ifelse(format(datetime[1], "%m-%Y") == "12-2021","Before or during 12-2021",format(datetime[1], "%m-%Y"))))
-
-month_added_plot$Month = factor(month_added_plot$Month, levels = c("Before or during 12-2021","01-2022","02-2022","03-2022"))
-```
-
-```{r}
-## Some summary stats
-AQ_df %>% group_by(ID) %>% dplyr::summarise(count_A_na = sum(is.na(pm25_a)),
-                                     count_B_na = sum(is.na(pm25_b)),
-                                     pct_A_na = (count_A_na/length(pm25_a))*100,
-                                     pct_B_na = (count_B_na/length(pm25_b))*100)
-
-# look at sensors based on indoor/outdoor position
-plot_data %>% group_by(location_status) %>% dplyr::summarise(n = n())
-```
-
-```{r}
-# why is one showing up way off -- investigate, I wonder if this sensor moved during the process?
-# sensor 112606
-# png(file = "images/fire_map2.png", width = 4500, height = 3800, res = 300)
-# (detailed_sensor_map = basemap + 
-#     geom_point(data=(plot_data %>% filter(ID != "112606")), aes(x=Lon,y=Lat, label = ID, shape = Location, color = Status, label = rownames(ID))) +
-#     scale_colour_brewer(palette = "Set1") +
-#     theme_light() +
-#     theme(legend.position = "bottom", legend.box = "vertical") +
-#     #guides(scale = FALSE) +
-#     ggtitle("Map of sensors in Louisville and Superior, 12-30-21 to 2-26-22"))
-# dev.off()
-
-# add sensors, check which sensor is off
-# (ggplot(plot_data, aes(x=Lon,y=Lat, label = ID, shape = Location, color = fire_period, label = ID))) + 
-#   geom_point() +
-#   geom_text(check_overlap = TRUE)
-
-
-# Create time period variable based on availability during fire, inside/outside status for mapping
-# (plot_data = AQ_df %>%
-#   group_by(ID) %>%
-#   dplyr::select(ID, Lon, Lat, Location) %>%
-#   # use location[1] presuming indoor/outdoor doesn't change
-#   dplyr::summarize(Location = Location[1],
-#                    Lat = Lat[1],
-#                    Lon = Lon[1]))
-```
-
-```{r}
-# png(file = "images/month_map.png", width = 6000, height = 3800, res = 300)
-# (month_plot = basemap +
-#   geom_point(data = month_added_plot, aes(x=Lon,y=Lat, label = ID, shape = Location, color = Month)) +
-#    facet_grid(cols = vars(Month)))
-# dev.off()
+# turned this on to get code to run -- should update classification code in the extraction file
+sensors = na.omit(sensors)
 ```
 
 ```{r}
 # set factors to false
 options(stringsAsFactors = FALSE)
 
-# create pallete for destroyed and damaged building colors
+# create pallete for destroyed and damaged building colors for leaflet map
 pal = colorFactor(c("red","orange","magenta","light pink"), domain = unique(destroyed_damaged$type))
 
 
@@ -114,6 +95,7 @@ sensorIcon = awesomeIconList(
   ))
 
 
+# create pallete for location + time period
 timeSensorIcon = awesomeIconList(
   "inside - Complete data throughout fire period" = makeAwesomeIcon(
     icon = "home",
@@ -170,14 +152,14 @@ timeSensorIcon = awesomeIconList(
     library = "fa"
   ))
 
-
+sensors
 
 # map of damaged/destroyed buildings and AQ sensors (indoor/outdoor)
 # chose not to do icons for destroyed/damaged buildings because the map got really busy
-(fire_destruction_and_AQ_plot = leaflet(plot_data) %>%
+(fire_destruction_and_AQ_plot = leaflet(sensors) %>%
     addTiles() %>% 
     addAwesomeMarkers(icon = ~sensorIcon[Location],
-                      lng = plot_data$Lon, lat = plot_data$Lat) %>% 
+                      lng = sensors$Lon, lat = sensors$Lat) %>% 
     addCircleMarkers(color = ~pal(destroyed_damaged$type),
                      radius = 3.5,
                      opacity = 1,
@@ -188,10 +170,10 @@ timeSensorIcon = awesomeIconList(
 
 
 # map based on when sensor was added
-(fire_destruction_and_AQ_plot = leaflet(plot_data) %>%
+(fire_destruction_and_AQ_plot = leaflet(sensors) %>%
     addTiles() %>% 
-    addAwesomeMarkers(icon = ~timeSensorIcon[location_status],
-                      lng = plot_data$Lon, lat = plot_data$Lat) %>% 
+    addAwesomeMarkers(icon = ~timeSensorIcon[loc_status],
+                      lng = sensors$Lon, lat = sensors$Lat) %>% 
     addCircleMarkers(color = ~pal(destroyed_damaged$type),
                      radius = 3.5,
                      opacity = 1,
@@ -209,12 +191,15 @@ timeSensorIcon = awesomeIconList(
 ```{r}
 ## Create spacetime objects -- 10 minute
 
+# first, re-format datetime as a xts object
+AQ_df$datetime = as.POSIXct(AQ_df$datetime)
+
 # create spatial points object for each sensor
 PA_sensors = SpatialPoints(AQ_df[!duplicated(AQ_df$ID), c("Lon", "Lat")],proj4string = CRS(prg))
 summary(PA_sensors)
 
 # contruct spatiotemporal object
-PA_STFDF = stConstruct(AQ_df, space = c("Lon","Lat"), time = "datetime", crs = CRS(prg), SpatialObj = stations)
+PA_STFDF = stConstruct(AQ_df, space = c("Lon","Lat"), time = "datetime", crs = CRS(prg), SpatialObj = sensors)
 #hrly_STFDF = stConstruct(AQ_df_hr, space = c("Lon","Lat"), time = "datetime", crs = CRS(prg), SpatialObj = stations)
 
 # turn ST object into a STFDF (stationary points)
@@ -242,12 +227,12 @@ dim(PA_STFDF)
 # temp and rh ts
 stplot(PA_STFDF[,"2021-12-30::2021-12-31","temp"],mode="ts")
 stplot(PA_STFDF[,"2021-12-30::2021-12-31","rh"],mode="ts")
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","corrected_pm"],mode="ts")
 ```
 
 ```{r}
-# just using PM2.5_a for PM observations
-stplot(PA_STFDF[,"2021-12-30::2021-12-31","pm25_a"],mode="ts")
-
+# NOTE
+## I removed the sensor map (I think to the bottom of this script) so this didn't work for me
 # aggregate sensor data over the sensor_map geometries
 aggregate_spatial <- aggregate(PA_STFDF[, "2021-12-30::2021-12-31"], as_Spatial(sensor_map$data$geometry), mean, na.rm=TRUE)
 stplot(aggregate_spatial[, , "pm25_a"], mode="ts")
@@ -261,7 +246,7 @@ stplot(PA_STFDF[,"2021-12-30::2021-12-31","temp"],mode="xt")
 stplot(PA_STFDF[,"2021-12-30::2021-12-31","rh"],mode="xt")
 
 # just using PM2.5_a for PM observations
-stplot(PA_STFDF[,"2021-12-30::2021-12-31","pm25_a"],mode="xt")
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","corrected_pm"],mode="xt")
 ```
 
 # Individual sensor plots
@@ -523,11 +508,42 @@ for (sensor in 1:30) {
 ```
 
 
-# To do
-- add columns to data - offline during fire, added after fire
-- ~~pm25 of full time period~~
-- points of all sensors, color coded by time period (before, burned, added after)
-- ~~look at paired inside/outside~~
-- map of sensors by area & time period
-- two columns of time series sensor plots for fire period, inside vs outside
+# Old Code
+```{r}
+# why is one showing up way off -- investigate, I wonder if this sensor moved during the process?
+# sensor 112606
+# png(file = "images/fire_map2.png", width = 4500, height = 3800, res = 300)
+# (detailed_sensor_map = basemap + 
+#     geom_point(data=(plot_data %>% filter(ID != "112606")), aes(x=Lon,y=Lat, label = ID, shape = Location, color = Status, label = rownames(ID))) +
+#     scale_colour_brewer(palette = "Set1") +
+#     theme_light() +
+#     theme(legend.position = "bottom", legend.box = "vertical") +
+#     #guides(scale = FALSE) +
+#     ggtitle("Map of sensors in Louisville and Superior, 12-30-21 to 2-26-22"))
+# dev.off()
+
+# add sensors, check which sensor is off
+# (ggplot(plot_data, aes(x=Lon,y=Lat, label = ID, shape = Location, color = fire_period, label = ID))) + 
+#   geom_point() +
+#   geom_text(check_overlap = TRUE)
+
+
+# Create time period variable based on availability during fire, inside/outside status for mapping
+# (plot_data = AQ_df %>%
+#   group_by(ID) %>%
+#   dplyr::select(ID, Lon, Lat, Location) %>%
+#   # use location[1] presuming indoor/outdoor doesn't change
+#   dplyr::summarize(Location = Location[1],
+#                    Lat = Lat[1],
+#                    Lon = Lon[1]))
+```
+
+```{r}
+# png(file = "images/month_map.png", width = 6000, height = 3800, res = 300)
+# (month_plot = basemap +
+#   geom_point(data = month_added_plot, aes(x=Lon,y=Lat, label = ID, shape = Location, color = Month)) +
+#    facet_grid(cols = vars(Month)))
+# dev.off()
+```
+
 
