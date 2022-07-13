@@ -16,6 +16,8 @@ library(stringr)
 library(readr)
 library(plyr)
 library(gtsummary)
+library(sf)
+library(kableExtra)
 ```
 
 
@@ -23,11 +25,8 @@ Cleaning/correction information: https://fire.airnow.gov/#correction-equation
 
 # Load data
 ```{r}
-# directory where sensor data is stored
-dir = "/Users/esrieves/Documents/GitHub/marshall_fires"
-
 # read in the file
-AQ_df = read_csv("/Users/esrieves/Documents/GitHub/marshall_fires/intermediary_outputs/aq_data.csv")
+AQ_df = read_csv("../intermediary_outputs/aq_data.csv")
 
 # drop the index columns
 AQ_df = AQ_df[,-1]
@@ -66,6 +65,290 @@ AQ_df = AQ_df %>%
 ```
 
 ## Cleaning summary stats
+
+```{r}
+agree = AQ_df %>%
+  dplyr::filter(a_b_agree == "agree") %>%
+  group_by(ID, a_b_agree) %>%
+  dplyr::summarise(n_agree = n())
+
+disagree = AQ_df %>%
+  dplyr::filter(a_b_agree != "agree") %>%
+  group_by(ID, a_b_agree) %>%
+  dplyr::summarise(n_disagree = n())
+```
+
+```{r}
+agree_counts = inner_join(agree, disagree, by="ID") %>%
+  dplyr::select(-c(a_b_agree.x, a_b_agree.y)) %>%
+  mutate(pct_agree = 100 * n_agree / (n_agree + n_disagree),
+         pct_disagree = 100 * n_disagree / (n_agree + n_disagree)) %>%
+  arrange(desc(pct_disagree))
+
+agree_counts %>%
+  kbl(digits=2, caption="Number of Datapoints that Agree Between Channels, Per Sensor") %>%
+  kable_styling()
+```
+
+```{r}
+# how many sensors have significant % disagreement btwn a & b?
+agree_counts = agree_counts %>%
+  mutate(group = case_when(pct_disagree >= 90 ~ 'very high (>90%)',
+                           pct_disagree < 90 & pct_disagree >= 75 ~ 'high (75%-90%)',
+                           pct_disagree < 75 & pct_disagree >= 50 ~ 'moderate (50%-75%)',
+                           pct_disagree < 50 & pct_disagree >= 25 ~ 'low (25%-50%)',
+                           pct_disagree < 25 & pct_disagree >= 1 ~ 'very low (1%-25%)',
+                           pct_disagree < 1 ~ 'less than 1%')) %>%
+  mutate(group = factor(group, levels=c("very high (>90%)", "high (75%-90%)", "moderate (50%-75%)", 'low (25%-50%)', 'very low (1%-25%)', 'less than 1%')))
+
+agree_counts %>% group_by(group) %>%
+  dplyr::summarise(n = n()) %>%
+  kbl(caption="Number of Sensors with Their Two Channels Disagreeing") %>%
+  kable_styling()
+```
+
+## Mapping
+```{r}
+# BOUNDARIES
+# Boulder boundaries
+BO_CO = st_read("../GIS_inputs_destruction_fireboundary/Boulder_county_munis/Municipalities.shp")
+fire_counties = BO_CO %>%
+  dplyr::filter(ZONEDESC == "Louisville" |
+                  ZONEDESC == "Superior" |
+                  ZONEDESC == "Broomfield" |
+                  ZONEDESC == "Lafayette" |
+                  ZONEDESC == "Boulder")
+boulder_precincts = st_read("../GIS_inputs_destruction_fireboundary/Unincorporated_Boulder/Unincorporated_Boulder.shp")
+broomfield_precincts = st_read("../GIS_inputs_destruction_fireboundary/Broomfield_Precincts/Precincts.shp")
+westminster_city = st_read("../GIS_inputs_destruction_fireboundary/Westminster_CityLimits/CityLimits.shp")
+
+# save proj string for fire-affected counties to use for other transformations
+prg = raster::crs(fire_counties,asText=TRUE)
+
+# Marshall fire boundary
+wfigs_fire = st_read("../GIS_inputs_destruction_fireboundary/WFIGS_-_Wildland_Fire_Perimeters_Full_History/FH_Perimeter.shp")
+
+# filter fire to marshall fire only; update crs
+marshall_fire = wfigs_fire %>% filter(poly_Incid == "Marshall") %>% st_transform(crs = st_crs(prg))
+
+## sensor info
+sensors = read.csv("../intermediary_outputs/sensor_data_full.csv")
+sensors = st_as_sf(sensors, coords=c("Lon", "Lat"), crs=st_crs(prg))
+```
+
+```{r}
+ggplot(boulder_precincts) +
+  geom_sf() +
+  geom_sf(data=broomfield_precincts, color="darkblue") +
+  geom_sf(data=westminster_city, color="darkgreen") +
+  geom_sf(data=marshall_fire$geometry, fill="red", alpha=0.5) +
+  geom_sf(data=sensors$geometry) +
+  ggtitle("All Sensor Locations")
+```
+
+```{r}
+# join the sensor locations to the agree/disagree information
+agree_counts = left_join(agree_counts, sensors, by="ID")
+```
+
+
+```{r}
+ggplot(boulder_precincts) +
+  geom_sf(color="gray") +
+  geom_sf(data=broomfield_precincts, color="gray") +
+  geom_sf(data=westminster_city, color="gray") +
+  geom_sf(data=marshall_fire$geometry, fill="red", alpha=0.5) +
+  geom_sf(data=agree_counts, aes(col=pct_disagree, geometry=geometry)) +
+  scale_color_viridis_c() +
+  ggtitle("All Sensor Locations 12/30/21 - 05/01/22")
+```
+
+## Limiting to fire period
+```{r}
+agree = AQ_df %>%
+  dplyr::filter(a_b_agree == "agree" & datetime < "2022-01-02") %>%
+  group_by(ID, a_b_agree) %>%
+  dplyr::summarise(n_agree = n())
+
+disagree = AQ_df %>%
+  dplyr::filter(a_b_agree != "agree" & datetime < "2022-01-02") %>%
+  group_by(ID, a_b_agree) %>%
+  dplyr::summarise(n_disagree = n())
+
+agree_counts_fire = inner_join(agree, disagree, by="ID") %>%
+  dplyr::select(-c(a_b_agree.x, a_b_agree.y)) %>%
+  mutate(pct_agree = 100 * n_agree / (n_agree + n_disagree),
+         pct_disagree = 100 * n_disagree / (n_agree + n_disagree)) %>%
+  arrange(desc(pct_disagree))
+
+agree_counts_fire %>%
+  kbl(digits=2, caption="Number of Datapoints that Agree Between Channels, Per Sensor") %>%
+  kable_styling()
+```
+
+```{r}
+agree_counts_fire = left_join(agree_counts_fire, sensors, by="ID")
+```
+
+```{r}
+ggplot(boulder_precincts) +
+  geom_sf(color="gray") +
+  geom_sf(data=broomfield_precincts, color="gray") +
+  geom_sf(data=westminster_city, color="gray") +
+  geom_sf(data=marshall_fire$geometry, fill="red", alpha=0.5) +
+  geom_sf(data=agree_counts_fire, aes(col=pct_disagree, geometry=geometry), alpha=0.75) +
+  scale_color_viridis_c() +
+  ggtitle("All Sensor Locations 12/30/21 - 01/02/22")
+```
+
+Only looking at disagreeing sensors
+```{r}
+only_disagree <- agree_counts_fire %>%
+  filter(pct_disagree > 0)
+
+ggplot(boulder_precincts) +
+  geom_sf(color="gray") +
+  geom_sf(data=broomfield_precincts, color="gray") +
+  geom_sf(data=westminster_city, color="gray") +
+  geom_sf(data=marshall_fire$geometry, fill="red", alpha=0.5) +
+  geom_sf(data=only_disagree, aes(col=pct_disagree, geometry=geometry, alpha = 0.5, size=pct_disagree)) +
+  scale_color_viridis_c() +
+  ggtitle("All Sensor Locations 12/30/21 - 01/02/22")
+```
+
+```{r}
+ggplot(data=agree_counts_fire) +
+  geom_histogram(aes(x=pct_disagree), fill="black", color="white") +
+  ggtitle("Histogram of the percentage of data points in fire period that disagree")
+```
+
+All of the data points that disagree are thrown out with the EPA cleaning & correcting. This means we lose a lot of the actual fire data (see map above).
+```{r}
+sum(agree_counts_fire$n_disagree)
+sum(agree_counts_fire$n_disagree) + sum(agree_counts_fire$n_agree)
+
+100 * sum(agree_counts_fire$n_disagree) / (sum(agree_counts_fire$n_disagree) + sum(agree_counts_fire$n_agree))
+```
+
+29.88% of the data between 12/30/21 and 01/02/22 is lost when we clean via the EPA standards.
+
+## Same Analysis, but January
+```{r}
+agree = AQ_df %>%
+  dplyr::filter(a_b_agree == "agree" & datetime < "2022-02-01") %>%
+  group_by(ID, a_b_agree) %>%
+  dplyr::summarise(n_agree = n())
+
+disagree = AQ_df %>%
+  dplyr::filter(a_b_agree != "agree" & datetime < "2022-02-01") %>%
+  group_by(ID, a_b_agree) %>%
+  dplyr::summarise(n_disagree = n())
+
+agree_counts_jan = inner_join(agree, disagree, by="ID") %>%
+  dplyr::select(-c(a_b_agree.x, a_b_agree.y)) %>%
+  mutate(pct_agree = 100 * n_agree / (n_agree + n_disagree),
+         pct_disagree = 100 * n_disagree / (n_agree + n_disagree)) %>%
+  arrange(desc(pct_disagree))
+
+agree_counts_jan %>%
+  kbl(digits=2, caption="Number of Datapoints that Agree Between Channels, Per Sensor") %>%
+  kable_styling()
+```
+
+```{r}
+agree_counts_jan = left_join(agree_counts_jan, sensors, by="ID")
+```
+
+```{r}
+ggplot(boulder_precincts) +
+  geom_sf(color="gray") +
+  geom_sf(data=broomfield_precincts, color="gray") +
+  geom_sf(data=westminster_city, color="gray") +
+  geom_sf(data=marshall_fire$geometry, fill="red", alpha=0.5) +
+  geom_sf(data=agree_counts_jan, aes(col=pct_disagree, geometry=geometry)) +
+  scale_color_viridis_c() +
+  ggtitle("All Sensor Locations 01/01/22 - 02/01/22")
+```
+
+Only looking at disagreeing sensors
+```{r}
+only_disagree_jan <- agree_counts_jan %>%
+  filter(pct_disagree > 0)
+
+ggplot(boulder_precincts) +
+  geom_sf(color="gray") +
+  geom_sf(data=broomfield_precincts, color="gray") +
+  geom_sf(data=westminster_city, color="gray") +
+  geom_sf(data=marshall_fire$geometry, fill="red", alpha=0.5) +
+  geom_sf(data=only_disagree_jan, aes(col=pct_disagree, geometry=geometry, alpha = 0.5, size=pct_disagree)) +
+  scale_color_viridis_c() +
+  ggtitle("All Sensor Locations 12/30/21 - 01/02/22")
+```
+
+```{r}
+sum(agree_counts_jan$n_disagree)
+sum(agree_counts_jan$n_disagree) + sum(agree_counts_jan$n_agree)
+
+100 * sum(agree_counts_jan$n_disagree) / (sum(agree_counts_jan$n_disagree) + sum(agree_counts_jan$n_agree))
+```
+
+8.58% of the data between 01/01/22 and 02/01/22 is lost when we clean via the EPA standards.
+
+# Aggregated Agreement by Day/Time
+## January
+```{r}
+jan_agg <- AQ_df %>%
+  dplyr::filter(datetime < "2022-02-01") %>%
+  group_by(datetime) %>%
+  dplyr::summarise(total = n(),
+                   num_disagree = sum(a_b_agree == "disagree"),
+                   num_agree = sum(a_b_agree == "aggree")) %>%
+  mutate(pct_disagree = num_disagree / total)
+```
+
+```{r}
+ggplot(jan_agg, aes(x=datetime, y=pct_disagree)) +
+  geom_line() +
+  geom_smooth()
+```
+
+### Aggregated by date
+```{r}
+jan_agg1 <- jan_agg %>%
+  mutate(date = as.Date(datetime),
+         pct_disagree = num_disagree / total) %>%
+  group_by(date) %>%
+  dplyr::summarise(pct_disagree = mean(pct_disagree))
+
+ggplot(jan_agg1, aes(x=date, y=pct_disagree)) +
+  geom_point() +
+  geom_line() +
+  geom_smooth()
+```
+
+
+## Fire period
+```{r}
+fire_agg <- AQ_df %>%
+  dplyr::filter(datetime < "2022-01-02") %>%
+  group_by(datetime) %>%
+  dplyr::summarise(total = n(),
+                   num_disagree = sum(a_b_agree == "disagree"),
+                   num_agree = sum(a_b_agree == "aggree")) %>%
+  mutate(pct_disagree = num_disagree / total)
+```
+
+```{r}
+# 11 am on 12/31/2021 was the first 911 call about the fire
+ggplot(fire_agg, aes(x=datetime, y=pct_disagree)) +
+  geom_point() +
+  geom_smooth() +
+  geom_vline(xintercept=as.POSIXct("2021-12-31 11:00:00", tz="UTC"), color="red") +
+  ggtitle("Percent of Disagreeing Data for the Fire Period (line is at 2021-12-31 11:00:00)")
+```
+There's high disagreement right before the fire was reported -> purple air sensors heavily affected by wind?
+
+# Summary Stats
 ```{r}
 # summary stats -- pct NA for each channel
 AQ_df %>% group_by(ID) %>% summarise(count_A_na = sum(is.na(pm25_a)),
@@ -115,6 +398,7 @@ equation found here: https://fire.airnow.gov/#correction-equation
                         ifelse(pm_avg >= 50 | pm_avg < 299, ((0.786 * pm_avg) - (0.086 * rh) + 5.75),
                                ifelse(pm_avg >= 229, ((0.69 * pm_avg) + 8.84 * (0.001 * pm_avg^2) + 2.97), NA)))))
 ```
+
 ```{r}
 # STATS
 # summary stats -- AB difference (for corrected channels)
@@ -143,7 +427,7 @@ summary(corrected_AQ$corrected_pm)
 # mean corrected PM
 (mean_AQ = corrected_AQ %>% group_by(ID) %>% dplyr::summarise(mean_pm = mean(corrected_pm)))
 
-# distribution of differences between sensors -- indicates that some sensor differenes are > 3000 on average! will investigate further
+# distribution of differences between sensors -- indicates that some sensor differecnes are > 3000 on average! will investigate further
 hist(mean_sensor_AB_diff$mean_ab_diff)
 
 # create a new version exploring AB differences, but excluding outliers
@@ -158,6 +442,6 @@ hist(mean_sensor_AB_diff_sub1000$mean_ab_diff,breaks = 20)
 # Export data
 ```{r}
 # AQ df for cleaning
-write.csv(corrected_AQ,"/Users/esrieves/Documents/GitHub/marshall_fires/intermediary_outputs/corrected_AQ_data.csv")
+write.csv(corrected_AQ,"../intermediary_outputs/corrected_AQ_data.csv")
 ```
 

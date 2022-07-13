@@ -1,0 +1,743 @@
+---
+title: "marshall_visualizations"
+author: "Emma Rieves & Zac Clement"
+date: "Created 4/27/2022, Updated 7/5/2022"
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Load the Libraries
+```{r}
+library(sf)
+library(sp)
+library(gstat)
+library(raster)
+library(tidyverse)
+library(spacetime)
+library(stringr)
+library(readr)
+library(leaflet)
+library(gridExtra)
+library(gifski)
+
+# to make the spherical geometry errors go away
+sf::sf_use_s2(FALSE)
+```
+
+# Import Data
+## Air quality & sensor data
+```{r}
+# AIR QUALITY
+## corrected air quality
+AQ_df = read.csv("../intermediary_outputs/corrected_AQ_data.csv")
+
+## sensor info
+sensors = read.csv("../intermediary_outputs/sensor_data_full.csv")
+```
+
+## Geometries
+```{r}
+# BOUNDARIES
+# Boulder boundaries
+BO_CO = st_read("../GIS_inputs_destruction_fireboundary/Boulder_county_munis/Municipalities.shp")
+fire_counties = BO_CO %>%
+  dplyr::filter(ZONEDESC == "Louisville" |
+                  ZONEDESC == "Superior" |
+                  ZONEDESC == "Broomfield" |
+                  ZONEDESC == "Lafayette" |
+                  ZONEDESC == "Boulder")
+# Boulder Boundary
+boulder_precincts = st_read("../GIS_inputs_destruction_fireboundary/Unincorporated_Boulder/Unincorporated_Boulder.shp")
+# Broomfield Boundary
+broomfield_precincts = st_read("../GIS_inputs_destruction_fireboundary/Broomfield_Precincts/Precincts.shp")
+# Westminster Boundary
+westminster_city = st_read("../GIS_inputs_destruction_fireboundary/Westminster_CityLimits/CityLimits.shp")
+
+# make all the precincts have the same columns (we don't need a lot of the data)
+boulder_precincts <- boulder_precincts %>%
+  select(c(OBJECTID, geometry, SHAPEarea, SHAPElen))
+
+broomfield_precincts <- broomfield_precincts %>%
+  mutate(SHAPEarea = Shape__Are,
+         SHAPElen = Shape__Len,
+         OBJECTID = OBJECTID + 1000) %>% # add 1,000 to the broomfield precincts to get rid of overlapping labels
+  select(-c("GlobalID", "GIS_ID", "PRECINCT_N", "MAP_COLOR", "USER_COMME", "LAST_UPDAT", "Shape__Are", "Shape__Len"))
+
+westminster_city <- westminster_city %>%
+  mutate(SHAPEarea = ShapeSTAre,
+         SHAPElen = ShapeSTLen) %>%
+  select(c(OBJECTID, geometry, SHAPEarea, SHAPElen))
+
+# save proj string for fire-affected counties to use for other transformations
+prg = raster::crs(fire_counties,asText=TRUE)
+
+# all boundaries joined together
+all_bounds <- boulder_precincts %>%
+  rbind(st_transform(broomfield_precincts, crs=prg)) %>%
+  rbind(st_transform(westminster_city, crs=prg))
+
+# Marshall fire boundary
+wfigs_fire = st_read("../GIS_inputs_destruction_fireboundary/WFIGS_-_Wildland_Fire_Perimeters_Full_History/FH_Perimeter.shp")
+
+# filter fire to marshall fire only; update crs
+marshall_fire = wfigs_fire %>% filter(poly_Incid == "Marshall") %>% st_transform(crs = st_crs(prg))
+```
+
+```{r}
+# BUILDINGS
+# Read in destroyed home and building sites
+destroyed_homes = st_read("../GIS_inputs_destruction_fireboundary/output_damage_files/destroyed_homes.shp")
+damaged_homes = st_read("../GIS_inputs_destruction_fireboundary/output_damage_files/damaged_homes.shp")
+destroyed_businesses = st_read("../GIS_inputs_destruction_fireboundary/output_damage_files/destroyed_businesses.shp")
+damaged_businesses = st_read("../GIS_inputs_destruction_fireboundary/output_damage_files/damaged_businesses.shp")
+
+
+# create 'type' column; select only the columns needed; make projection string match
+destroyed_homes = destroyed_homes %>%
+  mutate(type = "destroyed - residential") %>%
+  dplyr::rename(jurisdiction = JURISDICTI) %>%
+  dplyr::select(jurisdiction, type, latlong, geometry) %>%
+  st_transform(crs = st_crs(prg))
+destroyed_businesses = destroyed_businesses %>%
+  mutate(type = "destroyed - non-residential") %>%
+  dplyr::rename(jurisdiction = Jurisdicti) %>%
+  dplyr::select(jurisdiction, type, latlong, geometry) %>%
+  st_transform(crs = st_crs(prg))
+damaged_homes = damaged_homes %>%
+  mutate(type = "damaged - residential") %>%
+  dplyr::rename(jurisdiction = JURISDICTI) %>%
+  dplyr::select(jurisdiction, type, latlong, geometry) %>%
+  st_transform(crs = st_crs(prg))
+damaged_business = damaged_businesses %>%
+  mutate(type = "damaged - non-residential") %>%
+  dplyr::rename(jurisdiction = Jurisdicti) %>%
+  dplyr::select(jurisdiction, type, latlong, geometry) %>%
+  st_transform(crs = st_crs(prg))
+
+# combine into one df, using the "," indicator keeps decimal points
+(destroyed_damaged =rbind(destroyed_homes,destroyed_businesses,damaged_homes,damaged_business) %>% separate(latlong, c("lat","long"), ",", convert = FALSE))
+
+# change lat and long to floats
+destroyed_damaged$lat = as.double(destroyed_damaged$lat)
+destroyed_damaged$long = as.double(destroyed_damaged$long)
+```
+
+# Maps
+
+```{r}
+# create "location status" column for mapping]
+sensors$loc_status = str_c(sensors$Location, " - ", sensors$Status)
+sensors = na.omit(sensors)
+```
+
+```{r}
+# set factors to false
+options(stringsAsFactors = FALSE)
+
+# create palette for destroyed and damaged building colors for leaflet map
+pal = colorFactor(c("red","orange","magenta","light pink"), domain = unique(destroyed_damaged$type))
+
+
+## create indoor/outdoor icons
+sensorIcon = awesomeIconList(
+  "inside" = makeAwesomeIcon(
+    icon = "home",
+    iconColor = "white",
+    markerColor = "blue",
+    library = "fa"
+  ),
+  "outside" = makeAwesomeIcon(
+    icon = "tree",
+    iconColor = "white",
+    markerColor = "green",
+    library = "fa"
+  ))
+
+sensors
+
+# map of damaged/destroyed buildings and AQ sensors (indoor/outdoor)
+# chose not to do icons for destroyed/damaged buildings because the map got really busy
+(fire_destruction_and_AQ_plot = leaflet(sensors) %>%
+    addTiles() %>% 
+    addAwesomeMarkers(icon = ~sensorIcon[Location],
+                      lng = sensors$Lon, lat = sensors$Lat) %>% 
+    addCircleMarkers(color = ~pal(destroyed_damaged$type),
+                     radius = 3.5,
+                     opacity = 1,
+                     lng = destroyed_damaged$long, lat = destroyed_damaged$lat) %>%
+    addLegend("topright", pal = pal, values = ~destroyed_damaged$type,
+              title = "Fire damage"))
+```
+
+```{r}
+# create palette for location + time period
+timeSensorIcon = awesomeIconList(
+  "inside - Complete data throughout fire period" = makeAwesomeIcon(
+    icon = "home",
+    iconColor = "white",
+    markerColor = "green",
+    library = "fa"
+  ),
+  "inside - Sensor offline during fire, did not return online" = makeAwesomeIcon(
+    icon = "tree",
+    iconColor = "white",
+    markerColor = "gray",
+    library = "fa"
+  ),
+  "inside - Sensor offline during fire, returned online" = makeAwesomeIcon(
+    icon = "home",
+    iconColor = "white",
+    markerColor = "blue",
+    library = "fa"
+  ),
+   "outside - Complete data throughout fire period" = makeAwesomeIcon(
+    icon = "home",
+    iconColor = "white",
+    markerColor = "green",
+    library = "fa"
+  ),
+  "outside - Sensor offline during fire, did not return online" = makeAwesomeIcon(
+    icon = "tree",
+    iconColor = "white",
+    markerColor = "gray",
+    library = "fa"
+  ),
+  "outside - Sensor offline during fire, returned online" = makeAwesomeIcon(
+    icon = "tree",
+    iconColor = "white",
+    markerColor = "blue",
+    library = "fa"
+  ))
+
+# map based on when sensor was added
+(fire_destruction_and_AQ_plot = leaflet(sensors) %>%
+    addTiles() %>% 
+    addAwesomeMarkers(icon = ~timeSensorIcon[loc_status],
+                      lng = sensors$Lon, lat = sensors$Lat) %>% 
+    addCircleMarkers(color = ~pal(destroyed_damaged$type),
+                     radius = 3.5,
+                     opacity = 1,
+                     lng = destroyed_damaged$long, lat = destroyed_damaged$lat) %>%
+    addLegend("topright", pal = pal, values = ~destroyed_damaged$type,
+              title = "Fire damage") %>%
+    addLegend("bottomright",
+              pal = colorFactor(c("green","gray","blue"), domain = unique(sensors$Status)),
+              values = ~sensors$Status, title = "Sensor Time Info"))
+```
+
+
+## Create spatial objects
+
+```{r, cache=TRUE}
+## Create spacetime objects -- 10 minute
+# first, re-format datetime as a xts object
+AQ_df$datetime = as.POSIXct(AQ_df$datetime)
+
+# create spatial points object for each sensor
+PA_sensors = SpatialPoints(AQ_df[!duplicated(AQ_df$ID), c("Lon", "Lat")],proj4string = CRS(prg))
+summary(PA_sensors)
+
+# contruct spatiotemporal object
+PA_STFDF = stConstruct(AQ_df, space = c("Lon","Lat"), time = "datetime", crs = CRS(prg), SpatialObj = sensors)
+
+# turn ST object into a STFDF (stationary points)
+PA_STFDF = as(PA_STFDF,"STFDF")
+
+# see summary of data
+summary(PA_STFDF)
+
+# object class
+class(PA_STFDF)
+
+# object dimensions
+dim(PA_STFDF)
+```
+
+## Map of all sensors we have data for (many not online during the)
+```{r}
+ggplot(all_bounds, aes(geometry=geometry)) +
+  geom_sf() +
+  geom_sf(data=marshall_fire$geometry, fill="red", alpha=0.6) +
+  geom_sf(data=st_as_sf(PA_sensors))
+```
+
+# Time series plots
+
+```{r}
+## Time series plots
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","temp"],mode="ts")
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","rh"],mode="ts")
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","corrected_pm"],mode="ts")
+```
+
+```{r warning=FALSE}
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","temp"],mode="xt")
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","rh"],mode="xt")
+stplot(PA_STFDF[,"2021-12-30::2021-12-31","corrected_pm"],mode="xt")
+```
+
+# Sensors With Complete Data
+```{r}
+# make an STFDF with only the sensors that had complete data for the fire
+complete_sensors = sensors %>% filter(Status == "Complete data throughout fire period")
+complete_STFDF = PA_STFDF[PA_STFDF@data$ID %in% complete_sensors$ID]
+stplot(complete_STFDF[,,"corrected_pm"], mode="ts")
+```
+
+```{r}
+stplot(complete_STFDF[,"2021-12-30::2021-12-31","corrected_pm"], mode="ts")
+stplot(complete_STFDF[,"2021-12-30::2021-12-31","corrected_pm"], mode="tp")
+```
+
+# Kriging
+## Funky Data from Variograms
+```{r}
+# Index 15 -> ID 60517, STANDLEY LAKE
+plot(fortify(PA_STFDF[PA_STFDF@data$ID == 60517]["2021-12-30::2022-01-02", "corrected_pm"]))
+# looks normal
+
+# Index 23 -> ID 91877, Eisenhower Dr
+plot(fortify(PA_STFDF[PA_STFDF@data$ID == 91877]["2021-12-30::2022-01-02", "corrected_pm"]))
+# has incredibly large values midday Friday - Sunday, could be snow related?
+
+# Index 36 -> ID 112606, 1333 Wildwood Ct., Boulder, CO 80305 sensor
+plot(fortify(PA_STFDF[PA_STFDF@data$ID == 112606]["2021-12-30::2022-01-02", "corrected_pm"]))
+# looking at purpleair map, A channel is 'downgraded', 0% confidence
+
+# Index 40 -> ID 119547, Broadlands sensor
+plot(fortify(PA_STFDF[PA_STFDF@data$ID == 119547]["2021-12-30::2022-01-02", "corrected_pm"]))
+# reasonable values
+```
+
+
+Starting with Dec 30 - Jan 2, only outside sensors.
+```{r warning=FALSE}
+# get all of the data for the 12/30 to 1/2 timeframe
+krig_data <- complete_STFDF[,"2021-12-30::2022-01-02"]
+# limit to only outdoor sensors
+krig_data <- krig_data[krig_data@data$Location == "outside"]
+# drop sensor 112606 b/c 0% confidence according to PurpleAir map
+krig_data <- krig_data[krig_data@data$ID != 112606]
+# drop values for "Eisenhower Dr" sensor that're over 1000
+krig_data@data[(krig_data@data$ID == 91877) &
+                 (as.numeric(krig_data@data$corrected_pm) > 1000) &
+                 !is.na(krig_data@data$corrected_pm),]$corrected_pm <- NA
+# get rid of the weird sensor that might be throwing residuals off
+krig_data <- krig_data[krig_data@data$Name != "ntsky"]
+
+# reproject the data to utm
+reproj <- "+proj=utm +zone=13 +datum=WGS84 +units=km"
+krig_data@sp <- spTransform(krig_data@sp, reproj)
+
+# aggregate from 10 min intervals to hour intervals
+krig_data <- aggregate(krig_data, by="hour", mean)
+
+# split the data into the days we want
+dec30 <- krig_data[, "2021-12-30"]
+dec31 <- krig_data[, "2021-12-31"]
+jan1 <- krig_data[, "2022-01-01"]
+jan2 <- krig_data[, "2022-01-02"]
+
+# split each day into the time periods of focus
+# pre-fire period: betweeen 00:00 - 11:00 MST on 12/30/2021
+pre_fire <- aggregate(dec30, by="11 hours", mean)[, "2021-12-30 00:00:00"]
+# fire period (11am - 5pm)
+during_fire <- aggregate(dec30[, "2021-12-30 11:00:00::2021-12-30 16:00:00"], by="6 hours", mean)
+# post-fire on 12/30/2021
+evening_of_fire <- aggregate(dec30[, "2021-12-30 16:00:00::2021-12-31 00:00:00"], by="8 hours", mean)
+# dec 31st
+december31 <- aggregate(dec31, by="day", mean)
+# january 1st
+january1 <- aggregate(jan1, by="day", mean)
+# january 2nd
+january2 <- aggregate(jan2, by="day", mean)
+
+periods <- c(pre_fire, during_fire, evening_of_fire, december31, january1, january2)
+
+# create variograms for these time periods
+pre_fire.vgm <- variogram(corrected_pm~1, pre_fire[!is.na(pre_fire$corrected_pm),])
+during_fire.vgm <- variogram(corrected_pm~1, during_fire[!is.na(during_fire$corrected_pm),])
+evening_of_fire.vgm <- variogram(corrected_pm~1, evening_of_fire[!is.na(evening_of_fire$corrected_pm),])
+december31.vgm <- variogram(corrected_pm~1, december31[!is.na(december31$corrected_pm),])
+january1.vgm <- variogram(corrected_pm~1, january1[!is.na(january1$corrected_pm),])
+january2.vgm <- variogram(corrected_pm~1, january2[!is.na(january2$corrected_pm),])
+
+# plot the variograms
+plot(pre_fire.vgm)
+plot(during_fire.vgm)
+plot(evening_of_fire.vgm)
+plot(december31.vgm)
+plot(january1.vgm)
+plot(january2.vgm)
+```
+
+
+### Variogram Clouds
+```{r}
+for (period in periods) {
+  cloud <- variogram(corrected_pm~1, period[!is.na(period$corrected_pm), ], cloud=TRUE)
+  map <- variogram(corrected_pm~1, period[!is.na(period$corrected_pm), ], map=TRUE, cutoff=20, width=2)
+  print(plot(cloud))
+  print(plot(map))
+}
+
+```
+
+
+No good models variogram models!!!!
+
+```{r}
+pre_fire.fitted <- fit.variogram(pre_fire.vgm, vgm(c("Exp", "Sph", "Gau", "Mat")))
+pre_fire.fitted
+
+plot(pre_fire.vgm, model=pre_fire.fitted)
+
+during_fire.fitted <- fit.variogram(during_fire.vgm, vgm(c("Exp", "Sph", "Gau", "Mat")))
+during_fire.fitted
+
+plot(during_fire.vgm, model=during_fire.fitted)
+
+evening_of_fire.fitted <- fit.variogram(evening_of_fire.vgm, vgm(c("Exp", "Sph", "Gau", "Mat")))
+evening_of_fire.fitted
+
+plot(evening_of_fire.vgm, model=evening_of_fire.fitted)
+
+december31.fitted <- fit.variogram(december31.vgm, vgm(c("Exp", "Sph", "Gau", "Mat")))
+december31.fitted
+plot(december31.vgm, model=december31.fitted)
+
+january1.fitted <- fit.variogram(january1.vgm, vgm(c("Exp", "Sph", "Gau", "Mat")))
+january1.fitted
+plot(january1.vgm, model=january1.fitted)
+
+january2.fitted <- fit.variogram(january2.vgm, vgm(c("Exp", "Sph", "Gau", "Mat")))
+january2.fitted
+plot(january1.vgm, model=january2.fitted)
+```
+
+### Breaking down into smaller timeframes
+```{r}
+for (i in 0:11) {
+  if (i < 10) {
+    i <- paste("0", i, sep="")
+  }
+  t <- paste("2021-12-30 ", i, ":00:00", sep="")
+  i.data <- dec30[, t]
+  i.vgm <- variogram(corrected_pm~1, i.data[!is.na(i.data$corrected_pm),])
+  # print(plot(i.vgm, main=paste("Variogram at", t)))
+  i.fitted <- fit.variogram(i.vgm, vgm(c("Exp", "Sph", "Gau", "Mat")))
+  print(i.fitted)
+  print(plot(i.vgm, model=i.fitted, main=paste("Variogram at", t)))
+}
+```
+
+Still no good variograms!
+
+## Making grid for new data
+```{r}
+grd <- SpatialPixels(SpatialPoints(as_Spatial(st_make_grid(all_bounds, n=50))), proj4string = prg)
+plot(grd)
+
+grd <- grd[as_Spatial(all_bounds),]
+plot(grd)
+
+grd <- spTransform(grd, CRS(reproj))
+```
+
+## Plotting Corrected PM
+
+This is just used to check the data from the sensors, and visualize if any of the sensors have odd values.
+```{r}
+plot(pre_fire$corrected_pm)
+plot(during_fire$corrected_pm)
+plot(evening_of_fire$corrected_pm)
+plot(december31$corrected_pm)
+plot(january1$corrected_pm)
+plot(january2$corrected_pm)
+```
+
+
+## IDW
+```{r}
+pre_fire.idw <- idw(corrected_pm~1, pre_fire[!is.na(pre_fire$corrected_pm),], grd)
+spplot(pre_fire.idw[,1], main="Pre-Fire Period on 12/30")
+
+during_fire.idw <- idw(corrected_pm~1, during_fire[!is.na(during_fire$corrected_pm),], grd)
+spplot(during_fire.idw[,1], main="During Fire on 12/30")
+
+evening_of_fire.idw <- idw(corrected_pm~1, evening_of_fire[!is.na(evening_of_fire$corrected_pm),], grd)
+spplot(evening_of_fire.idw[,1], main="After Fire on 12/30")
+
+december31.idw <- idw(corrected_pm~1, december31[!is.na(december31$corrected_pm),], grd)
+spplot(december31.idw[,1], main="December 31st")
+
+january1.idw <- idw(corrected_pm~1, january1[!is.na(january1$corrected_pm),], grd)
+spplot(january1.idw[,1], main="January 1st")
+
+january2.idw <- idw(corrected_pm~1, january2[!is.na(january2$corrected_pm),], grd)
+spplot(january2.idw[,1], main="January 2nd")
+```
+
+
+```{r}
+aqi_colors <- c("#00e400",
+                "#ffff00",
+                "#ff7e00",
+                "#ff0000",
+                "#8f3f97",
+                "#7e0023")
+
+aqi_labels <- c("Good (0-12.0)",
+                "Moderate (12.1-35.4)",
+                "Unhealthy for Sensitive Groups (35.5-55.4)",
+                "Unhealthy (55.5-150.4)",
+                "Very Unhealthy (150.5-250.4)",
+                "Hazardous (250.5-500.4)")
+
+factorize_aqi <- function (idw) {
+  idw$PM2.5 <- cut(idw$var1.pred, breaks=c(0, 12.0, 35.4, 55.4, 150.4, 250.4), na.omit=T)
+  return(idw)
+}
+
+plot_idw <- function(idw, title) {
+  return(ggplot(all_bounds) +
+  geom_sf() +
+  geom_sf(data=st_as_sf(factorize_aqi(idw)), aes(col=PM2.5), size=2) +
+  scale_color_manual(values=aqi_colors, labels=aqi_labels, name="PM2.5 (µg/m^3)") +
+  geom_sf(data=marshall_fire$geometry, col="gray20", alpha=0.1) +
+  ggtitle(title))
+}
+
+plot_idw(pre_fire.idw, "Pre Fire IDW")
+plot_idw(during_fire.idw, "During Fire IDW")
+plot_idw(evening_of_fire.idw, "Evening of fire IDW")
+plot_idw(december31.idw, "December 31st IDW")
+plot_idw(january1.idw, "January 1st IDW")
+plot_idw(january2.idw, "January 2nd IDW")
+```
+
+
+### Cross Validation
+```{r}
+pre_fire.idw_cv <- krige.cv(corrected_pm~1, pre_fire[!is.na(pre_fire$corrected_pm),], nfold=38)
+pre_fire.idw_sd <- sd(pre_fire.idw_cv$residual)
+paste("Pre fire standard deviation:", pre_fire.idw_sd)
+spplot(pre_fire.idw_cv, main="Pre-Fire Period on 12/30")
+pre_fire.idw_cv$zscore <- pre_fire.idw_cv$residual / pre_fire.idw_sd
+
+during_fire.idw_cv <- krige.cv(corrected_pm~1, during_fire[!is.na(during_fire$corrected_pm),], nfold=38)
+during_fire.idw_sd <- sd(during_fire.idw_cv$residual)
+paste("During fire standard deviation:", during_fire.idw_sd)
+spplot(during_fire.idw_cv, main="During Fire on 12/30")
+during_fire.idw_cv$zscore <- during_fire.idw_cv$residual / during_fire.idw_sd
+
+evening_of_fire.idw_cv <- krige.cv(corrected_pm~1, evening_of_fire[!is.na(evening_of_fire$corrected_pm),], nfold=38)
+evening_of_fire.idw_sd <- sd(evening_of_fire.idw_cv$residual)
+paste("Evening of fire standard deviation:", evening_of_fire.idw_sd)
+spplot(evening_of_fire.idw_cv, main="After Fire on 12/30")
+evening_of_fire.idw_cv$zscore <- evening_of_fire.idw_cv$residual / evening_of_fire.idw_sd
+
+december31.idw_cv <- krige.cv(corrected_pm~1, december31[!is.na(december31$corrected_pm),], nfold=38)
+december31.idw_sd <- sd(december31.idw_cv$residual)
+paste("December 31st standard deviation:", december31.idw_sd)
+spplot(december31.idw_cv, main="December 31st")
+december31.idw_cv$zscore <- december31.idw_cv$residual / december31.idw_sd
+
+january1.idw_cv <- krige.cv(corrected_pm~1, january1[!is.na(january1$corrected_pm),], nfold=38)
+january1.idw_sd <- sd(january1.idw_cv$residual)
+paste("January 1 standard deviation:", january1.idw_sd)
+spplot(january1.idw_cv, main="January 1st")
+january1.idw_cv$zscore <- january1.idw_cv$residual / january1.idw_sd
+
+january2.idw_cv <- krige.cv(corrected_pm~1, january2[!is.na(january2$corrected_pm),], nfold=38)
+january2.idw_sd <- sd(january2.idw_cv$residual)
+paste("January 2 standard deviation:", january2.idw_sd)
+spplot(january1.idw_cv, main="January 2nd")
+january2.idw_cv$zscore <- january2.idw_cv$residual / january2.idw_sd
+```
+
+```{r}
+plot_idw_resid <- function(idw.cv, title) {
+  return(ggplot(all_bounds) +
+  geom_sf(fill="#FbFbFb", color="gray") + 
+  geom_sf(data=marshall_fire$geometry, col="red", alpha=0.1) +
+  geom_sf(data=st_as_sf(idw.cv), aes(fill=residual), color="black", shape=21, size=2) +
+  scale_color_gradient2(aesthetics="fill") +
+  ggtitle(title))
+}
+
+plot_idw_resid_zscore <- function(idw.cv, title) {
+  return(ggplot(all_bounds) +
+  geom_sf(fill="#FbFbFb", color="gray") + 
+  geom_sf(data=marshall_fire$geometry, col="red", alpha=0.1) +
+  geom_sf(data=st_as_sf(idw.cv), aes(fill=zscore), color="black", shape=21, size=2) +
+  scale_color_gradient2(aesthetics="fill") +
+  ggtitle(title))
+}
+
+plot_idw_cv <- function(idw, idw_title, idw.cv) {
+  p1 <- plot_idw(idw, idw_title)
+  p2 <- plot_idw_resid(idw.cv, "Residuals")
+  return(grid.arrange(p1, p2, ncol=2))
+}
+
+plot_idw_resid(pre_fire.idw_cv, "Pre-Fire Residuals")
+plot_idw_resid(during_fire.idw_cv, "During Fire Residuals")
+plot_idw_resid(evening_of_fire.idw_cv, "After Fire Residuals")
+plot_idw_resid(december31.idw_cv, "December 31st Residuals")
+plot_idw_resid(january1.idw_cv, "January 1st Residuals")
+plot_idw_resid(january2.idw_cv, "January 2nd Residuals")
+
+plot_idw_resid_zscore(pre_fire.idw_cv, "Pre-Fire Residual Z-Scores")
+plot_idw_resid_zscore(during_fire.idw_cv, "During Fire Residual Z-Scores")
+plot_idw_resid_zscore(evening_of_fire.idw_cv, "After Fire Residual Z-Scores")
+plot_idw_resid_zscore(december31.idw_cv, "December 31st Residual Z-Scores")
+plot_idw_resid_zscore(january1.idw_cv, "January 1st Residual Z-Scores")
+plot_idw_resid_zscore(january2.idw_cv, "January 2nd Residual Z-Scores")
+```
+
+```{r}
+plot_idw_cv(pre_fire.idw, "Pre-Fire IDW", pre_fire.idw_cv)
+plot_idw_cv(during_fire.idw, "During Fire IDW", during_fire.idw_cv)
+plot_idw_cv(evening_of_fire.idw, "Evening of Fire IDW", evening_of_fire.idw_cv)
+plot_idw_cv(december31.idw, "December 31st IDW", december31.idw_cv)
+plot_idw_cv(january1.idw, "January 1st IDW", january1.idw_cv)
+plot_idw_cv(january2.idw, "January 2nd IDW", january2.idw_cv)
+```
+
+
+### Notes:
+
+* Pre-fire period the residuals look fairly good, some over & underprediction in downtown Boulder
+* During fire period has 1 large underprediction value, few other overpredicted near fire area
+* Evening after the fire has underprediction, but not much
+* December 31st has high under & over predicted values right next to each other near fire
+* Same as December 31st on Jan 1st
+* Same as prior 2 days
+  + Something happened starting on December 31st with these two sensors? Will look into both and see how the values differ over time
+```{r}
+# One sensor is "Eisenhower Dr"
+plot(fortify(PA_STFDF[PA_STFDF@data$Name == "Eisenhower Dr"]["2021-12-30::2022-01-02", "corrected_pm"]))
+# The other is "Purple House"
+plot(fortify(PA_STFDF[PA_STFDF@data$Name == "Purple House"]["2021-12-30::2022-01-02", "corrected_pm"]), col="red")
+```
+
+The issue is coming from the Eisenhower Dr sensor most likely, as this is the one that seems messed up by the snow. Going to see how everything looks excluding the high values for this sensor.
+
+```{r}
+plot(fortify(PA_STFDF[PA_STFDF@data$Name == "Eisenhower Dr"]["2021-12-30::2022-01-02", "corrected_pm"]) %>%
+               filter(corrected_pm <= 1000))
+```
+
+Checking the sensor on the edge of the fire boundary with high residuals/z scores.
+```{r}
+plot(fortify(PA_STFDF[PA_STFDF@data$Name == "ntsky"]["2021-12-30::2022-01-02", "corrected_pm"]))
+```
+
+
+### Looping at Hourly Timescale
+```{r, animation.hook="gifski", interval=1.5, results='hide'}
+for (j in c(30, 31, 01, 02)) {
+  if (j > 3) {
+    date <- paste("2021-12-", j, sep="")
+  } else {
+    date <- paste("2022-01-", j, sep="")
+  }
+  for (i in 0:23) {
+    if (i < 10) {
+      i <- paste("0", i, sep="")
+    }
+    t <- paste(date, " ", i, ":00:00", sep="")
+    i.data <- krig_data[, t]
+    i.idw <- idw(corrected_pm~1, i.data[!is.na(i.data$corrected_pm),], grd)
+    print(plot_idw(i.idw, paste(t, "IDW")))
+  }
+}
+```
+
+```{r, animation.hook='gifski', interval=1.5, results='hide'}
+for (j in c(30, 31, 01, 02)) {
+  if (j > 3) {
+    date <- paste("2021-12-", j, sep="")
+  } else {
+    date <- paste("2022-01-", j, sep="")
+  }
+  for (i in 0:23) {
+    if (i < 10) {
+      i <- paste("0", i, sep="")
+    }
+    t <- paste(date, " ", i, ":00:00", sep="")
+    i.data <- krig_data[, t]
+    i.idw <- idw(corrected_pm~1, i.data[!is.na(i.data$corrected_pm),], grd)
+    i.idw_cv <- krige.cv(corrected_pm~1, i.data[!is.na(i.data$corrected_pm),], nfold=38)
+    i.idw_sd <- sd(i.idw_cv$residual)
+    i.idw_cv$zscore <- i.idw_cv$residual / i.idw_sd
+    print(plot_idw_resid_zscore(i.idw_cv, paste(t, "IDW Residual Z-Scores")))
+  }
+}
+```
+
+# Daily Gifs Starting 1/3/2022
+```{r, warning=F}
+# get the full timerange of data & clean it up
+daily <- complete_STFDF[,"2022-01-01::"]
+daily <- daily[daily@data$Location == "outside"]
+# drop sensor 112606 b/c 0% confidence according to PurpleAir
+daily <- daily[daily@data$ID != 112606]
+# drop values for "Eisenhower Dr" sensor that're over 1000
+daily@data[(daily@data$ID == 91877) &
+                 (as.numeric(daily@data$corrected_pm) > 1000) &
+                 !is.na(daily@data$corrected_pm),]$corrected_pm <- NA
+# get rid of the weird sensor that might be throwing residuals off
+daily <- daily[daily@data$Name != "ntsky"]
+# get rid of "ponderosa" sensor values after april 11 (when sensor looks to get wonky)
+daily@data[(daily@data$ID == 102614) & (daily@endTime < "2022-04-11") & !is.na(daily@data)] <- NA
+
+# reproject & aggregate
+daily@sp <- spTransform(daily@sp, reproj)
+daily <- aggregate(daily, by="day", mean)
+```
+
+```{r, animation.hook="gifski", interval=1.5, results='hide'}
+for (j in 1:4) {
+  date <- paste("2022-0", j, sep="")
+  if (j %in% c(1, 3, 5)) {
+    range = 1:31
+  } else if (j == 2) {
+    range = 1:28
+  } else {
+    range = 1:30
+  }
+  
+  for (i in range) {
+    if (i < 10) {
+      i <- paste("0", i, sep="")
+    }
+    day <- paste(date, "-", i, sep="")
+    
+    data <- daily[, day]
+    idw <- idw(corrected_pm~1, data[!is.na(data$corrected_pm),], grd)
+    print(plot_idw(idw, paste(day, "IDW")))
+    }
+}
+```
+
+```{r}
+plot(daily[, "2022-04-25"]$corrected_pm) # sensor at index 29 is weird = sensor ID 102614
+plot(fortify(PA_STFDF[PA_STFDF@data$ID == 102614]['2022-04', "corrected_pm"]))
+# ponderosa sensor has 0% confidence on purpleair map at present date
+```
+
+```{r}
+# png(file = "images/month_map.png", width = 6000, height = 3800, res = 300)
+# (month_plot = basemap +
+#   geom_point(data = month_added_plot, aes(x=Lon,y=Lat, label = ID, shape = Location, color = Month)) +
+#    facet_grid(cols = vars(Month)))
+# dev.off()
+```
