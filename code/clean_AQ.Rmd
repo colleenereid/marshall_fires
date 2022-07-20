@@ -107,6 +107,11 @@ agree_counts %>% group_by(group) %>%
   kable_styling()
 ```
 
+```{r}
+100 * sum(agree_counts$n_disagree) / (sum(agree_counts$n_disagree) + sum(agree_counts$n_agree))
+```
+5.80% of points are lost by using the EPA formula.
+
 ## Mapping
 ```{r}
 # BOUNDARIES

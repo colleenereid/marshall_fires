@@ -23,6 +23,8 @@ library(gridExtra)
 library(stringr)
 library(leaflet)
 library(tidygeocoder)
+library(parallel)
+library(doParallel)
 
 # PM2.5 package recommended by Priyanka
 # devtools::install_github("jianzhaobi/bjzresc")
@@ -73,6 +75,82 @@ This function will get a list of current Purple Air sensors & their locations. W
 ## use bjzresc package to get list of purple air sensors; save to df instead of csv
 pa_download = getPurpleairLst(output.path = NULL)
 ```
+
+```{r}
+base_url <- "https://api.purpleair.com/v1/sensors"
+sensors_url <- paste(base_url,
+                     "?fields=name%2Clocation_type%2Clatitude%2Clongitude",
+                     "&",
+                     "max_age=0",
+                     sep="")
+
+response <- httr::GET(url = sensors_url,
+                  add_headers("X-API-Key" = "B991ADB4-748B-11EC-B9BF-42010A800003"),
+                  accept_json())
+
+a <- content(response)
+b <- do.call(rbind, lapply(a$data, rbind))
+b[sapply(b, is.null)] <- NA
+sensors <- as.data.frame(b)
+colnames(sensors) <- a$fields
+sensors <- sensors %>%
+  mutate(sensor_index = as.numeric(sensor_index),
+         name = as.character(name),
+         location_type = as.numeric(location_type),
+         Lat = as.numeric(latitude),
+         Lon = as.numeric(longitude))
+
+# remove null Lat/Long PA sensors -- important to creating spatial dataframe
+sensors <- sensors[!is.na(sensors["Lat"]),]
+sensors <- sensors[!is.na(sensors["Lon"]),]
+
+# check that it worked
+sum(is.na(sensors[c("Lat","Lon")]))
+
+# create spatial dataframe, set CRS to match muni boundaries
+sensors_spatial = sensors %>% 
+  st_as_sf(coords = c("Lon", "Lat")) %>% 
+  st_set_crs(prg)
+
+raster::crs(sensors_spatial)
+
+# intersect PA download area and fire affected area to download sensors
+fire_affected_sensors = st_intersection(sensors_spatial, st_buffer(surrounding_area, 0))
+
+# get sensor IDs for sensors in fire affected area
+fire_area_sensor_IDs = fire_affected_sensors$sensor_index
+
+# filter original dataframe to include only sensors in fire affected area
+fire_area_sensors = sensors[sensors$sensor_index %in% fire_area_sensor_IDs, ]
+```
+```{r}
+# purpleairDownload(site.csv = fire_area_sensors, start.date = "2021-12-30", end.date = "2022-05-01", output.path = "../fire_counties_PAs/", average = 10, time.zone = "America/Denver", indoor = TRUE, n.thread = 1)
+
+root_url <- "https://june2022.api.purpleair.com/v1/sensors/"
+hist_url = '/history'
+average_url = '&average=10'
+dates_url = '&start_timestamp=2021-12-30&end_timestamp=2022-05-01'
+fields_url = paste('&fields=humidity',
+                   'temperature',
+                   'pressure',
+                   # 'pm2.5_a',
+                   # 'pm2.5_b',
+                   sep="%2C")
+
+foreach(i = 1:nrow(fire_area_sensors)) %dopar% {
+ full_url <- paste(root_url,
+                   fire_area_sensors$sensor_index[i],
+                   hist_url,
+                   # average_url,
+                   dates_url,
+                   fields_url,
+                   sep="")
+ response <- httr::GET(url = full_url,
+                       add_headers("X-API-Key" = "B991ADB4-748B-11EC-B9BF-42010A800003"))
+ print(response)
+}
+```
+
 
 Here we are intersecting the sensor list with our geometry to find sensors within the fire area.
 ```{r}
