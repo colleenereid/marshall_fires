@@ -23,7 +23,7 @@ Each file in this directory is the data for an individual sensor that was downlo
 - [output_damage_files](GIS_inputs_destruction_fireboundary/output_damage_files): damaged business & homes final data layers
 - [Precincts](GIS_inputs_destruction_fireboundary/Precincts): shapefile for Boulder County voter precincts used for boundaries
 - [Unincorporated_Boulder](GIS_inputs_destruction_fireboundary/Unincorporated_Boulder): shapefile for areas of Boulder outside of the city
-- [Westminster_CityLimits](GIS_inputs_destruction_fireboundary/Westminster_CityLimits: shapefile for the boundaries of Westminster
+- [Westminster_CityLimits](GIS_inputs_destruction_fireboundary/Westminster_CityLimits): shapefile for the boundaries of Westminster
 - [WFIGS_-_Wildland_Fire_Perimeters_Full_History](GIS_inputs_destruction_fireboundary/WFIGS_-_Wildland_Fire_Perimeters_Full_History): shapefile of fires used to get the Marshall Fire boundary
 
 ### images
