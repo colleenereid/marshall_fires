@@ -1,6 +1,6 @@
 ---
 title: "fire_PA_clean"
-author: "esr"
+author: "Emma Rieves & Zac Clement"
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -11,10 +11,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Packages
 ```{r}
+library(plyr)
 library(tidyverse)
 library(stringr)
 library(readr)
-library(plyr)
 library(gtsummary)
 library(sf)
 library(kableExtra)

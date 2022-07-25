@@ -234,7 +234,7 @@ timeSensorIcon = awesomeIconList(
 
 ## Create spatial objects
 
-```{r, cache=TRUE}
+```{r}
 ## Create spacetime objects -- 10 minute
 # first, re-format datetime as a xts object
 AQ_df$datetime = as.POSIXct(AQ_df$datetime)
