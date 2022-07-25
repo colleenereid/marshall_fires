@@ -2,8 +2,8 @@
 AQ data repository for Marshall Firest project
 
 ## Files
-- Methods.docx: a file documenting our methods of analysis (hopefully for publication)
-- marshall0.qgz: QGIS map showing burn area, damaged & destroyed buildings, and sensors
+- [Methods.docx](../Methods.docx): a file documenting our methods of analysis (hopefully for publication)
+- [marshall0.qgz](../marshall0.qgz): QGIS map showing burn area, damaged & destroyed buildings, and sensors
 
 ### code
 Each .Rmd file has a corresponding .html file which is the knitted, complete version of that file.
