@@ -25,6 +25,7 @@ library(readr)
 library(leaflet)
 library(gridExtra)
 library(gifski)
+library(nngeo)
 
 # to make the spherical geometry errors go away
 sf::sf_use_s2(FALSE)
@@ -81,6 +82,10 @@ prg = raster::crs(fire_counties,asText=TRUE)
 all_bounds <- boulder_precincts %>%
   rbind(st_transform(broomfield_precincts, crs=prg)) %>%
   rbind(st_transform(westminster_city, crs=prg))
+# remove the holes that existed so we just have the outside boundary of this area
+all_bounds <- all_bounds %>%
+  st_union() %>%
+  st_remove_holes()
 
 # Marshall fire boundary
 wfigs_fire = st_read("../GIS_inputs_destruction_fireboundary/WFIGS_-_Wildland_Fire_Perimeters_Full_History/FH_Perimeter.shp")
@@ -522,6 +527,39 @@ plot_idw(january1.idw, "January 1st IDW")
 plot_idw(january2.idw, "January 2nd IDW")
 ```
 
+```{r}
+r_grd <- raster(grd, nrows=50, ncols=49)
+
+# factorize_aqi <- function (idw) {
+#   idw$PM2.5 <- cut(idw$var1.pred, breaks=c(0, 12.0, 35.4, 55.4, 150.4, 250.4), na.omit=T)
+#   return(idw)
+# }
+
+# scale_color_manual(values=aqi_colors, labels=aqi_labels, name="PM2.5 (µg/m^3)") +
+
+plot_idw_raster <- function(idw, title) {
+  r <- raster::rasterize(idw, r_grd, field="var1.pred")
+  extent(r) <- st_bbox(all_bounds)
+  r_df <- r %>%
+    rasterToPoints() %>%
+    data.frame() %>%
+    mutate(cuts = cut(layer, breaks=c(0, 12.0, 35.4, 55.4, 150.4, 250.4), na.omit=T))
+  
+  return(ggplot() +
+          geom_tile(data=r_df, aes(x=x, y=y, fill=cuts))+
+          scale_fill_manual(values=aqi_colors, labels=aqi_labels, name="PM2.5 (µg/m^3)") +
+          geom_sf(data=marshall_fire$geometry, col="gray20", alpha=0.1) +
+          ggtitle(title))
+}
+
+plot_idw_raster(pre_fire.idw, "Pre Fire IDW")
+plot_idw_raster(during_fire.idw, "During Fire IDW")
+plot_idw_raster(evening_of_fire.idw, "Evening of fire IDW")
+plot_idw_raster(december31.idw, "December 31st IDW")
+plot_idw_raster(january1.idw, "January 1st IDW")
+plot_idw_raster(january2.idw, "January 2nd IDW")
+```
+
 
 ### Cross Validation
 ```{r}
@@ -656,7 +694,7 @@ for (j in c(30, 31, 01, 02)) {
     t <- paste(date, " ", i, ":00:00", sep="")
     i.data <- krig_data[, t]
     i.idw <- idw(corrected_pm~1, i.data[!is.na(i.data$corrected_pm),], grd)
-    print(plot_idw(i.idw, paste(t, "IDW")))
+    print(plot_idw_raster(i.idw, paste(t, "IDW")))
   }
 }
 ```
@@ -723,7 +761,7 @@ for (j in 1:4) {
     
     data <- daily[, day]
     idw <- idw(corrected_pm~1, data[!is.na(data$corrected_pm),], grd)
-    print(plot_idw(idw, paste(day, "IDW")))
+    print(plot_idw_raster(idw, paste(day, "IDW")))
     }
 }
 ```
