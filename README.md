@@ -4,6 +4,7 @@ AQ data repository for Marshall Firest project
 ## Files
 - [Methods.docx](/Methods.docx): a file documenting our methods of analysis (hopefully for publication)
 - [marshall0.qgz](/marshall0.qgz): QGIS map showing burn area, damaged & destroyed buildings, and sensors
+- [smoke-affected-parcels.qgz](/smoke-affected-parcels.qgz): QGIS project with complete Boulder County parcel data, and imported smoke data from the time period the fire was burning. TO DO: look at types of buildings on each parcel & more closely examine areas that were smoke-affected.
 
 ### code
 Each .Rmd file has a corresponding .html file which is the knitted, complete version of that file.
