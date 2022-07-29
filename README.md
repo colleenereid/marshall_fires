@@ -26,6 +26,13 @@ Each file in this directory is the data for an individual sensor that was downlo
 - [Unincorporated_Boulder](GIS_inputs_destruction_fireboundary/Unincorporated_Boulder): shapefile for areas of Boulder outside of the city
 - [Westminster_CityLimits](GIS_inputs_destruction_fireboundary/Westminster_CityLimits): shapefile for the boundaries of Westminster
 - [WFIGS_-_Wildland_Fire_Perimeters_Full_History](GIS_inputs_destruction_fireboundary/WFIGS_-_Wildland_Fire_Perimeters_Full_History): shapefile of fires used to get the Marshall Fire boundary
+- [Parcels/Parcels.zip](GIS_inputs_destruction_fireboundary/Parcels/Parcels.zip): shapefile of all Boulder County land parcels (needs to be unzipped)
+- [Parcels/full_parcel_building_info.zip](GIS_inputs_destruction_fireboundary/Parcels/full_parcel_building_info.zip): the parcel data joined with the building information for each parcel provided by Boulder County
+- [Parcels/parcel_smoke_data.zip](GIS_inputs_destruction_fireboundary/Parcels/parcel_smoke_data.zip): the parcels that are smoke-affected and the mean value of the PM2.5 concentration during the fire for each parcel
+- [Parcels/smoke_affected_parcels.zip](GIS_inputs_destruction_fireboundary/Parcels/smoke_affected_parcels.zip): the full parcel data limited to only htose within the smoke boundary
+- [Account_Parcels.csv](GIS_inputs_destruction_fireboundary/Account_Parcels.csv): the key to merge the building data to the parcel data
+- [Buildings.csv](GIS_inputs_destruction_fireboundary/Buildings.csv): the building data for each parcel
+- [smoke_affected.tiff](GIS_inputs_destruction_fireboundary/smoke_affected.tiff): raster export from the visualization.Rmd script of the areas that have >12 µg/m^3 PM2.5 concentration during the fire
 
 ### images
 - outputs from the visualization.Rmd script, many of the images are from older iterations of the script
