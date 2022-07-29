@@ -421,14 +421,17 @@ plot(evening_of_fire.vgm, model=evening_of_fire.fitted)
 
 december31.fitted <- fit.variogram(december31.vgm, vgm(c("Exp", "Sph", "Gau", "Mat")))
 december31.fitted
+
 plot(december31.vgm, model=december31.fitted)
 
 january1.fitted <- fit.variogram(january1.vgm, vgm(c("Exp", "Sph", "Gau", "Mat")))
 january1.fitted
+
 plot(january1.vgm, model=january1.fitted)
 
 january2.fitted <- fit.variogram(january2.vgm, vgm(c("Exp", "Sph", "Gau", "Mat")))
 january2.fitted
+
 plot(january1.vgm, model=january2.fitted)
 ```
 
@@ -453,7 +456,8 @@ for (i in 0:11) {
 
 Still no good variograms!
 
-## Making grid for new data
+## Making grid for interpolation
+We create a 50x50 grid for interpolation. This results in the resolution being 0.009372036 km wide by 0.007888942 km tall.
 ```{r}
 grd <- SpatialPixels(SpatialPoints(as_Spatial(st_make_grid(all_bounds, n=50))), proj4string = prg)
 plot(grd)
@@ -478,6 +482,7 @@ plot(january2$corrected_pm)
 
 
 ## IDW
+Inverse distance weighting interpolation is used to get a map of values across our new grid object for each time period.
 ```{r}
 pre_fire.idw <- idw(corrected_pm~1, pre_fire[!is.na(pre_fire$corrected_pm),], grd)
 spplot(pre_fire.idw[,1], main="Pre-Fire Period on 12/30")
@@ -498,7 +503,7 @@ january2.idw <- idw(corrected_pm~1, january2[!is.na(january2$corrected_pm),], gr
 spplot(january2.idw[,1], main="January 2nd")
 ```
 
-
+Let's make the maps easier to read. We use the EPA AQI mapping standards for these and create plots that have consistent legends.
 ```{r}
 aqi_colors <- c("#00e400",
                 "#ffff00",
@@ -536,15 +541,9 @@ plot_idw(january1.idw, "January 1st IDW")
 plot_idw(january2.idw, "January 2nd IDW")
 ```
 
+Now we take the above plots & plot them as rasters to clear up any visual confusion.
 ```{r}
-r_grd <- raster(grd, nrows=50, ncols=49)
-
-# factorize_aqi <- function (idw) {
-#   idw$PM2.5 <- cut(idw$var1.pred, breaks=c(0, 12.0, 35.4, 55.4, 150.4, 250.4), na.omit=T)
-#   return(idw)
-# }
-
-# scale_color_manual(values=aqi_colors, labels=aqi_labels, name="PM2.5 (µg/m^3)") +
+r_grd <- raster(grd, nrows=50, ncols=49) # creating a 50x50 object gives some weird visuals
 
 plot_idw_raster <- function(idw, title) {
   r <- raster::rasterize(idw, r_grd, field="var1.pred")
@@ -579,6 +578,7 @@ writeRaster(r, "../GIS_inputs_destruction_fireboundary/smoke_affected.tiff", ove
 
 
 ### Cross Validation
+Using leave-one-out cross validation to get residuals for the sensors for each time period. Each sensor is left out once, then the average residual is calculated from the other 37 times the model is created.
 ```{r}
 pre_fire.idw_cv <- krige.cv(corrected_pm~1, pre_fire[!is.na(pre_fire$corrected_pm),], nfold=38)
 pre_fire.idw_sd <- sd(pre_fire.idw_cv$residual)
@@ -617,6 +617,7 @@ spplot(january1.idw_cv, main="January 2nd")
 january2.idw_cv$zscore <- january2.idw_cv$residual / january2.idw_sd
 ```
 
+Plotting these residuals & normalizing them to z-scores for easier visual comparison.
 ```{r}
 plot_idw_resid <- function(idw.cv, title) {
   return(ggplot(all_bounds) +
@@ -636,12 +637,6 @@ plot_idw_resid_zscore <- function(idw.cv, title) {
   ggtitle(title))
 }
 
-plot_idw_cv <- function(idw, idw_title, idw.cv) {
-  p1 <- plot_idw(idw, idw_title)
-  p2 <- plot_idw_resid(idw.cv, "Residuals")
-  return(grid.arrange(p1, p2, ncol=2))
-}
-
 plot_idw_resid(pre_fire.idw_cv, "Pre-Fire Residuals")
 plot_idw_resid(during_fire.idw_cv, "During Fire Residuals")
 plot_idw_resid(evening_of_fire.idw_cv, "After Fire Residuals")
@@ -657,7 +652,14 @@ plot_idw_resid_zscore(january1.idw_cv, "January 1st Residual Z-Scores")
 plot_idw_resid_zscore(january2.idw_cv, "January 2nd Residual Z-Scores")
 ```
 
+Trying to plot each map with the residuals next to it, however these just look messy.
 ```{r}
+plot_idw_cv <- function(idw, idw_title, idw.cv) {
+  p1 <- plot_idw(idw, idw_title)
+  p2 <- plot_idw_resid(idw.cv, "Residuals")
+  return(grid.arrange(p1, p2, ncol=2))
+}
+
 plot_idw_cv(pre_fire.idw, "Pre-Fire IDW", pre_fire.idw_cv)
 plot_idw_cv(during_fire.idw, "During Fire IDW", during_fire.idw_cv)
 plot_idw_cv(evening_of_fire.idw, "Evening of Fire IDW", evening_of_fire.idw_cv)
@@ -683,7 +685,7 @@ plot(fortify(PA_STFDF[PA_STFDF@data$Name == "Eisenhower Dr"]["2021-12-30::2022-0
 plot(fortify(PA_STFDF[PA_STFDF@data$Name == "Purple House"]["2021-12-30::2022-01-02", "corrected_pm"]), col="red")
 ```
 
-The issue is coming from the Eisenhower Dr sensor most likely, as this is the one that seems messed up by the snow. Going to see how everything looks excluding the high values for this sensor.
+The issue is coming from the Eisenhower Dr sensor most likely, as this is the one that seems messed up by the snow. Going to see how everything looks excluding the high values for this sensor. This fed back into our analysis, and has already been accounted for in the current models.
 
 ```{r}
 plot(fortify(PA_STFDF[PA_STFDF@data$Name == "Eisenhower Dr"]["2021-12-30::2022-01-02", "corrected_pm"]) %>%
@@ -697,6 +699,7 @@ plot(fortify(PA_STFDF[PA_STFDF@data$Name == "ntsky"]["2021-12-30::2022-01-02", "
 
 
 ### Looping at Hourly Timescale
+We create gifs to make visualization easier, as well as looking at hourly timescales instead of the six predefined fire periods.
 ```{r, animation.hook="gifski", interval=1.5, results='hide'}
 for (j in c(30, 31, 01, 02)) {
   if (j > 3) {
@@ -783,16 +786,10 @@ for (j in 1:4) {
 }
 ```
 
+### Weird Sensor from Gif
+This sensor seemed to be really skewing our results starting in April 2022. Looking at the purple air website, this sensor has 0% confidence now, with values looking to lose credibility around the start of April, so earlier all of those values were dropped. (this already fed back into the current analysis we're looking at).
 ```{r}
 plot(daily[, "2022-04-25"]$corrected_pm) # sensor at index 29 is weird = sensor ID 102614
 plot(fortify(PA_STFDF[PA_STFDF@data$ID == 102614]['2022-04', "corrected_pm"]))
 # ponderosa sensor has 0% confidence on purpleair map at present date
-```
-
-```{r}
-# png(file = "images/month_map.png", width = 6000, height = 3800, res = 300)
-# (month_plot = basemap +
-#   geom_point(data = month_added_plot, aes(x=Lon,y=Lat, label = ID, shape = Location, color = Month)) +
-#    facet_grid(cols = vars(Month)))
-# dev.off()
 ```
