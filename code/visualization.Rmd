@@ -338,7 +338,7 @@ krig_data@data[(krig_data@data$ID == 91877) &
                  (as.numeric(krig_data@data$corrected_pm) > 1000) &
                  !is.na(krig_data@data$corrected_pm),]$corrected_pm <- NA
 # get rid of the weird sensor that might be throwing residuals off
-krig_data <- krig_data[krig_data@data$Name != "ntsky"]
+#krig_data <- krig_data[krig_data@data$Name != "ntsky"]
 
 # reproject the data to utm
 reproj <- "+proj=utm +zone=13 +datum=WGS84 +units=km"
@@ -483,6 +483,26 @@ plot(january2$corrected_pm)
 
 ## IDW
 Inverse distance weighting interpolation is used to get a map of values across our new grid object for each time period.
+
+```{r}
+# split each day into the time periods of focus
+# pre-fire period: betweeen 00:00 - 11:00 MST on 12/30/2021
+pre_fire <- aggregate(dec30, by="11 hours", mean)[, "2021-12-30 00:00:00"]
+# fire period (11am - 5pm)
+during_fire <- aggregate(dec30[, "2021-12-30 11:00:00::2021-12-30 16:00:00"], by="6 hours", mean)
+# post-fire on 12/30/2021
+evening_of_fire <- aggregate(dec30[, "2021-12-30 16:00:00::2021-12-31 00:00:00"], by="8 hours", mean)
+# dec 31st
+december31 <- aggregate(dec31, by="day", mean)
+# january 1st
+january1 <- aggregate(jan1, by="day", mean)
+# january 2nd
+january2 <- aggregate(jan2, by="day", mean)
+
+periods <- c(pre_fire, during_fire, evening_of_fire, december31, january1, january2)
+```
+
+
 ```{r}
 pre_fire.idw <- idw(corrected_pm~1, pre_fire[!is.na(pre_fire$corrected_pm),], grd)
 spplot(pre_fire.idw[,1], main="Pre-Fire Period on 12/30")
