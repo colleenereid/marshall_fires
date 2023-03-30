@@ -12,6 +12,8 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+I would like a map (using leaflet or ggplot or some other package) or the red Marshall Fire boundary (scroll down and you will see it) but also some underlying map info so we know where we are, but without the AQ sensor data that she has put into these maps. Could you try your hand at that and then send the map to Matt? It doesn't have to be perfect.
+
 # Load the Libraries
 ```{r}
 library(sf)
@@ -74,7 +76,7 @@ westminster_city <- westminster_city %>%
   select(c(OBJECTID, geometry, SHAPEarea, SHAPElen))
 
 # save proj string for fire-affected counties to use for other transformations
-prg = raster::crs(fire_counties,asText=TRUE)
+prg = raster::projection(fire_counties, asText=TRUE)
 
 # all boundaries joined together
 all_bounds <- boulder_precincts %>%
@@ -278,16 +280,31 @@ pal = colorFactor(c("red","orange","magenta","light pink"), domain = unique(dest
 
 # interactive map of damaged/destroyed buildings 
 # chose not to do icons for destroyed/damaged buildings because the map got really busy
-fire_destruction_and_AQ_plot = leaflet() %>%
+fire_destruction_AQ_and_area_plot = leaflet(marshall_fire) %>% 
+  addTiles() %>% 
+  addPolygons(color="red",
+              opacity=0.5) %>% 
+  addCircleMarkers(color = ~pal(destroyed_damaged$type),
+                   radius = 3.5,
+                   opacity = 1,
+                   lng = destroyed_damaged$long,
+                   lat = destroyed_damaged$lat)
+
+fire_destruction_and_AQ_plot = leaflet(data=destroyed_damaged) %>%
     addTiles() %>% 
-    #addAwesomeMarkers(icon = ~sensorIcon[Location],
-     #                 lng = sensors$Lon, lat = sensors$Lat) %>% 
+    # addAwesomeMarkers(icon = ~sensorIcon[Location],
+    #                 lng = sensors$Lon, lat = sensors$Lat) %>%
+    # addPolygons(data=marshall_fire,
+    #             lat=marshall_fire@polygons) %>%
     addCircleMarkers(color = ~pal(destroyed_damaged$type),
                      radius = 3.5,
                      opacity = 1,
                      lng = destroyed_damaged$long, lat = destroyed_damaged$lat) %>%
     addLegend("topright", pal = pal, values = ~destroyed_damaged$type,
               title = "Fire damage")
+
+fire_destruction_AQ_and_area_plot
+fire_destruction_and_AQ_plot
 ```
 
 Leaflet map that colors each sensor icon based on the time period it has data:
@@ -351,9 +368,9 @@ timeSensorIcon = awesomeIconList(
 # Map of all sensors we have data for (many not online during the fire)
 ```{r}
 ggplot(all_bounds, aes(geometry=geometry)) +
-  #geom_sf() +
+  # geom_sf() +
   geom_sf(data=marshall_fire$geometry, fill="red", alpha=0.6) #+
-  #geom_sf(data=st_as_sf(PA_sensors))
+  # geom_sf(data=st_as_sf(PA_sensors))
 ```
 
 # Time series plots
@@ -383,6 +400,9 @@ stplot(complete_STFDF[,,"corrected_pm"], mode="ts")
 ```{r}
 stplot(complete_STFDF[,"2021-12-30::2021-12-31","corrected_pm"], mode="ts")
 stplot(complete_STFDF[,"2021-12-30::2021-12-31","corrected_pm"], mode="tp")
+# code kind of evaluates for me past this point - Ryan Erickson
+# suspisions:
+# 
 ```
 
 # Kriging
