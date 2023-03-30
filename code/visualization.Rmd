@@ -266,12 +266,94 @@ class(PA_STFDF)
 dim(PA_STFDF)
 ```
 
+# Leaflet Map without AQ sensors
+
+```{r}
+# set factors to false
+options(stringsAsFactors = FALSE)
+
+# create palette for destroyed and damaged building colors for leaflet map
+pal = colorFactor(c("red","orange","magenta","light pink"), domain = unique(destroyed_damaged$type))
+
+
+# interactive map of damaged/destroyed buildings 
+# chose not to do icons for destroyed/damaged buildings because the map got really busy
+fire_destruction_and_AQ_plot = leaflet() %>%
+    addTiles() %>% 
+    #addAwesomeMarkers(icon = ~sensorIcon[Location],
+     #                 lng = sensors$Lon, lat = sensors$Lat) %>% 
+    addCircleMarkers(color = ~pal(destroyed_damaged$type),
+                     radius = 3.5,
+                     opacity = 1,
+                     lng = destroyed_damaged$long, lat = destroyed_damaged$lat) %>%
+    addLegend("topright", pal = pal, values = ~destroyed_damaged$type,
+              title = "Fire damage")
+```
+
+Leaflet map that colors each sensor icon based on the time period it has data:
+```{r}
+# create palette for location + time period
+timeSensorIcon = awesomeIconList(
+  "inside - Complete data throughout fire period" = makeAwesomeIcon(
+    icon = "home",
+    iconColor = "white",
+    markerColor = "green",
+    library = "fa"
+  ),
+  "inside - Sensor offline during fire, did not return online" = makeAwesomeIcon(
+    icon = "tree",
+    iconColor = "white",
+    markerColor = "gray",
+    library = "fa"
+  ),
+  "inside - Sensor offline during fire, returned online" = makeAwesomeIcon(
+    icon = "home",
+    iconColor = "white",
+    markerColor = "blue",
+    library = "fa"
+  ),
+   "outside - Complete data throughout fire period" = makeAwesomeIcon(
+    icon = "home",
+    iconColor = "white",
+    markerColor = "green",
+    library = "fa"
+  ),
+  "outside - Sensor offline during fire, did not return online" = makeAwesomeIcon(
+    icon = "tree",
+    iconColor = "white",
+    markerColor = "gray",
+    library = "fa"
+  ),
+  "outside - Sensor offline during fire, returned online" = makeAwesomeIcon(
+    icon = "tree",
+    iconColor = "white",
+    markerColor = "blue",
+    library = "fa"
+  ))
+
+# map based on when sensor was added
+(fire_destruction_and_AQ_plot = leaflet(sensors) %>%
+    addTiles() %>% 
+    addAwesomeMarkers(icon = ~timeSensorIcon[loc_status],
+                      lng = sensors$Lon, lat = sensors$Lat) %>% 
+    addCircleMarkers(color = ~pal(destroyed_damaged$type),
+                     radius = 3.5,
+                     opacity = 1,
+                     lng = destroyed_damaged$long, lat = destroyed_damaged$lat) %>%
+    addLegend("topright", pal = pal, values = ~destroyed_damaged$type,
+              title = "Fire damage") %>%
+    addLegend("bottomright",
+              pal = colorFactor(c("green","gray","blue"), domain = unique(sensors$Status)),
+              values = ~sensors$Status, title = "Sensor Time Info"))
+```
+
+
 # Map of all sensors we have data for (many not online during the fire)
 ```{r}
 ggplot(all_bounds, aes(geometry=geometry)) +
-  geom_sf() +
-  geom_sf(data=marshall_fire$geometry, fill="red", alpha=0.6) +
-  geom_sf(data=st_as_sf(PA_sensors))
+  #geom_sf() +
+  geom_sf(data=marshall_fire$geometry, fill="red", alpha=0.6) #+
+  #geom_sf(data=st_as_sf(PA_sensors))
 ```
 
 # Time series plots
