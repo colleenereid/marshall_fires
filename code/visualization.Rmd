@@ -401,8 +401,6 @@ stplot(complete_STFDF[,,"corrected_pm"], mode="ts")
 stplot(complete_STFDF[,"2021-12-30::2021-12-31","corrected_pm"], mode="ts")
 stplot(complete_STFDF[,"2021-12-30::2021-12-31","corrected_pm"], mode="tp")
 # code kind of evaluates for me past this point - Ryan Erickson
-# suspisions:
-# 
 ```
 
 # Kriging
