@@ -4,7 +4,17 @@ author: "Ryan Erickson"
 date: "2023-04-05"
 output: html_document
 ---
-Loading Libraries
+```{r, echo=FALSE}
+# function junction
+tblFun <- function(x){
+  tbl <- table(x)
+  res <- cbind(tbl,round(prop.table(tbl)*100,2))
+  colnames(res) <- c('Count','Percentage')
+  res
+}
+```
+
+# Libraries
 ```{r}
 library(dplyr)
 library(tidyverse)
@@ -17,24 +27,19 @@ library(elevatr)
 library(ggspatial)
 library(ggmap) #citation("ggmap")
 ```
-API Key for Geocoding: 
-
-```{r}
-api_key = "AIzaSyAeoVaM_45SQ4G-lHeci1RhRNbhpxO3BDc"
-register_google(key = api_key) 
-```
-
-# Colors to Use
-
-```{r}
-ryg.palette<-c("#DB4325", "#EDA247", "#E6E1BC","#57C4AD", "#006164")
-ryg.palette.long<-c("#DB4325", "#EDA247", "#E6E1BC","#57C4AD", "#006164", "grey")
-ryg.palette.short<-c("#EDA247", "#E6E1BC","#57C4AD", "#006164")
-```
 
 # Data
 
 ```{r}
+# Colors to Use
+ryg.palette<-c("#DB4325", "#EDA247", "#E6E1BC","#57C4AD", "#006164")
+ryg.palette.long<-c("#DB4325", "#EDA247", "#E6E1BC","#57C4AD", "#006164", "grey")
+ryg.palette.short<-c("#EDA247", "#E6E1BC","#57C4AD", "#006164")
+
+# API Key for Geocoding:
+api_key = "AIzaSyAeoVaM_45SQ4G-lHeci1RhRNbhpxO3BDc"
+register_google(key = api_key) 
+
 # waveone<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w1_deID.csv")
 # wavetwo<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w2_deID.csv")
 waveone<-read.csv("../data/marshall_w1_deID.csv")
