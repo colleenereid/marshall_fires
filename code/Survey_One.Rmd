@@ -14,20 +14,31 @@ library(sp)
 library(ggplot2)
 library(gridExtra)
 library(elevatr)
+library(ggspatial)
+library(ggmap) #citation("ggmap")
+```
+API Key for Geocoding: 
+
+```{r}
+api_key = "AIzaSyAeoVaM_45SQ4G-lHeci1RhRNbhpxO3BDc"
+register_google(key = api_key) 
 ```
 
-Colors to Use
+# Colors to Use
+
 ```{r}
 ryg.palette<-c("#DB4325", "#EDA247", "#E6E1BC","#57C4AD", "#006164")
 ryg.palette.long<-c("#DB4325", "#EDA247", "#E6E1BC","#57C4AD", "#006164", "grey")
 ryg.palette.short<-c("#EDA247", "#E6E1BC","#57C4AD", "#006164")
 ```
 
-Data
-```{r}
-waveone<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w1_deID.csv")
-wavetwo<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w2_deID.csv")
+# Data
 
+```{r}
+# waveone<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w1_deID.csv")
+# wavetwo<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w2_deID.csv")
+waveone<-read.csv("../data/marshall_w1_deID.csv")
+wavetwo<-read.csv("../data/marshall_w2_deID.csv")
 wave.one<-waveone%>%
   mutate(mailingcity=recode(mailingcity, 'Superior'='SUPERIOR', 'UNINCORPORATED'='BOULDER')) %>%
   mutate(across(air_quality_1:air_quality_4, as.factor)) %>%
@@ -159,14 +170,17 @@ wave.two<-wavetwo %>%
   filter(impact_cat!="Complete loss")
 ```
 
-Descriptive Survey Statistics (tables)
-Number of respondents for Wave 1 and Wave 2  
+# Descriptive Survey Statistics (tables)
+
+### Number of respondents for Wave 1 and Wave 2  
+
 ```{r}
 nrow(waveone)
 nrow(wavetwo)
 ```
 
-Number of respondants who completed the survey for Wave One and Wave Two
+### Number of respondants who completed the survey for Wave One and Wave Two
+
 ```{r}
 waveone %>% 
   filter(finished==1) %>% 
@@ -175,7 +189,7 @@ wavetwo %>%
   summarise(Wave_Two=n())
 ```
 
-% male/female 
+### % male/female 
 
 ```{r}
 wave.one %>% 
@@ -191,7 +205,8 @@ wave.two  %>%
             Percent_Female_w2=Female_w2/n()*100) 
 ```
 
-Educational attainment for each wave 
+### Educational attainment for each wave 
+
 ```{r}
 waveone %>% 
   filter(finished==1)  %>%
@@ -217,25 +232,42 @@ wavetwo %>%
             PHD=sum(education==7)/n()*100)
 ```
 
-Income for each wave 
+### Income for each wave 
 
-Race/ethnicity
+```{r}
 
-Owner/Renter 
+```
 
-Impact category 
+### Race/ethnicity
 
-Distance category 
+```{r}
+
+```
+
+### Owner/Renter 
+
+```{r}
+
+```
+
+### Impact category 
+
+```{r}
+
+```
+
+### Distance category 
 
 ```{r}
 
 ```
 
 
-Air Quality Perceptions 
-Wave One:
+# Air Quality Perceptions
 
-Wave One only: compare before and after the fire – perception of air quality in their neighborhood 
+## Wave One:
+
+### Wave One only: compare before and after the fire – perception of air quality in their neighborhood 
 ```{r}
 #trying a vertical graph
 w1.before.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1,x="Before the Fire")) +
@@ -260,7 +292,8 @@ w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_
 grid.arrange(w1.before.neigh.plot,w1.after.neigh.plot)
 ```
 
-Wave One only: compare before and after the fire – perception of air quality in their neighborhood by distance 
+### Wave One only: compare before and after the fire – perception of air quality in their neighborhood by distance 
+
 ```{r}
 ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1, x=group)) +
     geom_bar(position="stack") +
@@ -275,7 +308,8 @@ ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3, x=group))
    scale_fill_manual(values = ryg.palette)
 ```
 
-Wave One only: compare before and after the fire – perception of air quality in their neighborhood by impact category 
+### Wave One only: compare before and after the fire – perception of air quality in their neighborhood by impact category 
+
 ```{r}
 ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1, x=impact_cat)) +
     geom_bar(position="stack") +
@@ -290,7 +324,8 @@ ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3, x=impact_
    scale_fill_manual(values = ryg.palette)
 ```
 
-Wave One only: compare before and after the fire – perception of air quality in their home 
+### Wave One only: compare before and after the fire – perception of air quality in their home 
+
 ```{r}
 #trying a horizontal graph
 w1.before.home.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Before the Fire")) +
@@ -315,7 +350,8 @@ w1.after.home.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_q
 grid.arrange(w1.before.home.plot,w1.after.home.plot)
 ```
 
-Wave One only: compare before and after the fire – perception of air quality in their home by distance 
+### Wave One only: compare before and after the fire – perception of air quality in their home by distance 
+
 ```{r}
 ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2, x=group)) +
     geom_bar(position="stack") +
@@ -330,7 +366,8 @@ ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=group))
    scale_fill_manual(values = ryg.palette)
 ```
 
-Wave One only: compare before and after the fire – perception of air quality in their home by impact category
+### Wave One only: compare before and after the fire – perception of air quality in their home by impact category
+
 ```{r}
 ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_cat)) +
     geom_bar(position="stack") +
@@ -345,8 +382,10 @@ ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_
    scale_fill_manual(values = ryg.palette)
 ```
 
-Wave One and Two:
-Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) 
+## Wave One and Two:
+
+### Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) 
+
 ```{r}
 w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave One")) +
   geom_bar(position="stack") +
@@ -370,7 +409,8 @@ w2.after.neigh.plot=ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_
 grid.arrange(w1.after.neigh.plot,w2.after.neigh.plot)
 ```
 
-Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) by distance 
+### Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) by distance 
+
 ```{r}
 w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave One")) +
   geom_bar(position="stack") +
@@ -394,7 +434,8 @@ w2.after.neigh.plot=ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_
 grid.arrange(w1.after.neigh.plot,w2.after.neigh.plot)
 ```
 
-Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) by impact category 
+### Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) by impact category 
+
 ```{r}
 ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_cat)) +
     geom_bar(position="stack") +
@@ -409,7 +450,8 @@ ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_
    scale_fill_manual(values = ryg.palette)
 ```
 
-Wave One to Wave Two comparison – perception of air quality in home (AQ4) 
+### Wave One to Wave Two comparison – perception of air quality in home (AQ4) 
+
 ```{r}
 w1.after.home.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4,y="Wave One")) +
   geom_bar(position="stack") +
@@ -433,7 +475,8 @@ w2.after.home.plot=ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_q
 grid.arrange(w1.after.neigh.plot,w2.after.neigh.plot)
 ```
 
-Wave One to Wave Two comparison – perception of air quality in home (AQ4) by distance 
+### Wave One to Wave Two comparison – perception of air quality in home (AQ4) by distance 
+
 ```{r}
 ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=group)) +
     geom_bar(position="stack") +
@@ -450,7 +493,8 @@ ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4, x=group))
    scale_fill_manual(values = ryg.palette)
 ```
 
-Wave One to Wave Two comparison – perception of air quality in home (AQ4) by impact category 
+### Wave One to Wave Two comparison – perception of air quality in home (AQ4) by impact category 
+
 ```{r}
 ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_cat)) +
     geom_bar(position="stack") +
@@ -467,29 +511,70 @@ ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_
    scale_fill_manual(values = ryg.palette)
 ```
 
-Maps:
+## Maps:
+
+#### Maps Data:
+
+```{r}
+mapwave1=read.csv("../data/marshall_w1.csv") %>% 
+  mutate(full_address = paste0(.$mailingaddr1,", ",.$mailingcity,", ", .$mailingstate,", ",.$mailingzip)) %>% 
+  mutate_geocode(full_address, output="latlona") %>%
+  filter(!is.na(lat))
+#mapwave2=
+```
 
 Map of perception of air quality in one’s neighborhood  - color from stacked plot colors 
-```{r}
 
+```{r}
+mapwave1 = st_as_sf(mapwave1, coords = c("lon", "lat"),  crs = 4326)
+
+fire_destruction_AQ_and_area_plot = leaflet(geo_marshall) %>% 
+  addTiles() %>% 
+  addCircleMarkers(color = c("Complete loss" = "#d7191c", 
+                              "Damaged, living there" = "#fdae61",
+                              "Damaged, not living there" = "#ffffbf",
+                              "No damage, living there" = "#a6d96a",
+                              "No damage, not living there" = "#1a9641"),
+                   radius = 3.5,
+                   opacity = 1,
+                   lng = geo_marshall$long,
+                   lat = geo_marshall$lat)
+
+ggplot(mapwave1) + 
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(color=impact_cat)) +
+  scale_color_manual(values = c("Complete loss" = "#d7191c", 
+                                "Damaged, living there" = "#fdae61",
+                                "Damaged, not living there" = "#ffffbf",
+                                "No damage, living there" = "#a6d96a",
+                                "No damage, not living there" = "#1a9641")) +
+  ggtitle("Marshall Fire Survey Results", subtitle=paste0("Total Respondants Displayed: ",nrow(mapwave1))) + 
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5)) +
+  guides(colour=guide_legend(title="Impact Level"))
 ```
 
 Moran’s I of perception of air quality in one’s neighborhood 
+
 ```{r}
 
 ```
 
 Map of perception of air quality in one’s home - color from stacked plot colors 
+
 ```{r}
 
 ```
 
 Moran’s I of perception of air quality in one’s home
+
 ```{r}
 
 ```
 
 Map of Wave One symptoms – do a separate map for each type of symptom with a color for yes and a different color for no on that symptom 
+
 ```{r}
 
 ```
@@ -500,52 +585,61 @@ Map of Wave Two symptoms – do a separate map for each type of symptom with a c
 
 ```
 
-Physical Health Symptoms
-Wave One:
+# Physical Health Symptoms
 
-Wave One counts of symptoms bar plot or pie chart 
+## Wave One:
+
+### Wave One counts of symptoms bar plot or pie chart 
+
 ```{r}
 wave1.symptoms=grep("^symptoms_\\d", names(wave.one), value=T)
 wave2.symptoms=grep("^symptoms_\\d", names(wave.two), value=T) # has 2 more columns
 
 ```
 
-Wave One table of symptom counts by distance category 
+### Wave One table of symptom counts by distance category 
+
 ```{r}
 
 ```
 
-Wave One table of symptom counts by impact category 
+### Wave One table of symptom counts by impact category 
+
 ```{r}
 
 ```
 
-Wave Two:
+## Wave Two:
+
 ```{r}
 
 ```
 
-Wave Two counts of symptoms bar plot or pie chart 
+### Wave Two counts of symptoms bar plot or pie chart 
+
 ```{r}
 
 ```
 
-Wave Two table of symptom counts by distance category 
+### Wave Two table of symptom counts by distance category 
+
 ```{r}
 
 ```
 
-Wave Two table of symptom counts by impact category 
+### Wave Two table of symptom counts by impact category 
+
 ```{r}
 
 ```
 
-Wave One to Wave Two comparison – physical symptoms (maybe select to only be the people who responded to both waves).  
+### Wave One to Wave Two comparison – physical symptoms (maybe select to only be the people who responded to both waves) 
+
 ```{r}
 
 ```
 
-Predictors of Physical Health Symptoms 
+### Predictors of Physical Health Symptoms 
 
 ```{r}
 

@@ -66,3 +66,45 @@ wave_two %>%
 # Impact category 
 
 # Distance category
+
+# Map
+mapwave1=read.csv("data/marshall_w1.csv")
+# fixes:
+mapwave1[mapwave1$mailingaddr1=="553 GRANT ST",]$mailingaddr1 = "553 GRANT AVE"
+
+#geocoding - assigning lats and longs via Google API - will need key
+# ~5 errors
+geo_marshall = mapwave1 %>% 
+  mutate(full_address = paste0(.$mailingaddr1,", ",.$mailingcity,", ", .$mailingstate,", ",.$mailingzip)) %>% 
+  mutate_geocode(full_address, output="latlona") %>%
+  filter(!is.na(lat)) %>% 
+  filter(impact_cat != "") %>% 
+  st_as_sf(coords = c("lon", "lat"),  crs = 4326)
+
+fire_destruction_AQ_and_area_plot = leaflet(geo_marshall) %>% 
+  addTiles() %>% 
+  # addPolygons(color="red",
+  #             opacity=0.5) %>% 
+  addCircleMarkers(color = c("Complete loss" = "#d7191c", 
+                              "Damaged, living there" = "#fdae61",
+                              "Damaged, not living there" = "#ffffbf",
+                              "No damage, living there" = "#a6d96a",
+                              "No damage, not living there" = "#1a9641"),
+                   radius = 3.5,
+                   opacity = 1,
+                   lng = geo_marshall$long,
+                   lat = geo_marshall$lat)
+
+ggplot(geo_marshall) + 
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(color=impact_cat)) +
+  scale_color_manual(values = c("Complete loss" = "#d7191c", 
+                                "Damaged, living there" = "#fdae61",
+                                "Damaged, not living there" = "#ffffbf",
+                                "No damage, living there" = "#a6d96a",
+                                "No damage, not living there" = "#1a9641")) +
+  ggtitle("Marshall Fire Survey Results", subtitle=paste0("Total Respondants Displayed: ",nrow(geo_marshall))) + 
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5)) +
+  guides(colour=guide_legend(title="Impact Level"))
