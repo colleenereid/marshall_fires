@@ -1,0 +1,554 @@
+---
+title: "Marshall Fire Health Surevy One"
+author: "Ryan Erickson"
+date: "2023-04-05"
+output: html_document
+---
+Loading Libraries
+```{r}
+library(dplyr)
+library(tidyverse)
+library(raster)
+library(sf)
+library(sp)
+library(ggplot2)
+library(gridExtra)
+library(elevatr)
+```
+
+Colors to Use
+```{r}
+ryg.palette<-c("#DB4325", "#EDA247", "#E6E1BC","#57C4AD", "#006164")
+ryg.palette.long<-c("#DB4325", "#EDA247", "#E6E1BC","#57C4AD", "#006164", "grey")
+ryg.palette.short<-c("#EDA247", "#E6E1BC","#57C4AD", "#006164")
+```
+
+Data
+```{r}
+waveone<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w1_deID.csv")
+wavetwo<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w2_deID.csv")
+
+wave.one<-waveone%>%
+  mutate(mailingcity=recode(mailingcity, 'Superior'='SUPERIOR', 'UNINCORPORATED'='BOULDER')) %>%
+  mutate(across(air_quality_1:air_quality_4, as.factor)) %>%
+  mutate(across(remediation_1:remediation_4, as.factor)) %>%
+  mutate(across(air_cleaning_1:air_cleaning_4, as.factor)) %>%
+  mutate(group=as.factor(group))  %>%
+  mutate(air_quality_1=recode_factor(air_quality_1,
+                "1"="Strongly disagree",
+                "2"="Somewhat disagree",
+                "3"="Neither agree nor disagree",
+                "4"="Somewhat agree",
+                "5"="Strongly agree",
+                "6"="Don't know")) %>%
+  mutate(air_quality_2=recode_factor(air_quality_2,
+                "1"="Strongly disagree",
+                "2"="Somewhat disagree",
+                "3"="Neither agree nor disagree",
+                "4"="Somewhat agree",
+                "5"="Strongly agree",
+                "6"="Don't know")) %>%
+  mutate(air_quality_3=recode_factor(air_quality_3,
+                "1"="Strongly disagree",
+                "2"="Somewhat disagree",
+                "3"="Neither agree nor disagree",
+                "4"="Somewhat agree",
+                "5"="Strongly agree",
+                "6"="Don't know")) %>%
+   mutate(air_quality_4=recode_factor(air_quality_4,
+                 "1"="Strongly disagree",
+                 "2"="Somewhat disagree",
+                 "3"="Neither agree nor disagree",
+                 "4"="Somewhat agree",
+                 "5"="Strongly agree",
+                 "6"="Don't know")) %>%
+  mutate(home_smell_1week=recode_factor(home_smell_1week,
+                "0"="No",
+                "1"="Yes",
+                "2"="Not sure/don't remember")) %>%
+  mutate(home_smell_type=recode_factor(home_smell_type,
+                "1"="Like a campfire",
+                "2"="Like chemicals or a chemical fire",
+                "3"="Other")) %>%
+  mutate(group=recode_factor(group,
+                "A"="within fire perimeter",
+                "B"="within 1/2 mile",
+                "C"="1/2 to 1 mile",
+                "D"="1 to 2 miles")) %>%
+  mutate(remediation_1=recode_factor(remediation_1, 
+                "1"="Did this already",
+                "2"="Plan to do this",
+                "3"="Neither"))%>%
+  mutate(remediation_2=recode_factor(remediation_2, 
+                "1"="Did this already",
+                "2"="Plan to do this",
+                "3"="Neither"))%>%
+  mutate(remediation_3=recode_factor(remediation_3, 
+                "1"="Did this already",
+                "2"="Plan to do this",
+                "3"="Neither"))%>%
+  mutate(remediation_4=recode_factor(remediation_4, 
+                "1"="Did this already",
+                "2"="Plan to do this",
+                "3"="Neither"))%>%
+  mutate(air_cleaning=recode_factor(air_cleaning_1, 
+                "1"="Changing air filters in HVAC")) %>%
+  mutate(air_cleaning=recode_factor(air_cleaning_2, 
+                "1"="Using air cleaners"))%>%
+  mutate(air_cleaning=recode_factor(air_cleaning_3, 
+                "1"="Hiring someone to clean indoor air")) %>%
+  mutate(air_cleaning=recode_factor(air_cleaning_4, 
+                "1"="Other")) %>%
+  mutate(air_cleaning_3=recode_factor(air_cleaning_3,
+                "1"="Hiring someone to clean indoor air"))%>%
+  mutate(air_cleaning_4=recode_factor(air_cleaning_4,
+                "1"="Other")) %>%
+  filter(finished==1) %>% #only analyzing finished data, not in wave.two
+  filter(mailingcity=="BOULDER"|mailingcity=="SUPERIOR"|mailingcity=="LOUISVILLE") %>% #filtering only respondents in Boulder Unincorporated, Superior or Louisville
+  filter(impact_cat!="Complete loss")
+
+wave.two<-wavetwo %>%
+  mutate(air_quality_2=as.factor(air_quality_2)) %>%
+  mutate(air_quality_4=as.factor(air_quality_4)) %>%
+  mutate(across(remediation_1:remediation_4, as.factor)) %>%
+  mutate(across(air_cleaning_1:air_cleaning_4, as.factor)) %>%
+  mutate(group=as.factor(group))  %>%
+  mutate(air_quality_2=recode_factor(air_quality_2,
+                "1"="Strongly disagree",
+                "2"="Somewhat disagree",
+                "3"="Neither agree nor disagree",
+                "4"="Somewhat agree",
+                "5"="Strongly agree",
+                "6"="Don't know")) %>%
+   mutate(air_quality_4=recode_factor(air_quality_4,
+                 "1"="Strongly disagree",
+                 "2"="Somewhat disagree",
+                 "3"="Neither agree nor disagree",
+                 "4"="Somewhat agree",
+                 "5"="Strongly agree",
+                 "6"="Don't know")) %>%
+  mutate(group=recode_factor(group,
+                             "A"="within fire perimeter",
+                             "B"="within 1/2 mile",
+                             "C"="1/2 to 1 mile",
+                             "D"="1 to 2 miles")) %>%
+  mutate(remediation_1=recode_factor(remediation_1, 
+                                     "1"="Did this already",
+                                     "2"="Plan to do this",
+                                     "3"="Neither")) %>%
+  mutate(remediation_2=recode_factor(remediation_2, 
+                                     "1"="Did this already",
+                                     "2"="Plan to do this",
+                                     "3"="Neither")) %>% 
+  mutate(remediation_3=recode_factor(remediation_3, 
+                                     "1"="Did this already",
+                                     "2"="Plan to do this",
+                                     "3"="Neither")) %>%
+  mutate(remediation_4=recode_factor(remediation_4,
+                                     "1"="Did this already",
+                                     "2"="Plan to do this",
+                                     "3"="Neither")) %>%
+  mutate(air_cleaning=recode_factor(air_cleaning_1, 
+                                    "1"="Changing air filters in HVAC")) %>%
+  mutate(air_cleaning=recode_factor(air_cleaning_2, 
+                                    "1"="Using air cleaners")) %>%
+  mutate(air_cleaning=recode_factor(air_cleaning_3, 
+                                    "1"="Hiring someone to clean indoor air")) %>%
+  mutate(air_cleaning=recode_factor(air_cleaning_4,
+                                    "1"="Other")) %>%
+  filter(impact_cat!="Complete loss")
+```
+
+Descriptive Survey Statistics (tables)
+Number of respondents for Wave 1 and Wave 2  
+```{r}
+nrow(waveone)
+nrow(wavetwo)
+```
+
+Number of respondants who completed the survey for Wave One and Wave Two
+```{r}
+waveone %>% 
+  filter(finished==1) %>% 
+  summarise(Wave_One=n())
+wavetwo %>% 
+  summarise(Wave_Two=n())
+```
+
+% male/female 
+
+```{r}
+wave.one %>% 
+  summarise(Male_w1=sum(Gender3=="Male"),
+            Female_w1=sum(Gender3=="Female"),
+            Percent_Male_w1=Male_w1/n()*100,
+            Percent_Female_w1=Female_w1/n()*100)
+
+wave.two  %>% 
+  summarise(Male_w2=sum(Gender3=="Male"),
+            Female_w2=sum(Gender3=="Female"),
+            Percent_Male_w2=Male_w2/n()*100,
+            Percent_Female_w2=Female_w2/n()*100) 
+```
+
+Educational attainment for each wave 
+```{r}
+waveone %>% 
+  filter(finished==1)  %>%
+  mutate(education=ifelse(is.na(education),0,education)) %>% 
+  summarise(na=sum(education==1)/n()*100,
+            hs=sum(education==1)/n()*100,
+            ged=sum(education==2)/n()*100,
+            SCollege=sum(education==3)/n()*100,
+            AA=sum(education==4)/n()*100,
+            BA=sum(education==5)/n()*100,
+            MA=sum(education==6)/n()*100,
+            PHD=sum(education==7)/n()*100)
+
+wavetwo %>%
+  mutate(education=ifelse(is.na(education),0,education)) %>% 
+  summarise(na=sum(education==1)/n()*100,
+            hs=sum(education==1)/n()*100,
+            ged=sum(education==2)/n()*100,
+            SCollege=sum(education==3)/n()*100,
+            AA=sum(education==4)/n()*100,
+            BA=sum(education==5)/n()*100,
+            MA=sum(education==6)/n()*100,
+            PHD=sum(education==7)/n()*100)
+```
+
+Income for each wave 
+
+Race/ethnicity
+
+Owner/Renter 
+
+Impact category 
+
+Distance category 
+
+```{r}
+
+```
+
+
+Air Quality Perceptions 
+Wave One:
+
+Wave One only: compare before and after the fire – perception of air quality in their neighborhood 
+```{r}
+#trying a vertical graph
+w1.before.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1,x="Before the Fire")) +
+  geom_bar(position="stack") +
+  labs(title = "I am confident that the air in my neighborhood is safe to breathe") +
+  xlab(NULL) +
+  ylab(NULL) +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+
+w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3,x="After the Fire")) +
+  geom_bar(position="stack") +
+  xlab(NULL) +
+  ylab("Count") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+
+grid.arrange(w1.before.neigh.plot,w1.after.neigh.plot)
+```
+
+Wave One only: compare before and after the fire – perception of air quality in their neighborhood by distance 
+```{r}
+ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1, x=group)) +
+    geom_bar(position="stack") +
+  labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+   scale_fill_manual(values = ryg.palette)
+
+ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3, x=group)) +
+    geom_bar(position="stack") +
+  labs(title = "Currently, I am confident that the air in my neighborhood is \n safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+   scale_fill_manual(values = ryg.palette)
+```
+
+Wave One only: compare before and after the fire – perception of air quality in their neighborhood by impact category 
+```{r}
+ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1, x=impact_cat)) +
+    geom_bar(position="stack") +
+  labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+   scale_fill_manual(values = ryg.palette)
+
+ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3, x=impact_cat)) +
+    geom_bar(position="stack") +
+  labs(title = "Currently, I am confident that the air in my neighborhood is \n safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+   scale_fill_manual(values = ryg.palette)
+```
+
+Wave One only: compare before and after the fire – perception of air quality in their home 
+```{r}
+#trying a horizontal graph
+w1.before.home.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Before the Fire")) +
+  geom_bar(position="stack") +
+  labs(title = "I am confident that the air inside my home is safe to breathe") +
+  ylab(NULL) +
+  xlab(NULL) +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+
+w1.after.home.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4,y="After the Fire")) +
+  geom_bar(position="stack") +
+  ylab(NULL) +
+  xlab("Count") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+
+grid.arrange(w1.before.home.plot,w1.after.home.plot)
+```
+
+Wave One only: compare before and after the fire – perception of air quality in their home by distance 
+```{r}
+ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2, x=group)) +
+    geom_bar(position="stack") +
+  labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+   scale_fill_manual(values = ryg.palette)
+
+ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=group)) +
+    geom_bar(position="stack") +
+  labs(title = "Currently, I am confident that the air in my neighborhood is \n safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+   scale_fill_manual(values = ryg.palette)
+```
+
+Wave One only: compare before and after the fire – perception of air quality in their home by impact category
+```{r}
+ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_cat)) +
+    geom_bar(position="stack") +
+  labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+   scale_fill_manual(values = ryg.palette)
+
+ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_cat)) +
+    geom_bar(position="stack") +
+  labs(title = "Currently, I am confident that the air in my neighborhood is \n safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+   scale_fill_manual(values = ryg.palette)
+```
+
+Wave One and Two:
+Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) 
+```{r}
+w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave One")) +
+  geom_bar(position="stack") +
+  labs(title = "I am confident that the air in my neighborhood is safe to breathe") +
+  ylab(NULL) +
+  xlab(NULL) +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+
+w2.after.neigh.plot=ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave Two")) +
+  geom_bar(position="stack") +
+  ylab(NULL) +
+  xlab("Count") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+
+grid.arrange(w1.after.neigh.plot,w2.after.neigh.plot)
+```
+
+Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) by distance 
+```{r}
+w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave One")) +
+  geom_bar(position="stack") +
+  labs(title = "I am confident that the air in my neighborhood is safe to breathe") +
+  ylab(NULL) +
+  xlab(NULL) +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+
+w2.after.neigh.plot=ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave Two")) +
+  geom_bar(position="stack") +
+  ylab(NULL) +
+  xlab("Count") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+
+grid.arrange(w1.after.neigh.plot,w2.after.neigh.plot)
+```
+
+Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) by impact category 
+```{r}
+ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_cat)) +
+    geom_bar(position="stack") +
+  labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+   scale_fill_manual(values = ryg.palette)
+
+ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_cat)) +
+    geom_bar(position="stack") +
+  labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+   scale_fill_manual(values = ryg.palette)
+```
+
+Wave One to Wave Two comparison – perception of air quality in home (AQ4) 
+```{r}
+w1.after.home.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4,y="Wave One")) +
+  geom_bar(position="stack") +
+  labs(title = "I am confident that the air in my neighborhood is safe to breathe") +
+  ylab(NULL) +
+  xlab(NULL) +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+
+w2.after.home.plot=ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4,y="Wave Two")) +
+  geom_bar(position="stack") +
+  ylab(NULL) +
+  xlab("Count") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+
+grid.arrange(w1.after.neigh.plot,w2.after.neigh.plot)
+```
+
+Wave One to Wave Two comparison – perception of air quality in home (AQ4) by distance 
+```{r}
+ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=group)) +
+    geom_bar(position="stack") +
+  labs(title = "I am confident that the air inside my home was \n safe to breathe",
+       subtitle = "Wave One",
+       x = "Distance from fire perimeter", fill ="") +
+   scale_fill_manual(values = ryg.palette)
+
+ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4, x=group)) +
+    geom_bar(position="stack") +
+  labs(title = "I am confident that the air inside my home was \n safe to breathe",
+       subtitle = "Wave Two",
+       x = "Distance from fire perimeter", fill ="") +
+   scale_fill_manual(values = ryg.palette)
+```
+
+Wave One to Wave Two comparison – perception of air quality in home (AQ4) by impact category 
+```{r}
+ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_cat)) +
+    geom_bar(position="stack") +
+  labs(title = "I am confident that the air inside my home was \n safe to breathe",
+       subtitle = "Wave One",
+       x = "Distance from fire perimeter", fill ="") +
+   scale_fill_manual(values = ryg.palette)
+
+ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_cat)) +
+    geom_bar(position="stack") +
+  labs(title = "I am confident that the air inside my home was \n safe to breathe",
+       subtitle = "Wave Two",
+       x = "Distance from fire perimeter", fill ="") +
+   scale_fill_manual(values = ryg.palette)
+```
+
+Maps:
+
+Map of perception of air quality in one’s neighborhood  - color from stacked plot colors 
+```{r}
+
+```
+
+Moran’s I of perception of air quality in one’s neighborhood 
+```{r}
+
+```
+
+Map of perception of air quality in one’s home - color from stacked plot colors 
+```{r}
+
+```
+
+Moran’s I of perception of air quality in one’s home
+```{r}
+
+```
+
+Map of Wave One symptoms – do a separate map for each type of symptom with a color for yes and a different color for no on that symptom 
+```{r}
+
+```
+
+Map of Wave Two symptoms – do a separate map for each type of symptom with a color for yes and a different color for no on that symptom 
+
+```{r}
+
+```
+
+Physical Health Symptoms
+Wave One:
+
+Wave One counts of symptoms bar plot or pie chart 
+```{r}
+wave1.symptoms=grep("^symptoms_\\d", names(wave.one), value=T)
+wave2.symptoms=grep("^symptoms_\\d", names(wave.two), value=T) # has 2 more columns
+
+```
+
+Wave One table of symptom counts by distance category 
+```{r}
+
+```
+
+Wave One table of symptom counts by impact category 
+```{r}
+
+```
+
+Wave Two:
+```{r}
+
+```
+
+Wave Two counts of symptoms bar plot or pie chart 
+```{r}
+
+```
+
+Wave Two table of symptom counts by distance category 
+```{r}
+
+```
+
+Wave Two table of symptom counts by impact category 
+```{r}
+
+```
+
+Wave One to Wave Two comparison – physical symptoms (maybe select to only be the people who responded to both waves).  
+```{r}
+
+```
+
+Predictors of Physical Health Symptoms 
+
+```{r}
+
+```
+
+Discussion: FOR LATER 
