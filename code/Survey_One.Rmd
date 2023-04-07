@@ -4,15 +4,6 @@ author: "Ryan Erickson"
 date: "2023-04-05"
 output: html_document
 ---
-```{r, echo=FALSE}
-# function junction
-tblFun <- function(x){
-  tbl <- table(x)
-  res <- cbind(tbl,round(prop.table(tbl)*100,2))
-  colnames(res) <- c('Count','Percentage')
-  res
-}
-```
 
 # Libraries
 ```{r}
@@ -26,6 +17,26 @@ library(gridExtra)
 library(elevatr)
 library(ggspatial)
 library(ggmap) #citation("ggmap")
+library(leaflet)
+library(htmlwidgets)
+library(kableExtra)
+library(maps)
+library(spdep)
+library(ggsn)
+library(car)
+library(performance)
+library(ggResidpanel)
+library(ape)
+```
+
+```{r, echo=FALSE}
+# function junction
+tblFun <- function(x){
+  tbl <- table(x)
+  res <- cbind(tbl,round(prop.table(tbl)*100,2))
+  colnames(res) <- c('Count','Percentage')
+  knitr::kable(res)
+}
 ```
 
 # Data
@@ -40,115 +51,137 @@ ryg.palette.short<-c("#EDA247", "#E6E1BC","#57C4AD", "#006164")
 api_key = "AIzaSyAeoVaM_45SQ4G-lHeci1RhRNbhpxO3BDc"
 register_google(key = api_key) 
 
-<<<<<<< HEAD
-# waveone<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w1_deID.csv")
-# wavetwo<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w2_deID.csv")
-waveone<-read.csv("../data/marshall_w1_deID.csv")
-wavetwo<-read.csv("../data/marshall_w2_deID.csv")
-=======
-```{r}
 waveone<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w1_deID.csv")
 wavetwo<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w2_deID.csv")
->>>>>>> b552acba003045d37b4c7baec38503217b8aac9e
-wave.one<-waveone%>%
-  mutate(mailingcity=recode(mailingcity, 'Superior'='SUPERIOR', 'UNINCORPORATED'='BOULDER')) %>%
+```
+
+```{r}
+wave.one<-waveone %>%
+#  mutate(mailingcity=recode(mailingcity, 'Superior'='SUPERIOR', 'UNINCORPORATED'='BOULDER')) %>%
   mutate(across(air_quality_1:air_quality_4, as.factor)) %>%
   mutate(across(remediation_1:remediation_4, as.factor)) %>%
   mutate(across(air_cleaning_1:air_cleaning_4, as.factor)) %>%
-  mutate(group=as.factor(group))  %>%
+  mutate(group=as.factor(group)) %>% 
+  mutate(ownership_status=recode_factor(ownership_status,
+                                        "1"="Owned",
+                                        "2"="Rented",
+                                        "3"="Owned but Not Living",
+                                        "4"="Purchased after Dec. 30, 2021",
+                                        "5"="Other")) %>%
   mutate(air_quality_1=recode_factor(air_quality_1,
-                "1"="Strongly disagree",
-                "2"="Somewhat disagree",
-                "3"="Neither agree nor disagree",
-                "4"="Somewhat agree",
-                "5"="Strongly agree",
-                "6"="Don't know")) %>%
+                                     "1"="Strongly disagree",
+                                     "2"="Somewhat disagree",
+                                     "3"="Neither agree nor disagree",
+                                     "4"="Somewhat agree",
+                                     "5"="Strongly agree",
+                                     "6"="Don't know")) %>%
   mutate(air_quality_2=recode_factor(air_quality_2,
-                "1"="Strongly disagree",
-                "2"="Somewhat disagree",
-                "3"="Neither agree nor disagree",
-                "4"="Somewhat agree",
-                "5"="Strongly agree",
-                "6"="Don't know")) %>%
+                                     "1"="Strongly disagree",
+                                     "2"="Somewhat disagree",
+                                     "3"="Neither agree nor disagree",
+                                     "4"="Somewhat agree",
+                                     "5"="Strongly agree",
+                                     "6"="Don't know")) %>%
   mutate(air_quality_3=recode_factor(air_quality_3,
-                "1"="Strongly disagree",
-                "2"="Somewhat disagree",
-                "3"="Neither agree nor disagree",
-                "4"="Somewhat agree",
-                "5"="Strongly agree",
-                "6"="Don't know")) %>%
-   mutate(air_quality_4=recode_factor(air_quality_4,
-                 "1"="Strongly disagree",
-                 "2"="Somewhat disagree",
-                 "3"="Neither agree nor disagree",
-                 "4"="Somewhat agree",
-                 "5"="Strongly agree",
-                 "6"="Don't know")) %>%
+                                     "1"="Strongly disagree",
+                                     "2"="Somewhat disagree",
+                                     "3"="Neither agree nor disagree",
+                                     "4"="Somewhat agree",
+                                     "5"="Strongly agree",
+                                     "6"="Don't know")) %>%
+  mutate(air_quality_4=recode_factor(air_quality_4,
+                                     "1"="Strongly disagree",
+                                     "2"="Somewhat disagree",
+                                     "3"="Neither agree nor disagree",
+                                     "4"="Somewhat agree",
+                                     "5"="Strongly agree",
+                                     "6"="Don't know")) %>% 
   mutate(home_smell_1week=recode_factor(home_smell_1week,
-                "0"="No",
-                "1"="Yes",
-                "2"="Not sure/don't remember")) %>%
+                                        "0"="No",
+                                        "1"="Yes",
+                                        "2"="Not sure/don't remember")) %>%
   mutate(home_smell_type=recode_factor(home_smell_type,
-                "1"="Like a campfire",
-                "2"="Like chemicals or a chemical fire",
-                "3"="Other")) %>%
+                                       "1"="Like a campfire",
+                                       "2"="Like chemicals or a chemical fire",
+                                       "3"="Other")) %>%
   mutate(group=recode_factor(group,
-                "A"="within fire perimeter",
-                "B"="within 1/2 mile",
-                "C"="1/2 to 1 mile",
-                "D"="1 to 2 miles")) %>%
+                             "A"="within fire perimeter",
+                             "B"="within 1/2 mile",
+                             "C"="1/2 to 1 mile",
+                             "D"="1 to 2 miles")) %>%
   mutate(remediation_1=recode_factor(remediation_1, 
-                "1"="Did this already",
-                "2"="Plan to do this",
-                "3"="Neither"))%>%
+                                     "1"="Did this already",
+                                     "2"="Plan to do this",
+                                     "3"="Neither"))%>%
   mutate(remediation_2=recode_factor(remediation_2, 
-                "1"="Did this already",
-                "2"="Plan to do this",
-                "3"="Neither"))%>%
+                                     "1"="Did this already",
+                                     "2"="Plan to do this",
+                                     "3"="Neither"))%>%
   mutate(remediation_3=recode_factor(remediation_3, 
-                "1"="Did this already",
-                "2"="Plan to do this",
-                "3"="Neither"))%>%
+                                     "1"="Did this already",
+                                     "2"="Plan to do this",
+                                     "3"="Neither"))%>%
   mutate(remediation_4=recode_factor(remediation_4, 
-                "1"="Did this already",
-                "2"="Plan to do this",
-                "3"="Neither"))%>%
+                                     "1"="Did this already",
+                                     "2"="Plan to do this",
+                                     "3"="Neither"))%>%
   mutate(air_cleaning=recode_factor(air_cleaning_1, 
-                "1"="Changing air filters in HVAC")) %>%
+                                    "1"="Changing air filters in HVAC")) %>%
   mutate(air_cleaning=recode_factor(air_cleaning_2, 
-                "1"="Using air cleaners"))%>%
+                                    "1"="Using air cleaners"))%>%
   mutate(air_cleaning=recode_factor(air_cleaning_3, 
-                "1"="Hiring someone to clean indoor air")) %>%
+                                    "1"="Hiring someone to clean indoor air")) %>%
   mutate(air_cleaning=recode_factor(air_cleaning_4, 
-                "1"="Other")) %>%
+                                    "1"="Other")) %>%
   mutate(air_cleaning_3=recode_factor(air_cleaning_3,
-                "1"="Hiring someone to clean indoor air"))%>%
+                                      "1"="Hiring someone to clean indoor air"))%>%
   mutate(air_cleaning_4=recode_factor(air_cleaning_4,
-                "1"="Other")) %>%
+                                      "1"="Other")) %>%
+  mutate(education=recode_factor(education,
+                                 "0"="Did not specify", 
+                                 "1"="High School Graduate",
+                                 "2"="GED or Equivalent",
+                                 "3"="Some College",
+                                 "4"="Associate's Degree",
+                                 "5"="Bachelor's Degree",
+                                 "6"="Master's Degree",
+                                 "7"="Doctoral Degree")) %>%
+  mutate(income=recode_factor(income,
+                              "1"="Less than $20,000", 
+                              "2"="$20,000 to $34,999",
+                              "3"="$35,000 to $49,999",
+                              "4"="$50,000 to $79,999",
+                              "5"="$80,000 to $99,999",
+                              "6"="$100,000 to $149,999",
+                              "7"="$150,000 to $199,999",
+                              "8"="$200,000 or more",
+                              "9"="Prefer not to answer")) %>%
   filter(finished==1) %>% #only analyzing finished data, not in wave.two
-  filter(mailingcity=="BOULDER"|mailingcity=="SUPERIOR"|mailingcity=="LOUISVILLE") %>% #filtering only respondents in Boulder Unincorporated, Superior or Louisville
-  filter(impact_cat!="Complete loss")
+  filter(mailingcity=="BOULDER"|mailingcity=="SUPERIOR"|mailingcity=="LOUISVILLE") #filtering only respondents in Boulder Unincorporated, Superior or Louisville
 
 wave.two<-wavetwo %>%
   mutate(air_quality_2=as.factor(air_quality_2)) %>%
   mutate(air_quality_4=as.factor(air_quality_4)) %>%
   mutate(across(remediation_1:remediation_4, as.factor)) %>%
   mutate(across(air_cleaning_1:air_cleaning_4, as.factor)) %>%
-  mutate(group=as.factor(group))  %>%
+  mutate(group=as.factor(group)) %>% 
+  mutate(renterowner=recode_factor(renterowner,
+                                        "1"="Owned",
+                                        "2"="Rented")) %>%
   mutate(air_quality_2=recode_factor(air_quality_2,
-                "1"="Strongly disagree",
-                "2"="Somewhat disagree",
-                "3"="Neither agree nor disagree",
-                "4"="Somewhat agree",
-                "5"="Strongly agree",
-                "6"="Don't know")) %>%
-   mutate(air_quality_4=recode_factor(air_quality_4,
-                 "1"="Strongly disagree",
-                 "2"="Somewhat disagree",
-                 "3"="Neither agree nor disagree",
-                 "4"="Somewhat agree",
-                 "5"="Strongly agree",
-                 "6"="Don't know")) %>%
+                                     "1"="Strongly disagree",
+                                     "2"="Somewhat disagree",
+                                     "3"="Neither agree nor disagree",
+                                     "4"="Somewhat agree",
+                                     "5"="Strongly agree",
+                                     "6"="Don't know")) %>%
+  mutate(air_quality_4=recode_factor(air_quality_4,
+                                     "1"="Strongly disagree",
+                                     "2"="Somewhat disagree",
+                                     "3"="Neither agree nor disagree",
+                                     "4"="Somewhat agree",
+                                     "5"="Strongly agree",
+                                     "6"="Don't know")) %>%
   mutate(group=recode_factor(group,
                              "A"="within fire perimeter",
                              "B"="within 1/2 mile",
@@ -178,7 +211,25 @@ wave.two<-wavetwo %>%
                                     "1"="Hiring someone to clean indoor air")) %>%
   mutate(air_cleaning=recode_factor(air_cleaning_4,
                                     "1"="Other")) %>%
-  filter(impact_cat!="Complete loss")
+  mutate(income=recode_factor(income,
+                              "1"="Less than $20,000", 
+                              "2"="$20,000 to $34,999",
+                              "3"="$35,000 to $49,999",
+                              "4"="$50,000 to $79,999",
+                              "5"="$80,000 to $99,999",
+                              "6"="$100,000 to $149,999",
+                              "7"="$150,000 to $199,999",
+                              "8"="$200,000 or more",
+                              "9"="Prefer not to answer")) %>%
+  mutate(education=recode_factor(education,
+                                 "0"="Did not specify", 
+                                 "1"="High School Graduate",
+                                 "2"="GED or Equivalent",
+                                 "3"="Some College",
+                                 "4"="Associate's Degree",
+                                 "5"="Bachelor's Degree",
+                                 "6"="Master's Degree",
+                                 "7"="Doctoral Degree"))
 ```
 
 # Descriptive Survey Statistics (tables)
@@ -193,89 +244,92 @@ nrow(wavetwo)
 ### Number of respondants who completed the survey for Wave One and Wave Two
 
 ```{r}
-waveone %>% 
-  filter(finished==1) %>% 
-  summarise(Wave_One=n())
-wavetwo %>% 
-  summarise(Wave_Two=n())
+Respondants = c(nrow(wave.one),nrow(wave.two))
+Wave=c("One","Two")
+df1 = cbind(Wave,Respondants) %>% 
+  as.data.frame()
+knitr::kable(df1)
 ```
 
 ### % male/female 
-
+#### Wave One
 ```{r}
-wave.one %>% 
-  summarise(Male_w1=sum(Gender3=="Male"),
-            Female_w1=sum(Gender3=="Female"),
-            Percent_Male_w1=Male_w1/n()*100,
-            Percent_Female_w1=Female_w1/n()*100)
+tblFun(wave.one$Gender3)
+```
 
-wave.two  %>% 
-  summarise(Male_w2=sum(Gender3=="Male"),
-            Female_w2=sum(Gender3=="Female"),
-            Percent_Male_w2=Male_w2/n()*100,
-            Percent_Female_w2=Female_w2/n()*100) 
+#### Wave Two
+```{r}
+tblFun(wave.two$Gender3)
 ```
 
 ### Educational attainment for each wave 
-
+#### Wave One
 ```{r}
-waveone %>% 
-  filter(finished==1)  %>%
-  mutate(education=ifelse(is.na(education),0,education)) %>% 
-  summarise(na=sum(education==1)/n()*100,
-            hs=sum(education==1)/n()*100,
-            ged=sum(education==2)/n()*100,
-            SCollege=sum(education==3)/n()*100,
-            AA=sum(education==4)/n()*100,
-            BA=sum(education==5)/n()*100,
-            MA=sum(education==6)/n()*100,
-            PHD=sum(education==7)/n()*100)
+tblFun(wave.one$education)
+```
 
-wavetwo %>%
-  mutate(education=ifelse(is.na(education),0,education)) %>% 
-  summarise(na=sum(education==1)/n()*100,
-            hs=sum(education==1)/n()*100,
-            ged=sum(education==2)/n()*100,
-            SCollege=sum(education==3)/n()*100,
-            AA=sum(education==4)/n()*100,
-            BA=sum(education==5)/n()*100,
-            MA=sum(education==6)/n()*100,
-            PHD=sum(education==7)/n()*100)
+#### Wave Two
+```{r}
+tblFun(wave.two$education)
 ```
 
 ### Income for each wave 
-
+#### Wave One
 ```{r}
+tblFun(wave.one$income)
+```
 
+#### Wave Two
+```{r}
+tblFun(wave.two$income)
 ```
 
 ### Race/ethnicity
-
+#### Wave One
 ```{r}
+tblFun(wave.one$RaceEthn2)
+```
 
+#### Wave Two
+```{r}
+tblFun(wave.two$RaceEthn2)
 ```
 
 ### Owner/Renter 
-
+#### Wave One
 ```{r}
+tblFun(wave.one$ownership_status)
+```
 
+#### Wave Two
+```{r}
+tblFun(wave.two$renterowner)
 ```
 
 ### Impact category 
-
+#### Wave One
 ```{r}
+tblFun(wave.one$impact_cat)
+```
 
+#### Wave Two
+```{r}
+tblFun(wave.two$impact_cat)
 ```
 
 ### Distance category 
-
+#### Wave One
 ```{r}
+tblFun(wave.one$group)
+```
 
+#### Wave Two
+```{r}
+tblFun(wave.two$group)
 ```
 
 
 # Air Quality Perceptions
-
 ## Wave One:
 
 ### Wave One only: compare before and after the fire – perception of air quality in their neighborhood 
@@ -522,36 +576,170 @@ ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_
    scale_fill_manual(values = ryg.palette)
 ```
 
-## Maps:
 
-#### Maps Data:
+# Maps:
 
+### Maps Data:
 ```{r, echo=FALSE}
-# mapwave1=read.csv("/Volumes/research/Marshall Fire Health/marshall_w1.csv") %>% 
-#   mutate(full_address = paste0(.$mailingaddr1,", ",.$mailingcity,", ", .$mailingstate,", ",.$mailingzip)) %>% 
-#   mutate_geocode(full_address, output="latlona") %>%
-#   filter(!is.na(lat))
-# #mapwave2=
+mapwave1=read.csv("/Volumes/research/Marshall Fire Health/marshall_w1.csv")
+
+# fixes:
+mapwave1[mapwave1$mailingaddr1=="553 GRANT ST",]$mailingaddr1 = "553 GRANT AVE"
+
+#geocoding - assigning lats and longs via Google API - will need key
+# ~5 errors
+geo_marshall=mapwave1%>% #geocoding only completed surveys and those with lat and long
+#  mutate(mailingcity=recode(mailingcity, 'Superior'='SUPERIOR', 'UNINCORPORATED'='BOULDER')) %>%
+  mutate(across(air_quality_1:air_quality_4, as.factor)) %>%
+  mutate(across(remediation_1:remediation_4, as.factor)) %>%
+  mutate(across(air_cleaning_1:air_cleaning_4, as.factor)) %>%
+  mutate(group=as.factor(group)) %>% 
+  mutate(ownership_status=recode_factor(ownership_status,
+                                        "1"="Owned",
+                                        "2"="Rented",
+                                        "3"="Owned but Not Living",
+                                        "4"="Purchased after Dec. 30, 2021",
+                                        "5"="Other")) %>%
+  mutate(air_quality_1=recode_factor(air_quality_1,
+                                     "1"="Strongly disagree",
+                                     "2"="Somewhat disagree",
+                                     "3"="Neither agree nor disagree",
+                                     "4"="Somewhat agree",
+                                     "5"="Strongly agree",
+                                     "6"="Don't know")) %>%
+  mutate(air_quality_2=recode_factor(air_quality_2,
+                                     "1"="Strongly disagree",
+                                     "2"="Somewhat disagree",
+                                     "3"="Neither agree nor disagree",
+                                     "4"="Somewhat agree",
+                                     "5"="Strongly agree",
+                                     "6"="Don't know")) %>%
+  mutate(air_quality_3=recode_factor(air_quality_3,
+                                     "1"="Strongly disagree",
+                                     "2"="Somewhat disagree",
+                                     "3"="Neither agree nor disagree",
+                                     "4"="Somewhat agree",
+                                     "5"="Strongly agree",
+                                     "6"="Don't know")) %>%
+  mutate(air_quality_4=recode_factor(air_quality_4,
+                                     "1"="Strongly disagree",
+                                     "2"="Somewhat disagree",
+                                     "3"="Neither agree nor disagree",
+                                     "4"="Somewhat agree",
+                                     "5"="Strongly agree",
+                                     "6"="Don't know")) %>% 
+  mutate(home_smell_1week=recode_factor(home_smell_1week,
+                                        "0"="No",
+                                        "1"="Yes",
+                                        "2"="Not sure/don't remember")) %>%
+  mutate(home_smell_type=recode_factor(home_smell_type,
+                                       "1"="Like a campfire",
+                                       "2"="Like chemicals or a chemical fire",
+                                       "3"="Other")) %>%
+  mutate(group=recode_factor(group,
+                             "A"="within fire perimeter",
+                             "B"="within 1/2 mile",
+                             "C"="1/2 to 1 mile",
+                             "D"="1 to 2 miles")) %>%
+  mutate(remediation_1=recode_factor(remediation_1, 
+                                     "1"="Did this already",
+                                     "2"="Plan to do this",
+                                     "3"="Neither"))%>%
+  mutate(remediation_2=recode_factor(remediation_2, 
+                                     "1"="Did this already",
+                                     "2"="Plan to do this",
+                                     "3"="Neither"))%>%
+  mutate(remediation_3=recode_factor(remediation_3, 
+                                     "1"="Did this already",
+                                     "2"="Plan to do this",
+                                     "3"="Neither"))%>%
+  mutate(remediation_4=recode_factor(remediation_4, 
+                                     "1"="Did this already",
+                                     "2"="Plan to do this",
+                                     "3"="Neither"))%>%
+  mutate(air_cleaning=recode_factor(air_cleaning_1, 
+                                    "1"="Changing air filters in HVAC")) %>%
+  mutate(air_cleaning=recode_factor(air_cleaning_2, 
+                                    "1"="Using air cleaners"))%>%
+  mutate(air_cleaning=recode_factor(air_cleaning_3, 
+                                    "1"="Hiring someone to clean indoor air")) %>%
+  mutate(air_cleaning=recode_factor(air_cleaning_4, 
+                                    "1"="Other")) %>%
+  mutate(air_cleaning_3=recode_factor(air_cleaning_3,
+                                      "1"="Hiring someone to clean indoor air"))%>%
+  mutate(air_cleaning_4=recode_factor(air_cleaning_4,
+                                      "1"="Other")) %>%
+  mutate(education=recode_factor(education,
+                                 "0"="Did not specify", 
+                                 "1"="High School Graduate",
+                                 "2"="GED or Equivalent",
+                                 "3"="Some College",
+                                 "4"="Associate's Degree",
+                                 "5"="Bachelor's Degree",
+                                 "6"="Master's Degree",
+                                 "7"="Doctoral Degree")) %>%
+  mutate(income=recode_factor(income,
+                              "1"="Less than $20,000", 
+                              "2"="$20,000 to $34,999",
+                              "3"="$35,000 to $49,999",
+                              "4"="$50,000 to $79,999",
+                              "5"="$80,000 to $99,999",
+                              "6"="$100,000 to $149,999",
+                              "7"="$150,000 to $199,999",
+                              "8"="$200,000 or more",
+                              "9"="Prefer not to answer")) %>%
+  filter(finished==1) %>% #only analyzing finished data, not in wave.two
+  filter(mailingcity=="BOULDER"|mailingcity=="SUPERIOR"|mailingcity=="LOUISVILLE") %>% 
+  mutate(full_address = paste0(.$mailingaddr1,", ",.$mailingcity,", ", .$mailingstate,", ",.$mailingzip)) %>% 
+  mutate_geocode(full_address, output="latlona") 
 ```
 
-Map of perception of air quality in one’s neighborhood  - color from stacked plot colors 
-
+### Map of perception of air quality in one’s neighborhood  - color from stacked plot colors 
 ```{r}
-# mapwave1 = st_as_sf(mapwave1, coords = c("lon", "lat"),  crs = 4326)
+marshall.sp.aq1 = as(filter(geo_marshall,!is.na(air_quality_1)),"Spatial")
+factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), c("1", "2","3","4","5"))
+
+leaflet(marshall.sp.aq1) %>%
+  addTiles() %>%
+  # addPolygons(color="red",
+  #             opacity=0.5) %>%
+  addCircleMarkers(group=marshall.sp.aq1$air_quality_1, color = ~factpal(air_quality_1),
+                   radius = 1,
+                   opacity = 1,
+                   lng = marshall.sp.aq1@coords[,1],
+                   lat = marshall.sp.aq1@coords[,2])
+
+ggplot(filter(geo_marshall,!is.na(air_quality_1))) +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(color=as.factor(air_quality_1))) +
+  scale_color_manual(values = c("1" = "#d7191c",
+                                "2" = "#fdae61",
+                                "3" = "#ffffbf",
+                                "4" = "#a6d96a",
+                                "5" = "#1a9641")) +
+  ggtitle("Marshall Fire Survey Results (NA's filtered out)", subtitle=paste0("Wave One: Total Respondants Displayed: ",nrow(filter(geo_marshall,!is.na(air_quality_1))))) +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5)) +
+  guides(colour=guide_legend(title=""))
+```
+
+```{r, eval=FALSE, echo=FALSE}
+#impact_cat
+
+# factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), c("Complete loss", "Damaged, living there","Damaged, not living there","No damage, living there","No damage, not living there"))
 # 
-# fire_destruction_AQ_and_area_plot = leaflet(geo_marshall) %>% 
+# leaflet(marshall.sp) %>% 
 #   addTiles() %>% 
-#   addCircleMarkers(color = c("Complete loss" = "#d7191c", 
-#                               "Damaged, living there" = "#fdae61",
-#                               "Damaged, not living there" = "#ffffbf",
-#                               "No damage, living there" = "#a6d96a",
-#                               "No damage, not living there" = "#1a9641"),
-#                    radius = 3.5,
+#   # addPolygons(color="red",
+#   #             opacity=0.5) %>% 
+#   addCircleMarkers(group=marshall.sp$impact_cat, color = ~factpal(impact_cat),
+#                    radius = 1,
 #                    opacity = 1,
-#                    lng = geo_marshall$long,
-#                    lat = geo_marshall$lat)
+#                    lng = marshall.sp@coords[,1],
+#                    lat = marshall.sp@coords[,2])
 # 
-# ggplot(mapwave1) + 
+# ggplot(geo_marshall) + 
 #   annotation_map_tile() +
 #   annotation_scale() +
 #   geom_sf(aes(color=impact_cat)) +
@@ -560,14 +748,13 @@ Map of perception of air quality in one’s neighborhood  - color from stacked p
 #                                 "Damaged, not living there" = "#ffffbf",
 #                                 "No damage, living there" = "#a6d96a",
 #                                 "No damage, not living there" = "#1a9641")) +
-#   ggtitle("Marshall Fire Survey Results", subtitle=paste0("Total Respondants Displayed: ",nrow(mapwave1))) + 
+#   ggtitle("Marshall Fire Survey Results", subtitle=paste0("Total Respondants Displayed: ",nrow(geo_marshall))) + 
 #   theme(plot.title = element_text(hjust=0.5),
 #         plot.subtitle = element_text(hjust=0.5)) +
 #   guides(colour=guide_legend(title="Impact Level"))
 ```
 
 Moran’s I of perception of air quality in one’s neighborhood 
-
 ```{r}
 
 ```
@@ -575,7 +762,54 @@ Moran’s I of perception of air quality in one’s neighborhood
 Map of perception of air quality in one’s home - color from stacked plot colors 
 
 ```{r}
+marshall.sp.aq3 = as(filter(geo_marshall,!is.na(air_quality_3)),"Spatial")
+marshall.sp.aq4 = as(filter(geo_marshall,!is.na(air_quality_4)),"Spatial")
 
+factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), c("1", "2","3","4","5"))
+
+leaflet(marshall.sp.aq3) %>%
+  addTiles() %>%
+  addCircleMarkers(group=marshall.sp.aq3$air_quality_3, color = ~factpal(air_quality_3),
+                   radius = 1,
+                   opacity = 1,
+                   lng = marshall.sp.aq3@coords[,1],
+                   lat = marshall.sp.aq3@coords[,2])
+
+ggplot(filter(geo_marshall,!is.na(air_quality_3))) +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(color=as.factor(air_quality_3))) +
+  scale_color_manual(values = c("1" = "#d7191c",
+                                "2" = "#fdae61",
+                                "3" = "#ffffbf",
+                                "4" = "#a6d96a",
+                                "5" = "#1a9641")) +
+  ggtitle("Marshall Fire Survey Results (NA's filtered out) \n Before the Fire", subtitle=paste0("Wave One: Total Respondants Displayed: ",nrow(filter(geo_marshall,!is.na(air_quality_3))))) +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5)) +
+  guides(colour=guide_legend(title=""))
+
+leaflet(marshall.sp.aq4) %>%
+  addTiles() %>%
+  addCircleMarkers(group=marshall.sp.aq4$air_quality_4, color = ~factpal(air_quality_4),
+                   radius = 1,
+                   opacity = 1,
+                   lng = marshall.sp.aq4@coords[,1],
+                   lat = marshall.sp.aq4@coords[,2])
+
+ggplot(filter(geo_marshall,!is.na(air_quality_4))) +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(color=as.factor(air_quality_4))) +
+  scale_color_manual(values = c("1" = "#d7191c",
+                                "2" = "#fdae61",
+                                "3" = "#ffffbf",
+                                "4" = "#a6d96a",
+                                "5" = "#1a9641")) +
+  ggtitle("Marshall Fire Survey Results (NA's filtered out) \n After the Fire", subtitle=paste0("Wave One: Total Respondants Displayed: ",nrow(filter(geo_marshall,!is.na(air_quality_4))))) +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5)) +
+  guides(colour=guide_legend(title=""))
 ```
 
 Moran’s I of perception of air quality in one’s home
@@ -596,6 +830,7 @@ Map of Wave Two symptoms – do a separate map for each type of symptom with a c
 
 ```
 
+
 # Physical Health Symptoms
 
 ## Wave One:
@@ -604,8 +839,20 @@ Map of Wave Two symptoms – do a separate map for each type of symptom with a c
 
 ```{r}
 wave1.symptoms=grep("^symptoms_\\d", names(wave.one), value=T)
-wave2.symptoms=grep("^symptoms_\\d", names(wave.two), value=T) # has 2 more columns
-
+rnames=c("Dry Cough","Wet Cough","Wheeze","Itchy or watery eyes","Sore Throat","Headache","Shortness of Breath","Difficult or labored breathing","Sneezing or stuffy nose","Nausea or vomiting ","Allergic skin reaction","Strange taste in your mouth","Stress")
+count=list()
+for(i in wave1.symptoms) {
+  v=sum(!is.na(wave.one[,i]))
+  count=c(count,v)
+}
+df=cbind(wave1.symptoms,count,rnames) %>% 
+  as.data.frame() %>% 
+  dplyr::select(rnames,count)
+df$count=as.integer(df$count)
+colnames(df)=c("Symptom","Count")
+final_df = df %>% 
+  mutate(Percent=round(Count/nrow(wave.one)*100,2))
+knitr::kable(final_df)
 ```
 
 ### Wave One table of symptom counts by distance category 
@@ -622,14 +869,24 @@ wave2.symptoms=grep("^symptoms_\\d", names(wave.two), value=T) # has 2 more colu
 
 ## Wave Two:
 
-```{r}
-
-```
-
 ### Wave Two counts of symptoms bar plot or pie chart 
 
 ```{r}
-
+wave2.symptoms=grep("^symptoms_\\d", names(wave.two), value=T) # has 2 more columns
+rnames=c("Dry Cough","Wet Cough","Wheeze","Itchy or watery eyes","Sore Throat","Headache","Shortness of Breath","Difficult or labored breathing","Sneezing or stuffy nose","Nausea or vomiting ","Allergic skin reaction","Strange taste in your mouth","Stress")
+count=list()
+for(i in wave2.symptoms) {
+  v=sum(wave.two[,i]==1)
+  count=c(count,v)
+}
+df=cbind(wave2.symptoms,count,rnames) %>% 
+  as.data.frame() %>% 
+  dplyr::select(rnames,count)
+df$count=as.integer(df$count)
+colnames(df)=c("Symptom","Count")
+final_df = df %>% 
+  mutate(Percent=round(Count/nrow(wave.two)*100,2))
+knitr::kable(final_df)
 ```
 
 ### Wave Two table of symptom counts by distance category 
