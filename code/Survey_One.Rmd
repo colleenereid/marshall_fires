@@ -51,13 +51,13 @@ ryg.palette.short<-c("#EDA247", "#E6E1BC","#57C4AD", "#006164")
 api_key = "AIzaSyAeoVaM_45SQ4G-lHeci1RhRNbhpxO3BDc"
 register_google(key = api_key) 
 
-waveone<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w1_deID.csv")
-wavetwo<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w2_deID.csv")
+waveone<-read.csv("../data/marshall_w1_deID.csv")
+wavetwo<-read.csv("../data/marshall_w2_deID.csv")
 ```
 
 ```{r}
 wave.one<-waveone %>%
-#  mutate(mailingcity=recode(mailingcity, 'Superior'='SUPERIOR', 'UNINCORPORATED'='BOULDER')) %>%
+  mutate(mailingcity=recode_factor(mailingcity, "Superior"="SUPERIOR", "UNINCORPORATED"="BOULDER")) %>%
   mutate(across(air_quality_1:air_quality_4, as.factor)) %>%
   mutate(across(remediation_1:remediation_4, as.factor)) %>%
   mutate(across(air_cleaning_1:air_cleaning_4, as.factor)) %>%
@@ -581,7 +581,7 @@ ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_
 
 ### Maps Data:
 ```{r, echo=FALSE}
-mapwave1=read.csv("/Volumes/research/Marshall Fire Health/marshall_w1.csv")
+mapwave1=read.csv("../data/marshall_w1.csv")
 
 # fixes:
 mapwave1[mapwave1$mailingaddr1=="553 GRANT ST",]$mailingaddr1 = "553 GRANT AVE"
@@ -589,7 +589,7 @@ mapwave1[mapwave1$mailingaddr1=="553 GRANT ST",]$mailingaddr1 = "553 GRANT AVE"
 #geocoding - assigning lats and longs via Google API - will need key
 # ~5 errors
 geo_marshall=mapwave1%>% #geocoding only completed surveys and those with lat and long
-#  mutate(mailingcity=recode(mailingcity, 'Superior'='SUPERIOR', 'UNINCORPORATED'='BOULDER')) %>%
+  mutate(mailingcity=recode_factor(mailingcity, 'Superior'='SUPERIOR', 'UNINCORPORATED'='BOULDER')) %>%
   mutate(across(air_quality_1:air_quality_4, as.factor)) %>%
   mutate(across(remediation_1:remediation_4, as.factor)) %>%
   mutate(across(air_cleaning_1:air_cleaning_4, as.factor)) %>%
@@ -695,32 +695,69 @@ geo_marshall=mapwave1%>% #geocoding only completed surveys and those with lat an
 ```
 
 ### Map of perception of air quality in one’s neighborhood  - color from stacked plot colors 
+#### Before the Fire
 ```{r}
-marshall.sp.aq1 = as(filter(geo_marshall,!is.na(air_quality_1)),"Spatial")
-factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), c("1", "2","3","4","5"))
+geo_marshall_1=filter(geo_marshall,!is.na(air_quality_1)) %>% 
+  st_as_sf(coords=c("lon","lat"), crs = 4326)
+marshall.sp.aq1 = as(geo_marshall_1,"Spatial")
+factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), c("Strongly disagree","Somewhat disagree", "Neither agree nor disagree","Somewhat agree","Strongly agree"))
 
 leaflet(marshall.sp.aq1) %>%
   addTiles() %>%
-  # addPolygons(color="red",
-  #             opacity=0.5) %>%
   addCircleMarkers(group=marshall.sp.aq1$air_quality_1, color = ~factpal(air_quality_1),
                    radius = 1,
                    opacity = 1,
                    lng = marshall.sp.aq1@coords[,1],
                    lat = marshall.sp.aq1@coords[,2])
 
-ggplot(filter(geo_marshall,!is.na(air_quality_1))) +
+ggplot(filter(geo_marshall_1,!is.na(air_quality_1))) +
   annotation_map_tile() +
   annotation_scale() +
   geom_sf(aes(color=as.factor(air_quality_1))) +
-  scale_color_manual(values = c("1" = "#d7191c",
-                                "2" = "#fdae61",
-                                "3" = "#ffffbf",
-                                "4" = "#a6d96a",
-                                "5" = "#1a9641")) +
-  ggtitle("Marshall Fire Survey Results (NA's filtered out)", subtitle=paste0("Wave One: Total Respondants Displayed: ",nrow(filter(geo_marshall,!is.na(air_quality_1))))) +
+  scale_color_manual(values = c("Strongly disagree"="#d7191c",
+                                "Somewhat disagree"="#fdae61",
+                                "Neither agree nor disagree"="#ffffbf",
+                                "Somewhat agree"= "#a6d96a",
+                                "Strongly agree" = "#1a9641")) +
+  labs(title="Marshall Fire Survey Results (NA's filtered out)", 
+       subtitle=paste0("Wave One: Total Respondants Displayed: ",nrow(filter(geo_marshall_1,!is.na(air_quality_1)))),
+       caption="Statement: Before the Marshall Fire, I was confident that the \n air in my neighborhood was safe to breath") +
   theme(plot.title = element_text(hjust=0.5),
-        plot.subtitle = element_text(hjust=0.5)) +
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5)) +
+  guides(colour=guide_legend(title=""))
+```
+
+#### After the Fire
+```{r}
+geo_marshall_2=filter(geo_marshall,!is.na(air_quality_2)) %>% 
+  st_as_sf(coords=c("lon","lat"), crs = 4326)
+marshall.sp.aq2 = as(geo_marshall_2,"Spatial")
+factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), c("Strongly disagree","Somewhat disagree", "Neither agree nor disagree","Somewhat agree","Strongly agree"))
+
+leaflet(marshall.sp.aq2) %>%
+  addTiles() %>%
+  addCircleMarkers(group=marshall.sp.aq2$air_quality_2, color = ~factpal(air_quality_2),
+                   radius = 1,
+                   opacity = 1,
+                   lng = marshall.sp.aq2@coords[,1],
+                   lat = marshall.sp.aq2@coords[,2])
+
+ggplot(filter(geo_marshall_2,!is.na(air_quality_2))) +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(color=as.factor(air_quality_2))) +
+  scale_color_manual(values = c("Strongly disagree"="#d7191c",
+                                "Somewhat disagree"="#fdae61",
+                                "Neither agree nor disagree"="#ffffbf",
+                                "Somewhat agree"= "#a6d96a",
+                                "Strongly agree" = "#1a9641")) +
+  labs(title="Marshall Fire Survey Results (NA's filtered out)", 
+       subtitle=paste0("Wave One: Total Respondants Displayed: ",nrow(filter(geo_marshall_2,!is.na(air_quality_2)))),
+       caption="Statement: Currently, I am confident that the air in \n my neighborhood is safe to breath") +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5)) +
   guides(colour=guide_legend(title=""))
 ```
 
@@ -754,18 +791,18 @@ ggplot(filter(geo_marshall,!is.na(air_quality_1))) +
 #   guides(colour=guide_legend(title="Impact Level"))
 ```
 
-Moran’s I of perception of air quality in one’s neighborhood 
+### Moran’s I of perception of air quality in one’s neighborhood 
 ```{r}
 
 ```
 
-Map of perception of air quality in one’s home - color from stacked plot colors 
-
+### Map of perception of air quality in one’s home - color from stacked plot colors 
+#### Before the Fire
 ```{r}
-marshall.sp.aq3 = as(filter(geo_marshall,!is.na(air_quality_3)),"Spatial")
-marshall.sp.aq4 = as(filter(geo_marshall,!is.na(air_quality_4)),"Spatial")
-
-factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), c("1", "2","3","4","5"))
+geo_marshall_3=filter(geo_marshall,!is.na(air_quality_3)) %>% 
+  st_as_sf(coords=c("lon","lat"), crs = 4326)
+marshall.sp.aq3 = as(geo_marshall_3,"Spatial")
+factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), c("Strongly disagree","Somewhat disagree", "Neither agree nor disagree","Somewhat agree","Strongly agree"))
 
 leaflet(marshall.sp.aq3) %>%
   addTiles() %>%
@@ -775,40 +812,21 @@ leaflet(marshall.sp.aq3) %>%
                    lng = marshall.sp.aq3@coords[,1],
                    lat = marshall.sp.aq3@coords[,2])
 
-ggplot(filter(geo_marshall,!is.na(air_quality_3))) +
+ggplot(filter(geo_marshall_3,!is.na(air_quality_3))) +
   annotation_map_tile() +
   annotation_scale() +
   geom_sf(aes(color=as.factor(air_quality_3))) +
-  scale_color_manual(values = c("1" = "#d7191c",
-                                "2" = "#fdae61",
-                                "3" = "#ffffbf",
-                                "4" = "#a6d96a",
-                                "5" = "#1a9641")) +
-  ggtitle("Marshall Fire Survey Results (NA's filtered out) \n Before the Fire", subtitle=paste0("Wave One: Total Respondants Displayed: ",nrow(filter(geo_marshall,!is.na(air_quality_3))))) +
+  scale_color_manual(values = c("Strongly disagree"="#d7191c",
+                                "Somewhat disagree"="#fdae61",
+                                "Neither agree nor disagree"="#ffffbf",
+                                "Somewhat agree"= "#a6d96a",
+                                "Strongly agree" = "#1a9641")) +
+  labs(title="Marshall Fire Survey Results (NA's filtered out)", 
+       subtitle=paste0("Wave One: Total Respondants Displayed: ",nrow(filter(geo_marshall_3,!is.na(air_quality_3)))),
+       caption="Statement: Currently, I am confident that the air in \n my neighborhood is safe to breath") +
   theme(plot.title = element_text(hjust=0.5),
-        plot.subtitle = element_text(hjust=0.5)) +
-  guides(colour=guide_legend(title=""))
-
-leaflet(marshall.sp.aq4) %>%
-  addTiles() %>%
-  addCircleMarkers(group=marshall.sp.aq4$air_quality_4, color = ~factpal(air_quality_4),
-                   radius = 1,
-                   opacity = 1,
-                   lng = marshall.sp.aq4@coords[,1],
-                   lat = marshall.sp.aq4@coords[,2])
-
-ggplot(filter(geo_marshall,!is.na(air_quality_4))) +
-  annotation_map_tile() +
-  annotation_scale() +
-  geom_sf(aes(color=as.factor(air_quality_4))) +
-  scale_color_manual(values = c("1" = "#d7191c",
-                                "2" = "#fdae61",
-                                "3" = "#ffffbf",
-                                "4" = "#a6d96a",
-                                "5" = "#1a9641")) +
-  ggtitle("Marshall Fire Survey Results (NA's filtered out) \n After the Fire", subtitle=paste0("Wave One: Total Respondants Displayed: ",nrow(filter(geo_marshall,!is.na(air_quality_4))))) +
-  theme(plot.title = element_text(hjust=0.5),
-        plot.subtitle = element_text(hjust=0.5)) +
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5)) +
   guides(colour=guide_legend(title=""))
 ```
 
@@ -831,6 +849,39 @@ Map of Wave Two symptoms – do a separate map for each type of symptom with a c
 ```
 
 
+#### After the Fire
+```{r}
+geo_marshall_4=filter(geo_marshall,!is.na(air_quality_4)) %>% 
+  st_as_sf(coords=c("lon","lat"), crs = 4326)
+marshall.sp.aq4 = as(geo_marshall_4,"Spatial")
+factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), c("Strongly disagree","Somewhat disagree", "Neither agree nor disagree","Somewhat agree","Strongly agree"))
+
+leaflet(marshall.sp.aq4) %>%
+  addTiles() %>%
+  addCircleMarkers(group=marshall.sp.aq4$air_quality_4, color = ~factpal(air_quality_4),
+                   radius = 1,
+                   opacity = 1,
+                   lng = marshall.sp.aq4@coords[,1],
+                   lat = marshall.sp.aq4@coords[,2])
+
+ggplot(filter(geo_marshall_4,!is.na(air_quality_3))) +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(color=as.factor(air_quality_3))) +
+  scale_color_manual(values = c("Strongly disagree"="#d7191c",
+                                "Somewhat disagree"="#fdae61",
+                                "Neither agree nor disagree"="#ffffbf",
+                                "Somewhat agree"= "#a6d96a",
+                                "Strongly agree" = "#1a9641")) +
+  labs(title="Marshall Fire Survey Results (NA's filtered out)", 
+       subtitle=paste0("Wave One: Total Respondants Displayed: ",nrow(filter(geo_marshall_4,!is.na(air_quality_4)))),
+       caption="Statement: Currently, I am confident that the air in \n my neighborhood is safe to breath") +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5)) +
+  guides(colour=guide_legend(title=""))
+```
+
 # Physical Health Symptoms
 
 ## Wave One:
@@ -839,32 +890,83 @@ Map of Wave Two symptoms – do a separate map for each type of symptom with a c
 
 ```{r}
 wave1.symptoms=grep("^symptoms_\\d", names(wave.one), value=T)
-rnames=c("Dry Cough","Wet Cough","Wheeze","Itchy or watery eyes","Sore Throat","Headache","Shortness of Breath","Difficult or labored breathing","Sneezing or stuffy nose","Nausea or vomiting ","Allergic skin reaction","Strange taste in your mouth","Stress")
+rnames=c("Dry Cough","Wet Cough","Wheeze","Itchy or watery eyes",
+         "Sore Throat","Headache","Shortness of Breath",
+         "Difficult or labored breathing","Sneezing or stuffy nose",
+         "Nausea or vomiting ","Allergic skin reaction",
+         "Strange taste in your mouth","None of these")
 count=list()
 for(i in wave1.symptoms) {
   v=sum(!is.na(wave.one[,i]))
   count=c(count,v)
 }
-df=cbind(wave1.symptoms,count,rnames) %>% 
+df_sym=cbind(wave1.symptoms,count,rnames) %>% 
   as.data.frame() %>% 
   dplyr::select(rnames,count)
-df$count=as.integer(df$count)
-colnames(df)=c("Symptom","Count")
-final_df = df %>% 
-  mutate(Percent=round(Count/nrow(wave.one)*100,2))
-knitr::kable(final_df)
+df_sym$count=as.integer(df_sym$count)
+colnames(df_sym)=c("Symptom","Count")
+knitr::kable(df_sym)
+# final_df = df %>% 
+#   mutate(Percent=round(Count/nrow(wave.one)*100,2))
+b=barplot(df_sym$Count, names.arg=df_sym$Symptom, las=2,
+          main="Count of Symptoms")
+text(b, df_sym$Count-10, df_sym$Count, font=2)
 ```
 
 ### Wave One table of symptom counts by distance category 
 
 ```{r}
-
+count.dist=v=wave.one %>% 
+  filter(!is.na(.[,wave1.symptoms[1]])) %>% 
+  group_by(group) %>%
+  count(.[,wave1.symptoms[1]]) %>% 
+  as.data.frame() %>% 
+  mutate(symptom=rnames[1]) %>% 
+  dplyr::select(group,symptom,n)
+for(i in 2:length(wave1.symptoms)) {
+  v=wave.one %>% 
+    filter(!is.na(.[,wave1.symptoms[i]])) %>% 
+    group_by(group) %>%
+    count(.[,wave1.symptoms[i]]) %>% 
+    as.data.frame() %>% 
+    mutate(symptom=rnames[i]) %>% 
+    dplyr::select(group,symptom,n)
+  count.dist=rbind(count.dist,v)
+}
+colnames(count.dist)=c("Distance","Symptom", "Count")
+ggplot(data=count.dist, aes(x=Symptom,y=Count,fill=Distance)) +
+  geom_bar(stat="identity") + 
+  labs(title="Symptoms")
+ggplot(data=count.dist, aes(x=Distance,y=Count,fill=Symptom)) +
+  geom_bar(stat="identity") + 
+  labs(title="Symptoms")
 ```
 
 ### Wave One table of symptom counts by impact category 
 
 ```{r}
-
+count.impact= filter(wave.one,impact_cat!="") %>% 
+  filter(!is.na(.[,wave1.symptoms[1]])) %>% 
+  group_by(impact_cat) %>%
+  count(.[,wave1.symptoms[1]]) %>% 
+  as.data.frame() %>% 
+  mutate(symptom=rnames[1]) %>% 
+  dplyr::select(impact_cat,symptom,n)
+for(i in 2:length(wave1.symptoms)) {
+  v=filter(wave.one,impact_cat!="") %>% 
+    filter(!is.na(.[,wave1.symptoms[i]])) %>% 
+    group_by(impact_cat) %>%
+    count(.[,wave1.symptoms[i]]) %>% 
+    as.data.frame() %>% 
+    mutate(symptom=rnames[i]) %>% 
+    dplyr::select(impact_cat,symptom,n)
+  count.impact=rbind(count.impact,v)
+}
+colnames(count.impact)=c("Impact_Category","Symptom", "Count")
+ggplot(data=count.impact, aes(x=Symptom,y=Count,fill=Impact_Category)) +
+  geom_bar(stat="identity") + 
+  labs(title="Symptoms - Impact Category",
+       subtitle = "I can change the colors of these graphs")
 ```
 
 ## Wave Two:
@@ -872,39 +974,97 @@ knitr::kable(final_df)
 ### Wave Two counts of symptoms bar plot or pie chart 
 
 ```{r}
-wave2.symptoms=grep("^symptoms_\\d", names(wave.two), value=T) # has 2 more columns
-rnames=c("Dry Cough","Wet Cough","Wheeze","Itchy or watery eyes","Sore Throat","Headache","Shortness of Breath","Difficult or labored breathing","Sneezing or stuffy nose","Nausea or vomiting ","Allergic skin reaction","Strange taste in your mouth","Stress")
-count=list()
+wave2.symptoms=grep("^symptoms_\\d", names(wave.two), value=T)[-13:-14] # has 2 more columns
+count2=list()
 for(i in wave2.symptoms) {
-  v=sum(wave.two[,i]==1)
-  count=c(count,v)
+  v=sum(wave.two[,i]==1, na.rm=T)
+  count2=c(count2,v)
 }
-df=cbind(wave2.symptoms,count,rnames) %>% 
+
+df_sym2=cbind(wave2.symptoms,count2,rnames) %>% 
   as.data.frame() %>% 
-  dplyr::select(rnames,count)
-df$count=as.integer(df$count)
-colnames(df)=c("Symptom","Count")
-final_df = df %>% 
-  mutate(Percent=round(Count/nrow(wave.two)*100,2))
-knitr::kable(final_df)
+  dplyr::select(rnames,count2)
+df_sym2$count2=as.integer(df_sym2$count2)
+colnames(df_sym2)=c("Symptom","Count")
+knitr::kable(df_sym2)
+# final_df = df %>% 
+#   mutate(Percent=round(Count/nrow(wave.one)*100,2))
+b=barplot(df_sym2$Count, names.arg=df_sym2$Symptom, las=2,
+          main="Count of Symptoms")
+text(b, df_sym2$Count+15, df_sym2$Count, font=2)
 ```
 
 ### Wave Two table of symptom counts by distance category 
 
 ```{r}
-
+count2.dist=v=wave.two %>% 
+  filter(!is.na(.[,wave2.symptoms[1]])) %>% 
+  group_by(group) %>%
+  count(.[,wave2.symptoms[1]]) %>% 
+  as.data.frame() %>% 
+  mutate(symptom=rnames[1]) %>% 
+  dplyr::select(group,symptom,n)
+for(i in 2:length(wave1.symptoms)) {
+  v=wave.two %>% 
+    filter(!is.na(.[,wave2.symptoms[i]])) %>% 
+    group_by(group) %>%
+    count(.[,wave2.symptoms[i]]) %>% 
+    as.data.frame() %>% 
+    mutate(symptom=rnames[i]) %>% 
+    dplyr::select(group,symptom,n)
+  count2.dist=rbind(count2.dist,v)
+}
+colnames(count2.dist)=c("Distance","Symptom", "Count")
+ggplot(data=count.dist, aes(x=Symptom,y=Count,fill=Distance)) +
+  geom_bar(stat="identity") + 
+  labs(title="Wave 2 Symptoms")
+ggplot(data=count2.dist, aes(x=Distance,y=Count,fill=Symptom)) +
+  geom_bar(stat="identity") + 
+  labs(title="Wave 2 Symptoms")
 ```
 
 ### Wave Two table of symptom counts by impact category 
 
 ```{r}
+count2.impact= filter(wave.two,impact_cat!="") %>% 
+  filter(!is.na(.[,wave2.symptoms[1]])) %>% 
+  filter(.[,wave2.symptoms[1]]==1) %>% 
+  group_by(impact_cat) %>%
+  count(.[,wave2.symptoms[1]]) %>% 
+  as.data.frame() %>% 
+  mutate(symptom=rnames[1]) %>% 
+  dplyr::select(impact_cat,symptom,n)
 
+for(i in 2:length(wave2.symptoms)) {
+  v=filter(wave.two,impact_cat!="") %>% 
+      filter(!is.na(.[,wave2.symptoms[i]])) %>% 
+      filter(.[,wave2.symptoms[i]]==1) %>% 
+      group_by(impact_cat) %>%
+      count(.[,wave2.symptoms[i]]) %>% 
+      as.data.frame() %>% 
+      mutate(symptom=rnames[i]) %>% 
+      dplyr::select(impact_cat,symptom,n)
+  count2.impact=rbind(count2.impact,v)
+}
+colnames(count2.impact)=c("Impact_Category","Symptom", "Count")
+ggplot(data=count2.impact, aes(x=Symptom,y=Count,fill=Impact_Category)) +
+  geom_bar(stat="identity") + 
+  labs(title="Symptoms - Impact Category",
+       subtitle = "I can change the colors of these graphs")
 ```
 
-### Wave One to Wave Two comparison – physical symptoms (maybe select to only be the people who responded to both waves) 
+
+## Wave One to Wave Two comparison – physical symptoms (maybe select to only be the people who responded to both waves) 
 
 ```{r}
-
+compare = left_join(df_sym,df_sym2, by="Symptom")
+colnames(compare)=c("Symptom","Wave_One","Wave_Two")
+df = gather(compare, Wave, Count, Wave_One:Wave_Two)
+ggplot(df, aes(x=Symptom, y=Count, fill=Wave)) + 
+  geom_bar(position = 'identity')
+  
+ggplot(data = df, aes(x = Symptom, y = Count, fill = Wave)) +
+  geom_bar(stat = "identity", position = position_dodge())
 ```
 
 ### Predictors of Physical Health Symptoms 
