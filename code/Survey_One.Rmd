@@ -27,6 +27,7 @@ library(car)
 library(performance)
 library(ggResidpanel)
 library(ape)
+library(reshape2)
 ```
 
 ```{r, echo=FALSE}
@@ -51,8 +52,8 @@ ryg.palette.short<-c("#EDA247", "#E6E1BC","#57C4AD", "#006164")
 api_key = "AIzaSyAeoVaM_45SQ4G-lHeci1RhRNbhpxO3BDc"
 register_google(key = api_key) 
 
-waveone<-read.csv("../data/marshall_w1_deID.csv")
-wavetwo<-read.csv("../data/marshall_w2_deID.csv")
+waveone<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w1_deID.csv")
+wavetwo<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w2_deID.csv")
 ```
 
 ```{r}
@@ -235,7 +236,6 @@ wave.two<-wavetwo %>%
 # Descriptive Survey Statistics (tables)
 
 ### Number of respondents for Wave 1 and Wave 2  
-
 ```{r}
 nrow(waveone)
 nrow(wavetwo)
@@ -330,6 +330,7 @@ tblFun(wave.two$group)
 
 
 # Air Quality Perceptions
+
 ## Wave One:
 
 ### Wave One only: compare before and after the fire – perception of air quality in their neighborhood 
@@ -578,10 +579,9 @@ ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_
 
 
 # Maps:
-
-### Maps Data:
-```{r, echo=FALSE}
-mapwave1=read.csv("../data/marshall_w1.csv")
+## Maps Data:
+```{r, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+mapwave1=read.csv("/Volumes/research/Marshall Fire Health/marshall_w1.csv")
 
 # fixes:
 mapwave1[mapwave1$mailingaddr1=="553 GRANT ST",]$mailingaddr1 = "553 GRANT AVE"
@@ -791,9 +791,12 @@ ggplot(filter(geo_marshall_2,!is.na(air_quality_2))) +
 #   guides(colour=guide_legend(title="Impact Level"))
 ```
 
+
 ### Moran’s I of perception of air quality in one’s neighborhood 
 ```{r}
-
+library(moranfast)
+moranfast(marshall.sp.aq1$air_quality_1, marshall.sp.aq1@coords[,1],marshall.sp.aq1@coords[,2])
+moranfast(marshall.sp.aq2$air_quality_2, marshall.sp.aq2@coords[,1],marshall.sp.aq2@coords[,2])
 ```
 
 ### Map of perception of air quality in one’s home - color from stacked plot colors 
@@ -830,19 +833,55 @@ ggplot(filter(geo_marshall_3,!is.na(air_quality_3))) +
   guides(colour=guide_legend(title=""))
 ```
 
-Moran’s I of perception of air quality in one’s home
+#### After the Fire
+```{r}
+geo_marshall_4=filter(geo_marshall,!is.na(air_quality_4)) %>% 
+  st_as_sf(coords=c("lon","lat"), crs = 4326)
+marshall.sp.aq4 = as(geo_marshall_4,"Spatial")
+factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), c("Strongly disagree","Somewhat disagree", "Neither agree nor disagree","Somewhat agree","Strongly agree"))
+
+leaflet(marshall.sp.aq4) %>%
+  addTiles() %>%
+  addCircleMarkers(group=marshall.sp.aq3$air_quality_4, color = ~factpal(air_quality_4),
+                   radius = 1,
+                   opacity = 1,
+                   lng = marshall.sp.aq4@coords[,1],
+                   lat = marshall.sp.aq4@coords[,2])
+
+ggplot(filter(geo_marshall_4,!is.na(air_quality_4))) +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(color=as.factor(air_quality_4))) +
+  scale_color_manual(values = c("Strongly disagree"="#d7191c",
+                                "Somewhat disagree"="#fdae61",
+                                "Neither agree nor disagree"="#ffffbf",
+                                "Somewhat agree"= "#a6d96a",
+                                "Strongly agree" = "#1a9641")) +
+  labs(title="Marshall Fire Survey Results (NA's filtered out)", 
+       subtitle=paste0("Wave One: Total Respondants Displayed: ",nrow(filter(geo_marshall_4,!is.na(air_quality_4)))),
+       caption="Statement: Currently, I am confident that the air in \n my neighborhood is safe to breath") +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5)) +
+  guides(colour=guide_legend(title=""))
+```
+
+### Moran’s I of perception of air quality in one’s home
+```{r}
+moranfast(marshall.sp.aq3$air_quality_3, marshall.sp.aq3@coords[,1],marshall.sp.aq3@coords[,2])
+moranfast(marshall.sp.aq4$air_quality_4, marshall.sp.aq4@coords[,1],marshall.sp.aq4@coords[,2])
+```
+
+
+
+### Map of Wave One symptoms – do a separate map for each type of symptom with a color for yes and a different color for no on that symptom 
 
 ```{r}
 
 ```
 
-Map of Wave One symptoms – do a separate map for each type of symptom with a color for yes and a different color for no on that symptom 
 
-```{r}
-
-```
-
-Map of Wave Two symptoms – do a separate map for each type of symptom with a color for yes and a different color for no on that symptom 
+### Map of Wave Two symptoms – do a separate map for each type of symptom with a color for yes and a different color for no on that symptom 
 
 ```{r}
 
@@ -881,6 +920,7 @@ ggplot(filter(geo_marshall_4,!is.na(air_quality_3))) +
         plot.caption = element_text(hjust=0.5)) +
   guides(colour=guide_legend(title=""))
 ```
+
 
 # Physical Health Symptoms
 
@@ -1059,12 +1099,36 @@ ggplot(data=count2.impact, aes(x=Symptom,y=Count,fill=Impact_Category)) +
 ```{r}
 compare = left_join(df_sym,df_sym2, by="Symptom")
 colnames(compare)=c("Symptom","Wave_One","Wave_Two")
-df = gather(compare, Wave, Count, Wave_One:Wave_Two)
-ggplot(df, aes(x=Symptom, y=Count, fill=Wave)) + 
-  geom_bar(position = 'identity')
-  
-ggplot(data = df, aes(x = Symptom, y = Count, fill = Wave)) +
-  geom_bar(stat = "identity", position = position_dodge())
+df = melt(compare, id=c("Symptom")) %>% 
+  dplyr::mutate(Symptom=rep(1:13,2), 
+         Symptom=recode_factor(Symptom,
+                               "1"=rnames[1],
+                               "2"=rnames[2],
+                               "3"=rnames[3],
+                               "4"=rnames[4],
+                               "5"=rnames[5],
+                               "6"=rnames[6],
+                               "7"=rnames[7],
+                               "8"=rnames[8],
+                               "9"=rnames[9],
+                               "10"=rnames[10],
+                               "11"=rnames[11],
+                               "12"=rnames[12],
+                               "13"=rnames[13]))
+ggplot(df) +
+  geom_bar(aes(x = Symptom, y = value, fill = variable), 
+           stat="identity", position = "dodge", width = 0.7) +
+  scale_fill_manual("",
+                    values = c("red","blue"), 
+                    labels = c(" Wave One", " Wave Two")) +
+  labs(title="Wave One / Wave Two Comparison",
+       subtitle="Add counts to top of bars",
+       x="Symptom",
+       y="Count") +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5),
+        axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 ### Predictors of Physical Health Symptoms 

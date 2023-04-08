@@ -6,10 +6,10 @@ tblFun <- function(x){
   knitr::kable(res)
 }
 
-# waveone<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w1_deID.csv")
-# wavetwo<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w2_deID.csv")
-waveone<-read.csv("../data/marshall_w1_deID.csv")
-wavetwo<-read.csv("../data/marshall_w2_deID.csv")
+waveone<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w1_deID.csv")
+wavetwo<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w2_deID.csv")
+# waveone<-read.csv("../data/marshall_w1_deID.csv")
+# wavetwo<-read.csv("../data/marshall_w2_deID.csv")
 
 wave.one<-waveone %>% # recoding of mailing address has one "" response
   mutate(mailingcity=recode_factor(mailingcity, 'Superior'='SUPERIOR', 'UNINCORPORATED'='BOULDER')) %>% # randomly had to change to recode_factor?
@@ -711,10 +711,10 @@ factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), c("
 #                    lng = marshall.sp.aq4@coords[,1],
 #                    lat = marshall.sp.aq4@coords[,2])
 
-ggplot(filter(geo_marshall_4,!is.na(air_quality_3))) +
+ggplot(filter(geo_marshall_4,!is.na(air_quality_4))) +
   annotation_map_tile() +
   annotation_scale() +
-  geom_sf(aes(color=as.factor(air_quality_3))) +
+  geom_sf(aes(color=as.factor(air_quality_4))) +
   scale_color_manual(values = c("Strongly disagree"="#d7191c",
                                 "Somewhat disagree"="#fdae61",
                                 "Neither agree nor disagree"="#ffffbf",
@@ -735,7 +735,15 @@ library(moranfast)
 marshall.dists = as.matrix(dist(cbind(marshall.sp.aq1@coords[,1], marshall.sp.aq1@coords[,2])))
 marshall.dists.inv = 1/marshall.dists
 diag(marshall.dists.inv) = 0
+plot(geo_marshall_1$geometry)
+marshall.aq1.spac=st_buffer(geo_marshall_1,dist=25)
+plot(marshall.aq1.spac$geometry)
+marshall.rook=poly2nb(marshall.aq1.spac)
+
 moranfast(marshall.sp.aq1$air_quality_1, marshall.sp.aq1@coords[,1],marshall.sp.aq1@coords[,2])
+moranfast(marshall.sp.aq2$air_quality_2, marshall.sp.aq2@coords[,1],marshall.sp.aq2@coords[,2])
+moranfast(marshall.sp.aq3$air_quality_3, marshall.sp.aq3@coords[,1],marshall.sp.aq3@coords[,2])
+moranfast(marshall.sp.aq4$air_quality_4, marshall.sp.aq4@coords[,1],marshall.sp.aq4@coords[,2])
 
 # Moran's I - Veroni
 bb=st_bbox(marshall.sp.aq1) %>% 
@@ -794,7 +802,7 @@ colnames(df_sym)=c("Symptom","Count")
 # final_df = df %>% 
 #   mutate(Percent=round(Count/nrow(wave.one)*100,2))
 b=barplot(df_sym$Count, names.arg=df_sym$Symptom, las=2,
-          main="Count of Symptoms")
+          main="Wave One - Count of Symptoms")
 text(b, df_sym$Count-10, df_sym$Count, font=2)
 #save("images/symptom_barchart.png")
 #save_kable(knitr::kable(df_sym), "images/symptoms_count.png")
@@ -820,12 +828,12 @@ for(i in 2:length(wave1.symptoms)) {
 colnames(count.dist)=c("Distance","Symptom", "Count")
 ggplot(data=count.dist, aes(x=Symptom,y=Count,fill=Distance)) +
   geom_bar(stat="identity") + 
-  labs(title="Symptoms - Distance",
+  labs(title="Wave One Symptoms - Distance",
        subtitle = "I can change the colors of these graphs")
 ggplot(data=count.dist, aes(x=Distance,y=Count,fill=Symptom)) +
   geom_bar(stat="identity",
            subtitle = "Was curious what this would look like \n Might be an okay % graph idea") + 
-  labs(title="Symptoms - Distance")
+  labs(title="Wave One Symptoms - Distance")
 
 ### Wave One table of symptom counts by impact category 
 count.impact= filter(wave.one,impact_cat!="") %>% 
@@ -848,7 +856,7 @@ for(i in 2:length(wave1.symptoms)) {
 colnames(count.impact)=c("Impact_Category","Symptom", "Count")
 ggplot(data=count.impact, aes(x=Symptom,y=Count,fill=Impact_Category)) +
   geom_bar(stat="identity") + 
-  labs(title="Symptoms - Impact Category",
+  labs(title=" Wave One Symptoms - Impact Category",
        subtitle = "I can change the colors of these graphs")
 
 ## Wave Two:
@@ -931,8 +939,277 @@ ggplot(data=count2.impact, aes(x=Symptom,y=Count,fill=Impact_Category)) +
        subtitle = "I can change the colors of these graphs")
 
 ### Wave One to Wave Two comparison – physical symptoms (maybe select to only be the people who responded to both waves) 
+Number <- c(1,2,3,4)
+Yresult <- c(1233,223,2223,4455)
+Xresult <- c(1223,334,4421,0)
+nyx <- data.frame(Number, Yresult, Xresult)
+# load needed libraries
+library(reshape2)
+library(ggplot2)
 
+# reshape your data into long format
+nyxlong <- melt(nyx, id=c("Number"))
 
+# make the plot
+ggplot(nyxlong) +
+  geom_bar(aes(x = Number, y = value, fill = variable), 
+           stat="identity", position = "dodge", width = 0.7) +
+  scale_fill_manual("Result\n", values = c("red","blue"), 
+                    labels = c(" Yresult", " Xresult")) +
+  labs(x="\nNumber",y="Result\n") +
+  theme_bw(base_size = 14)
+
+compare = left_join(df_sym,df_sym2, by="Symptom")
+colnames(compare)=c("Symptom","Wave_One","Wave_Two")
+df = melt(compare, id=c("Symptom")) %>% 
+ggplot(df) +
+  geom_bar(aes(x = Symptom, y = value, fill = variable), 
+           stat="identity", position = "dodge", width = 0.7) +
+  scale_fill_manual("Result\n", values = c("red","blue"), 
+                    labels = c(" Yresult", " Xresult")) +
+  labs(x="\nNumber",y="Result\n") +
+  theme_bw(base_size = 14)
+
+### Map of Wave One symptoms – do a separate map for each type of symptom with a color for yes and a different color for no on that symptom 
+geo_marshall_sym = geo_marshall %>%
+  filter(impact_cat!="") %>% 
+  st_as_sf(coords=c("lon","lat"), crs = 4326) %>% 
+  mutate(symptoms_1=ifelse(is.na(symptoms_1),0,symptoms_1),
+         symptoms_2=ifelse(is.na(symptoms_2),0,symptoms_2),
+         symptoms_3=ifelse(is.na(symptoms_3),0,symptoms_3),
+         symptoms_4=ifelse(is.na(symptoms_4),0,symptoms_4),
+         symptoms_5=ifelse(is.na(symptoms_5),0,symptoms_5),
+         symptoms_6=ifelse(is.na(symptoms_6),0,symptoms_6),
+         symptoms_7=ifelse(is.na(symptoms_7),0,symptoms_7),
+         symptoms_8=ifelse(is.na(symptoms_8),0,symptoms_8),
+         symptoms_9=ifelse(is.na(symptoms_9),0,symptoms_9),
+         symptoms_10=ifelse(is.na(symptoms_10),0,symptoms_10),
+         symptoms_11=ifelse(is.na(symptoms_11),0,symptoms_11),
+         symptoms_12=ifelse(is.na(symptoms_12),0,symptoms_12),
+         symptoms_13=ifelse(is.na(symptoms_13),0,symptoms_13))
+  
+# qk_ft <- function(dataframe,symptoms) {
+#   plt=geo_marshall_sym[,symptoms] %>% 
+#     mutate(highlight=ifelse(.[,symptoms]==1,"green","red"))
+#   plt
+# } 
+#   guides(colour=guide_legend(title=NULL))
+# ggsave("images/map1.AQ4.png", height = 7.5, width = 7.5)
+  
+test_1=geo_marshall_sym %>% 
+  dplyr::select(symptoms_1,geometry) %>% 
+  mutate(highlight=ifelse(symptoms_1==1,"green","red"))
+test_2=geo_marshall_sym %>% 
+  dplyr::select(symptoms_2,geometry) %>% 
+  mutate(highlight=ifelse(symptoms_2==1,"green","red"))
+test_3=geo_marshall_sym %>% 
+  dplyr::select(symptoms_3,geometry) %>% 
+  mutate(highlight=ifelse(symptoms_3==1,"green","red"))
+test_4=geo_marshall_sym %>% 
+  dplyr::select(symptoms_4,geometry) %>% 
+  mutate(highlight=ifelse(symptoms_4==1,"green","red"))
+test_5=geo_marshall_sym %>% 
+  dplyr::select(symptoms_5,geometry) %>% 
+  mutate(highlight=ifelse(symptoms_5==1,"green","red"))
+test_6=geo_marshall_sym %>% 
+  dplyr::select(symptoms_6,geometry) %>% 
+  mutate(highlight=ifelse(symptoms_6==1,"green","red"))
+test_7=geo_marshall_sym %>% 
+  dplyr::select(symptoms_7,geometry) %>% 
+  mutate(highlight=ifelse(symptoms_7==1,"green","red"))
+test_8=geo_marshall_sym %>% 
+  dplyr::select(symptoms_8,geometry) %>% 
+  mutate(highlight=ifelse(symptoms_8==1,"green","red"))
+test_9=geo_marshall_sym %>% 
+  dplyr::select(symptoms_9,geometry) %>% 
+  mutate(highlight=ifelse(symptoms_9==1,"green","red"))
+test_10=geo_marshall_sym %>% 
+  dplyr::select(symptoms_10,geometry) %>% 
+  mutate(highlight=ifelse(symptoms_10==1,"green","red"))
+test_11=geo_marshall_sym %>% 
+  dplyr::select(symptoms_11,geometry) %>% 
+  mutate(highlight=ifelse(symptoms_11==1,"green","red"))
+test_12=geo_marshall_sym %>% 
+  dplyr::select(symptoms_12,geometry) %>% 
+  mutate(highlight=ifelse(symptoms_12==1,"green","red"))
+test_13=geo_marshall_sym %>% 
+  dplyr::select(symptoms_13,geometry) %>% 
+  mutate(highlight=ifelse(symptoms_13==1,"green","red"))
+
+test1=ggplot(test_1)  +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(fill=symptoms_1), col=test_1$highlight) +
+  #  gghighlight::gghighlight(symptoms_1==1, unhighlighted_colour = "red")  +
+  labs(title=NULL, #paste0("Marshall Fire Survey, Wave One: "),
+       subtitle=paste0("Symptom - ", rnames[1],"\nNumber of Cases: ",sum(test_1$symptoms_1==1)),
+       caption="Need to get legend to display properly")  +
+  theme_void() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5),
+        legend.position = "none")
+test2=ggplot(test_2)  +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(fill=symptoms_2), col=test_2$highlight) +
+  #  gghighlight::gghighlight(symptoms_2==1, unhighlighted_colour = "red")  +
+  labs(title=NULL, #paste0("Marshall Fire Survey, Wave One: "),
+       subtitle=paste0("Symptom - ", rnames[1],"\nNumber of Cases: ",sum(test_2$symptoms_2==1)),
+       caption="Need to get legend to display properly")  +
+  theme_void() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5),
+        legend.position = "none")
+test3=ggplot(test_3)  +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(fill=symptoms_3), col=test_3$highlight) +
+  #  gghighlight::gghighlight(symptoms_3==1, unhighlighted_colour = "red")  +
+  labs(title=NULL, #paste0("Marshall Fire Survey, Wave One: "),
+       subtitle=paste0("Symptom - ", rnames[1],"\nNumber of Cases: ",sum(test_3$symptoms_3==1)),
+       caption="Need to get legend to display properly")  +
+  theme_void() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5),
+        legend.position = "none")
+test4=ggplot(test_4)  +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(fill=symptoms_4), col=test_4$highlight) +
+  #  gghighlight::gghighlight(symptoms_4==1, unhighlighted_colour = "red")  +
+  labs(title=NULL, #paste0("Marshall Fire Survey, Wave One: "),
+       subtitle=paste0("Symptom - ", rnames[1],"\nNumber of Cases: ",sum(test_4$symptoms_4==1)),
+       caption="Need to get legend to display properly")  +
+  theme_void() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5),
+        legend.position = "none")
+test5=ggplot(test_5)  +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(fill=symptoms_5), col=test_5$highlight) +
+  #  gghighlight::gghighlight(symptoms_5==1, unhighlighted_colour = "red")  +
+  labs(title=NULL, #paste0("Marshall Fire Survey, Wave One: "),
+       subtitle=paste0("Symptom - ", rnames[1],"\nNumber of Cases: ",sum(test_5$symptoms_5==1)),
+       caption="Need to get legend to display properly")  +
+  theme_void() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5),
+        legend.position = "none")
+test6=ggplot(test_6)  +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(fill=symptoms_6), col=test_6$highlight) +
+  #  gghighlight::gghighlight(symptoms_6==1, unhighlighted_colour = "red")  +
+  labs(title=NULL, #paste0("Marshall Fire Survey, Wave One: "),
+       subtitle=paste0("Symptom - ", rnames[1],"\nNumber of Cases: ",sum(test_6$symptoms_6==1)),
+       caption="Need to get legend to display properly")  +
+  theme_void() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5),
+        legend.position = "none")
+test7=ggplot(test_7)  +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(fill=symptoms_7), col=test_7$highlight) +
+  #  gghighlight::gghighlight(symptoms_7==1, unhighlighted_colour = "red")  +
+  labs(title=NULL, #paste0("Marshall Fire Survey, Wave One: "),
+       subtitle=paste0("Symptom - ", rnames[1],"\nNumber of Cases: ",sum(test_7$symptoms_7==1)),
+       caption="Need to get legend to display properly")  +
+  theme_void() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5),
+        legend.position = "none")
+test8=ggplot(test_8)  +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(fill=symptoms_8), col=test_8$highlight) +
+  #  gghighlight::gghighlight(symptoms_8==1, unhighlighted_colour = "red")  +
+  labs(title=NULL, #paste0("Marshall Fire Survey, Wave One: "),
+       subtitle=paste0("Symptom - ", rnames[1],"\nNumber of Cases: ",sum(test_8$symptoms_8==1)),
+       caption="Need to get legend to display properly")  +
+  theme_void() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5),
+        legend.position = "none")
+test9=ggplot(test_9)  +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(fill=symptoms_9), col=test_9$highlight) +
+  #  gghighlight::gghighlight(symptoms_9==1, unhighlighted_colour = "red")  +
+  labs(title=NULL, #paste0("Marshall Fire Survey, Wave One: "),
+       subtitle=paste0("Symptom - ", rnames[1],"\nNumber of Cases: ",sum(test_9$symptoms_9==1)),
+       caption="Need to get legend to display properly")  +
+  theme_void() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5),
+        legend.position = "none")
+test10=ggplot(test_10)  +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(fill=symptoms_10), col=test_10$highlight) +
+  #  gghighlight::gghighlight(symptoms_10==1, unhighlighted_colour = "red")  +
+  labs(title=NULL, #paste0("Marshall Fire Survey, Wave One: "),
+       subtitle=paste0("Symptom - ", rnames[10],"\nNumber of Cases: ",sum(test_10$symptoms_10==1)),
+       caption="Need to get legend to display properly")  +
+  theme_void() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5),
+        legend.position = "none")
+test11=ggplot(test_11)  +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(fill=symptoms_11), col=test_11$highlight) +
+  #  gghighlight::gghighlight(symptoms_11==1, unhighlighted_colour = "red")  +
+  labs(title=NULL, #paste0("Marshall Fire Survey, Wave One: "),
+       subtitle=paste0("Symptom - ", rnames[11],"\nNumber of Cases: ",sum(test_11$symptoms_11==1)),
+       caption="Need to get legend to display properly")  +
+  theme_void() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5),
+        legend.position = "none")
+test12=ggplot(test_12)  +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(fill=symptoms_12), col=test_12$highlight) +
+  #  gghighlight::gghighlight(symptoms_12==1, unhighlighted_colour = "red")  +
+  labs(title=NULL, #paste0("Marshall Fire Survey, Wave One: "),
+       subtitle=paste0("Symptom - ", rnames[12],"\nNumber of Cases: ",sum(test_12$symptoms_12==1)),
+       caption="Need to get legend to display properly")  +
+  theme_void() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5),
+        legend.position = "none")
+test13=ggplot(test_13)  +
+  annotation_map_tile() +
+  annotation_scale() +
+  geom_sf(aes(fill=symptoms_13), col=test_13$highlight) +
+  #  gghighlight::gghighlight(symptoms_13==1, unhighlighted_colour = "red")  +
+  labs(title=NULL, #paste0("Marshall Fire Survey, Wave One: ")
+       subtitle=paste0("Symptom - ", rnames[13],"\nNumber of Cases: ",sum(test_13$symptoms_13==1)),
+       caption="Need to get legend to display properly")  +
+  theme_void() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5),
+        legend.position = "none")
+grid.arrange(test1,test2,test3,test4,test5,test6,test7,test8,test9,test10,test11,test12,test13,ncol=4)
+### Map of Wave Two symptoms – do a separate map for each type of symptom with a color for yes and a different color for no on that symptom 
+
+ggplot(data = df, aes(x = Symptom, y = Count, fill = Wave)) +
+  geom_bar(stat = "identity", position = position_dodge())
 
 library(ggplot2)
 library(reshape2)
@@ -942,6 +1219,7 @@ y <- c(1,2,3,4,5,6,7,8,9,10,11,12)
 day <- c(1,2,3,4,5,6,7,8,9,10,11,12)
 
 
+
 df1 <- data.frame(x, y, day)
 df2 <- melt(df1, id.vars='day')
 head(df2)
@@ -949,8 +1227,7 @@ head(df2)
 ggplot(df2, aes(x=day, y=value, fill=variable)) +
   geom_bar(stat='identity', position='dodge')
 
+
 ### Predictors of Physical Health Symptoms 
-
-
 
 
