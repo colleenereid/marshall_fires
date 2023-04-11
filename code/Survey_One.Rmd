@@ -52,8 +52,11 @@ ryg.palette.short<-c("#EDA247", "#E6E1BC","#57C4AD", "#006164")
 api_key = "AIzaSyAeoVaM_45SQ4G-lHeci1RhRNbhpxO3BDc"
 register_google(key = api_key) 
 
-waveone<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w1_deID.csv")
-wavetwo<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w2_deID.csv")
+#waveone<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w1_deID.csv")
+#wavetwo<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w2_deID.csv")
+waveone<-read.csv("../data/marshall_w1_deID.csv")
+wavetwo<-read.csv("../data/marshall_w2_deID.csv")
+mapwave1<-read.csv("../data/marshall_w1.csv")
 ```
 
 ```{r}
@@ -246,109 +249,82 @@ Respondants = c(nrow(wave.one),nrow(wave.two), nrow(wave.one.only2))
 Wave=c("One","Two","Both")
 df1 = cbind(Wave,Respondants) %>%
   as.data.frame()
-# knitr::kable(df1)
-# save_kable(knitr::kable(df1),"../images/w1w2_counts.png")
-# table(wave.one.only2$Gender3, wave.two.only1$Gender3)
-chisq.test(wave.one.only2$Gender3, wave.two.only1$Gender3)
-# table(wave.one.only2$education, wave.two.only1$education)
-chisq.test(wave.one.only2$education, wave.two.only1$education)
-# table(wave.one.only2$income, wave.two.only1$income)
-chisq.test(wave.one.only2$income, wave.two.only1$income)
-# table(wave.one.only2$RaceEthn2, wave.two.only1$RaceEthn2)
-chisq.test(wave.one.only2$RaceEthn2, wave.two.only1$RaceEthn2)
-# table(wave.one.only2$ownership_status, wave.two.only1$renterowner)
-chisq.test(wave.one.only2$ownership_status, wave.two.only1$renterowner)
-# table(wave.one.only2$impact_cat, wave.two.only1$impact_cat)
-chisq.test(wave.one.only2$impact_cat, wave.two.only1$impact_cat)
-# table(wave.one.only2$group, wave.two.only1$group)
-chisq.test(wave.one.only2$group, wave.two.only1$group)
-```
-
-### Number of respondants who completed the survey for Wave One and Wave Two
-
-```{r}
-Respondants = c(nrow(wave.one),nrow(wave.two))
-Wave=c("One","Two")
-df1 = cbind(Wave,Respondants) %>% 
-  as.data.frame()
 knitr::kable(df1)
+# save_kable(knitr::kable(df1),"../images/w1w2_counts.png")
 ```
+
+We utilized survey results of people whom completed the entire survey for accuracy. Wave one contained 3,462 total respondents with 802 of them completing the whole survey. Wave two had a total of 576 respondents who finished the survey. There were 568 respondents whom participated in both surveys, resulting in a 70.82% and 98.61% retention rate for wave one and wave two respectively. 
 
 ### % male/female 
-#### Wave One
 ```{r}
+#### Wave One
 tblFun(wave.one$Gender3)
-```
 
 #### Wave Two
-```{r}
 tblFun(wave.two$Gender3)
+# table(wave.one.only2$Gender3, wave.two.only1$Gender3)
+chisq.test(wave.one.only2$Gender3, wave.two.only1$Gender3)
 ```
 
 ### Educational attainment for each wave 
+```{r}
 #### Wave One
-```{r}
 tblFun(wave.one$education)
-```
-
 #### Wave Two
-```{r}
 tblFun(wave.two$education)
+# table(wave.one.only2$education, wave.two.only1$education)
+chisq.test(wave.one.only2$education, wave.two.only1$education)
 ```
 
 ### Income for each wave 
-#### Wave One
 ```{r}
+#### Wave One
 tblFun(wave.one$income)
-```
 
 #### Wave Two
-```{r}
 tblFun(wave.two$income)
+# table(wave.one.only2$income, wave.two.only1$income)
+chisq.test(wave.one.only2$income, wave.two.only1$income)
 ```
 
 ### Race/ethnicity
-#### Wave One
 ```{r}
+#### Wave One
 tblFun(wave.one$RaceEthn2)
-```
-
 #### Wave Two
-```{r}
 tblFun(wave.two$RaceEthn2)
+# table(wave.one.only2$RaceEthn2, wave.two.only1$RaceEthn2)
+chisq.test(wave.one.only2$RaceEthn2, wave.two.only1$RaceEthn2)
 ```
 
-### Owner/Renter 
+### Owner/Renter
+```{r} 
 #### Wave One
-```{r}
 tblFun(wave.one$ownership_status)
-```
-
 #### Wave Two
-```{r}
 tblFun(wave.two$renterowner)
+# table(wave.one.only2$ownership_status, wave.two.only1$renterowner)
+chisq.test(wave.one.only2$ownership_status, wave.two.only1$renterowner)
 ```
 
 ### Impact category 
-#### Wave One
 ```{r}
+#### Wave One
 tblFun(wave.one$impact_cat)
-```
-
 #### Wave Two
-```{r}
 tblFun(wave.two$impact_cat)
+# table(wave.one.only2$impact_cat, wave.two.only1$impact_cat)
+chisq.test(wave.one.only2$impact_cat, wave.two.only1$impact_cat)
 ```
 
-### Distance category 
+### Distance category
+```{r} 
 #### Wave One
-```{r}
 tblFun(wave.one$group)
-```
-
 #### Wave Two
-```{r}
 tblFun(wave.two$group)
+# table(wave.one.only2$group, wave.two.only1$group)
+chisq.test(wave.one.only2$group, wave.two.only1$group)
 ```
 
 
@@ -604,7 +580,7 @@ ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_
 # Maps:
 ## Maps Data:
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
-mapwave1=read.csv("/Volumes/research/Marshall Fire Health/marshall_w1.csv")
+# mapwave1=read.csv("/Volumes/research/Marshall Fire Health/marshall_w1.csv")
 
 # fixes:
 mapwave1[mapwave1$mailingaddr1=="553 GRANT ST",]$mailingaddr1 = "553 GRANT AVE"
