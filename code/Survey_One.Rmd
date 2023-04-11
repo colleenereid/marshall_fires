@@ -237,8 +237,31 @@ wave.two<-wavetwo %>%
 
 ### Number of respondents for Wave 1 and Wave 2  
 ```{r}
-nrow(waveone)
-nrow(wavetwo)
+wave.one.only2=filter(wave.one,wave.one$surveyid %in% wave.two$surveyid) #survey respondants in wave two who are not in wave one?
+wave.two.only1=filter(wave.two,wave.two$surveyid %in% wave.one.only2$surveyid) #survey respondants in wave two who are not in wave 
+# nrow(waveone)
+# nrow(wavetwo)
+
+Respondants = c(nrow(wave.one),nrow(wave.two), nrow(wave.one.only2))
+Wave=c("One","Two","Both")
+df1 = cbind(Wave,Respondants) %>%
+  as.data.frame()
+# knitr::kable(df1)
+# save_kable(knitr::kable(df1),"../images/w1w2_counts.png")
+# table(wave.one.only2$Gender3, wave.two.only1$Gender3)
+chisq.test(wave.one.only2$Gender3, wave.two.only1$Gender3)
+# table(wave.one.only2$education, wave.two.only1$education)
+chisq.test(wave.one.only2$education, wave.two.only1$education)
+# table(wave.one.only2$income, wave.two.only1$income)
+chisq.test(wave.one.only2$income, wave.two.only1$income)
+# table(wave.one.only2$RaceEthn2, wave.two.only1$RaceEthn2)
+chisq.test(wave.one.only2$RaceEthn2, wave.two.only1$RaceEthn2)
+# table(wave.one.only2$ownership_status, wave.two.only1$renterowner)
+chisq.test(wave.one.only2$ownership_status, wave.two.only1$renterowner)
+# table(wave.one.only2$impact_cat, wave.two.only1$impact_cat)
+chisq.test(wave.one.only2$impact_cat, wave.two.only1$impact_cat)
+# table(wave.one.only2$group, wave.two.only1$group)
+chisq.test(wave.one.only2$group, wave.two.only1$group)
 ```
 
 ### Number of respondants who completed the survey for Wave One and Wave Two
@@ -336,7 +359,7 @@ tblFun(wave.two$group)
 ### Wave One only: compare before and after the fire – perception of air quality in their neighborhood 
 ```{r}
 #trying a vertical graph
-w1.before.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1,x="Before the Fire")) +
+w1.before.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1,x="Before the Fire",y=)) +
   geom_bar(position="stack") +
   labs(title = "I am confident that the air in my neighborhood is safe to breathe") +
   xlab(NULL) +
@@ -355,7 +378,7 @@ w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_
         plot.subtitle = element_text(hjust = 0.5)) +
   guides(fill=guide_legend(title=NULL))
 
-grid.arrange(w1.before.neigh.plot,w1.after.neigh.plot)
+ggarrange(w1.before.neigh.plot,w1.after.neigh.plot, nrow=2, common.legend = T)
 ```
 
 ### Wave One only: compare before and after the fire – perception of air quality in their neighborhood by distance 
@@ -1131,10 +1154,78 @@ ggplot(df) +
         axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+## Comparing Respondants that replied to both surveys
+```{r}
+rnames=c("Dry Cough","Wet Cough","Wheeze","Itchy or watery eyes",
+         "Sore Throat","Headache","Shortness of Breath",
+         "Difficult or labored breathing","Sneezing or stuffy nose",
+         "Nausea or vomiting ","Allergic skin reaction",
+         "Strange taste in your mouth","None of these")
+count3=list()
+for(i in wave1.symptoms) {
+  v=sum(!is.na(wave.one.only2[,i]))
+  count3=c(count3,v)
+}
+count4=list()
+for(i in wave2.symptoms) {
+  v=sum(wave.two.only1[,i]==1, na.rm = T)
+  count4=c(count4,v)
+}
+df_sym3=cbind(wave1.symptoms,count3,rnames) %>% 
+  as.data.frame() %>% 
+  dplyr::select(rnames,count3)
+df_sym3$count3=as.integer(df_sym3$count3)
+colnames(df_sym3)=c("Symptom","Count")
+df_sym4=cbind(wave2.symptoms,count4,rnames) %>% 
+  as.data.frame() %>% 
+  dplyr::select(rnames,count4)
+df_sym4$count4=as.integer(df_sym4$count4)
+colnames(df_sym4)=c("Symptom","Count")
+# final_df = df %>% 
+#   mutate(Percent=round(Count/nrow(wave.one)*100,2))
+compare = left_join(df_sym3,df_sym4, by="Symptom")
+colnames(compare)=c("Symptom","Wave_One","Wave_Two")
+df = melt(compare, id=c("Symptom")) %>% 
+  dplyr::mutate(Symptom=rep(1:13,2), 
+         Symptom=recode_factor(Symptom,
+                               "1"=rnames[1],
+                               "2"=rnames[2],
+                               "3"=rnames[3],
+                               "4"=rnames[4],
+                               "5"=rnames[5],
+                               "6"=rnames[6],
+                               "7"=rnames[7],
+                               "8"=rnames[8],
+                               "9"=rnames[9],
+                               "10"=rnames[10],
+                               "11"=rnames[11],
+                               "12"=rnames[12],
+                               "13"=rnames[13]))
+ggplot(df) +
+  geom_bar(aes(x = Symptom, y = value, fill = variable), 
+           stat="identity", position = "dodge", width = 0.7) +
+  scale_fill_manual("",
+                    values = c("red","blue"), 
+                    labels = c(" Wave One", " Wave Two")) +
+  labs(title="Wave One / Wave Two Comparison: \n Only Respondants in Both Waves",
+       subtitle="Add counts to top of bars",
+       x="Symptom",
+       y="Count") +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5),
+        plot.caption = element_text(hjust=0.5),
+        axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
 ### Predictors of Physical Health Symptoms 
 
 ```{r}
-
+# Linear Regression
+# Chi Squared
+# G Squared
+# ANOVA
+# Generalized Additive Models (GAMs)
 ```
 
 Discussion: FOR LATER 

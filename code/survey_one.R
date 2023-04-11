@@ -1,4 +1,29 @@
-#Function Junction
+# Libraries
+library(dplyr)
+library(tidyverse)
+library(raster)
+library(sf)
+library(sp)
+library(ggplot2)
+library(gridExtra)
+library(elevatr)
+library(ggspatial)
+library(ggmap) #citation("ggmap")
+library(leaflet)
+library(htmlwidgets)
+library(kableExtra)
+library(maps)
+library(spdep)
+library(ggsn)
+library(performance)
+library(ggResidpanel)
+library(reshape2)
+library(moranfast) # remotes::install_github('mcooper/moranfast') #citation probably needed
+library(deldir)
+library(rgeos)
+library(ggpubr)
+# Data
+## Function Junction
 tblFun <- function(x){
   tbl <- table(x)
   res <- cbind(tbl,round(prop.table(tbl)*100,2))
@@ -6,13 +31,89 @@ tblFun <- function(x){
   knitr::kable(res)
 }
 
+voronoipolygons = function(layer) {
+  require(deldir)
+  crds = layer@coords
+  z = deldir(crds[,1], crds[,2])
+  w = tile.list(z)
+  polys = vector(mode='list', length=length(w))
+  require(sp)
+  for (i in seq(along=polys)) {
+    pcrds = cbind(w[[i]]$x, w[[i]]$y)
+    pcrds = rbind(pcrds, pcrds[1,])
+    polys[[i]] = Polygons(list(Polygon(pcrds)), ID=as.character(i))
+  }
+  SP = SpatialPolygons(polys)
+  voronoi = SpatialPolygonsDataFrame(SP, data=data.frame(dummy = seq(length(SP)), 
+                                                         row.names=sapply(slot(SP, 'polygons'), 
+                                                                          function(x) slot(x, 'ID'))))
+}
+
+moranfast <- function(x, c1, c2, alternative='two.sided') {
+  res <- calc_moran(x, c1, c2)
+  
+  names(res) <- c('observed', 'expected', 'sd')
+  res <- as.list(res)
+  
+  alternative <- match.arg(alternative, c("two.sided", "less", "greater"))
+  pv <- pnorm(res$observed, mean = res$expected, sd = res$sd)
+  if (alternative == "two.sided"){
+    if (res$observed <= -1/(length(x) - 1)){
+      pv <- 2 * pv
+    }else{
+      pv <- 2 * (1 - pv)
+    }
+  }
+  if (alternative == "greater"){
+    pv <- 1 - pv
+  }
+  
+  res[['p.value']] <- pv
+  
+  return(res)
+}
+
+# voronoipolygons = function(layer) {
+#   require(deldir)
+#   crds = layer@coords
+#   z = deldir(crds[,1], crds[,2],round=F, sort=F,rw=st_bbox(marshall.sp.aq1))
+#   w = tile.list(z)
+#   polys = vector(mode='list', length=length(w))
+#   require(sp)
+#   for (i in seq(along=polys)) {
+#     pcrds = cbind(w[[i]]$x, w[[i]]$y)
+#     pcrds = rbind(pcrds, pcrds[1,])
+#     polys[[i]] = Polygons(list(Polygon(pcrds)), ID=as.character(i))
+#   }
+#   SP = SpatialPolygons(polys)
+#   voronoi = SpatialPolygonsDataFrame(SP, data=data.frame(dummy = seq(length(SP)), row.names=sapply(slot(SP, 'polygons'), 
+#                                                                                                    function(x) slot(x, 'ID'))))
+# }
+
+
+## API Key for Geocoding:
+api_key = "AIzaSyAeoVaM_45SQ4G-lHeci1RhRNbhpxO3BDc"
+register_google(key = api_key) 
+
+## Loading Datasets
 waveone<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w1_deID.csv")
 wavetwo<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w2_deID.csv")
+mapwave1=read.csv("/Volumes/research/Marshall Fire Health/marshall_w1.csv")
 # waveone<-read.csv("../data/marshall_w1_deID.csv")
 # wavetwo<-read.csv("../data/marshall_w2_deID.csv")
 
+## Colors to Use
+ryg.palette<-c("#DB4325", "#EDA247", "#E6E1BC","#57C4AD", "#006164")
+ryg.palette.long<-c("#DB4325", "#EDA247", "#E6E1BC","#57C4AD", "#006164", "grey")
+ryg.palette.short<-c("#EDA247", "#E6E1BC","#57C4AD", "#006164")
+factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), 
+                       c("Strongly disagree","Somewhat disagree", "Neither agree nor disagree",
+                         "Somewhat agree","Strongly agree"))
+
+## Variables
 wave.one<-waveone %>% # recoding of mailing address has one "" response
-  mutate(mailingcity=recode_factor(mailingcity, 'Superior'='SUPERIOR', 'UNINCORPORATED'='BOULDER')) %>% # randomly had to change to recode_factor?
+  # randomly had to change to recode_factor?
+  mutate(mailingcity=recode_factor(mailingcity, 'Superior'='SUPERIOR', 'UNINCORPORATED'='BOULDER')) %>% 
   mutate(across(air_quality_1:air_quality_4, as.factor)) %>%
   mutate(across(remediation_1:remediation_4, as.factor)) %>%
   mutate(across(air_cleaning_1:air_cleaning_4, as.factor)) %>%
@@ -112,7 +213,8 @@ wave.one<-waveone %>% # recoding of mailing address has one "" response
                               "8"="$200,000 or more",
                               "9"="Prefer not to answer")) %>%
   filter(finished==1) %>% #only analyzing finished data, not in wave.two
-  filter(mailingcity=="BOULDER"|mailingcity=="SUPERIOR"|mailingcity=="LOUISVILLE") #filtering only respondents in Boulder Unincorporated, Superior or Louisville
+  #filtering only respondents in Boulder Unincorporated, Superior or Louisville
+  filter(mailingcity=="BOULDER"|mailingcity=="SUPERIOR"|mailingcity=="LOUISVILLE") 
 
 wave.two<-wavetwo %>%
   mutate(air_quality_2=as.factor(air_quality_2)) %>%
@@ -186,283 +288,7 @@ wave.two<-wavetwo %>%
                                  "6"="Master's Degree",
                                  "7"="Doctoral Degree"))
 
-#Number of respondants
-nrow(waveone)
-nrow(wavetwo)
-
-#Number of respondants who completed the survey
-Respondants = c(nrow(wave.one),nrow(wave.two))
-Wave=c("One","Two")
-df1 = cbind(Wave,Respondants) %>% 
-  as.data.frame()
-save_kable(knitr::kable(df1),"images/w1w2_counts.png")
-#Percent male and Female -> There is Binary/Decl
-save_kable(tblFun(wave.one$Gender3),"images/w1.gender.table.png")
-save_kable(tblFun(wave.two$Gender3),"images/w2.gender.table.png")
-
-# Education attainment
-save_kable(tblFun(wave.one$education),"images/w1.edu.table.png")
-save_kable(tblFun(wave.two$education),"images/w2.edu.table.png")
-
-### Income for each wave 
-save_kable(tblFun(wave.one$income),"images/w1.income.table.png")
-save_kable(tblFun(wave.two$income),"images/w2.income.table.png")
-
-### Race/ethnicity
-save_kable(tblFun(wave.one$RaceEthn2),"images/w1.ethn.table.png")
-save_kable(tblFun(wave.two$RaceEthn2),"images/w2.ethn.table.png")
-
-### Owner/Renter 
-save_kable(tblFun(wave.one$ownership_status),"images/w1.ownrent.table.png")
-save_kable(tblFun(wave.two$renterowner),"images/w2.ownrent.table.png")
-
-### Impact category 
-save_kable(tblFun(wave.one$impact_cat),"images/w1.impact.table.png")
-save_kable(tblFun(wave.two$impact_cat),"images/w2.impact.table.png")
-
-### Distance category 
-save_kable(tblFun(wave.one$group),"images/w1.dist.table.png")
-save_kable(tblFun(wave.two$group),"images/w2.dist.table.png")
-
-# Air Quality Perceptions
-
-## Wave One:
-
-### Wave One only: compare before and after the fire – perception of air quality in their neighborhood 
-#trying a vertical graph
-w1.before.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1,x="Before the Fire")) +
-  geom_bar(position="stack") +
-  labs(title = "I am confident that the air in my \n neighborhood is safe to breathe") +
-  xlab(NULL) +
-  ylab(NULL) +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
-w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,x="After the Fire")) +
-  geom_bar(position="stack") +
-  xlab(NULL) +
-  ylab("Count") +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
-grid.arrange(w1.before.neigh.plot,w1.after.neigh.plot)
-ggsave("images/wave1.neigh.AQ1_2.png",plot=grid.arrange(w1.before.neigh.plot,w1.after.neigh.plot))
-
-### Wave One only: compare before and after the fire – perception of air quality in their neighborhood by distance 
-w1.before.neigh.dist.plot = ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1, x=group)) +
-  geom_bar(position="stack") +
-  labs(title = "Before the Marshall Fire, I was confident that the air \n in my neighborhood was safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-  scale_fill_manual(values = ryg.palette)+
-  theme(plot.title = element_text(hjust = 0.5))
-w1.after.neigh.dist.plot = ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2, x=group)) +
-  geom_bar(position="stack") +
-  labs(title = "Currently, I am confident that the air in my neighborhood \n is safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-  scale_fill_manual(values = ryg.palette)+
-  theme(plot.title = element_text(hjust = 0.5))
-grid.arrange(w1.before.neigh.dist.plot,w1.after.neigh.dist.plot)
-ggsave("images/wave1.neigh.dist.AQ1_2.png",plot=grid.arrange(w1.before.neigh.dist.plot,w1.after.neigh.dist.plot))
-
-### Wave One only: compare before and after the fire – perception of air quality in their neighborhood by impact category 
-w1.before.neigh.impact.plot=ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1, x=impact_cat)) +
-  geom_bar(position="stack") +
-  labs(title = "Before the Marshall Fire, I was confident that the air in \n my neighborhood was safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5))
-w1.after.neigh.impact.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_cat)) +
-  geom_bar(position="stack") +
-  labs(title = "Currently, I am confident that the air in my neighborhood \n is safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-  scale_fill_manual(values = ryg.palette)+
-  theme(plot.title = element_text(hjust = 0.5))
-grid.arrange(w1.before.neigh.impact.plot,w1.after.neigh.impact.plot)
-ggsave("images/wave1.neigh.impact.AQ1_2.png",plot=grid.arrange(w1.before.neigh.impact.plot,w1.after.neigh.impact.plot))
-
-### Wave One only: compare before and after the fire – perception of air quality in their home 
-#trying a horizontal graph
-w1.before.home.plot=ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3,y="Before the Fire")) +
-  geom_bar(position="stack") +
-  labs(title = "I am confident that the air inside my home is safe to breathe") +
-  ylab(NULL) +
-  xlab(NULL) +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
-w1.after.home.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4,y="After the Fire")) +
-  geom_bar(position="stack") +
-  ylab(NULL) +
-  xlab("Count") +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
-grid.arrange(w1.before.home.plot,w1.after.home.plot)
-ggsave("images/wave1.home.AQ3_4.png",plot=grid.arrange(w1.before.home.plot,w1.after.home.plot))
-
-### Wave One only: compare before and after the fire – perception of air quality in their home by distance 
-w1.before.home.dist.plot=ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3, x=group)) +
-  geom_bar(position="stack") +
-  labs(title = "Before the Marshall Fire, I was confident that the air inside \n my home was safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-  scale_fill_manual(values = ryg.palette)
-w1.after.home.dist.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=group)) +
-  geom_bar(position="stack") +
-  labs(title = "Currently, I am confident that the air inside my home is \n safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-  scale_fill_manual(values = ryg.palette)
-grid.arrange(w1.before.home.dist.plot,w1.after.home.dist.plot)
-ggsave("images/wave1.home.dist.AQ3_4.png",plot=grid.arrange(w1.before.home.dist.plot,w1.after.home.dist.plot))
-
-### Wave One only: compare before and after the fire – perception of air quality in their home by impact category
-w1.before.home.impact.plot=ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3, x=impact_cat)) +
-  geom_bar(position="stack") +
-  labs(title = "Before the Marshall Fire, I was confident that the air inside my home was \n safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-  scale_fill_manual(values = ryg.palette)+
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
-w1.after.home.impact.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_cat)) +
-  geom_bar(position="stack") +
-  labs(title = "Currently, I am confident that the air inside my home is \n safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-  scale_fill_manual(values = ryg.palette)+
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
-grid.arrange(w1.before.home.impact.plot,w1.after.home.impact.plot)
-ggsave("images/wave1.home.impact.AQ3_4.png",plot=grid.arrange(w1.before.home.impact.plot,w1.after.home.impact.plot))
-
-## Wave One and Two:
-### Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) 
-w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave One")) +
-  geom_bar(position="stack") +
-  labs(title = "I am confident that the air in my neighborhood is safe to breathe") +
-  ylab(NULL) +
-  xlab(NULL) +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
-w2.after.neigh.plot=ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave Two")) +
-  geom_bar(position="stack") +
-  ylab(NULL) +
-  xlab("Count") +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
-grid.arrange(w1.after.neigh.plot,w2.after.neigh.plot)
-ggsave("images/w1xw2.neigh.AQ2.png",plot=grid.arrange(w1.after.neigh.plot,w2.after.neigh.plot))
-
-### Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) by distance 
-w1.after.neigh.dist.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,y=group)) +
-  geom_bar(position="stack") +
-  labs(title = "I am confident that the air in my neighborhood is safe to breathe") +
-  ylab(NULL) +
-  xlab(NULL) +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
-w2.after.neigh.dist.plot=ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_quality_2,y=group)) +
-  geom_bar(position="stack") +
-  ylab(NULL) +
-  xlab("Count") +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
-grid.arrange(w1.after.neigh.dist.plot,w2.after.neigh.dist.plot)
-ggsave("images/w1xw2.neigh.dist.AQ2.png",plot=grid.arrange(w1.after.neigh.dist.plot,w2.after.neigh.dist.plot))
-
-### Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) by impact category 
-w1.after.neigh.impact.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_cat)) +
-  geom_bar(position="stack") +
-  labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-  scale_fill_manual(values = ryg.palette)
-w2.after.neigh.impact.plot=ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_cat)) +
-  geom_bar(position="stack") +
-  labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-  scale_fill_manual(values = ryg.palette)
-grid.arrange(w1.after.neigh.impact.plot,w2.after.neigh.impact.plot)
-ggsave("images/w1xw2.neigh.impact.AQ2.png",plot=grid.arrange(w1.after.neigh.impact.plot,w2.after.neigh.impact.plot))
-
-### Wave One to Wave Two comparison – perception of air quality in home (AQ4) 
-w1.after.home.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4,y="Wave One")) +
-  geom_bar(position="stack") +
-  labs(title = "I am confident that the air inside my home is safe to breathe") +
-  ylab(NULL) +
-  xlab(NULL) +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
-w2.after.home.plot=ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4,y="Wave Two")) +
-  geom_bar(position="stack") +
-  ylab(NULL) +
-  xlab("Count") +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
-grid.arrange(w1.after.home.plot,w2.after.home.plot)
-ggsave("images/w1xw2.home.AQ4.png",plot=grid.arrange(w1.after.home.plot,w2.after.home.plot))
-
-### Wave One to Wave Two comparison – perception of air quality in home (AQ4) by distance 
-w1.after.home.dist.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=group)) +
-  geom_bar(position="stack") +
-  labs(title = "I am confident that the air inside my home is \n safe to breathe",
-       subtitle = "Wave One",
-       x = NULL, fill ="") +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) 
-w2.after.home.dist.plot=ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4, x=group)) +
-  geom_bar(position="stack") +
-  labs(title = NULL,
-       subtitle = "Wave Two",
-       x = "Distance from fire perimeter", fill ="") +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) 
-grid.arrange(w1.after.home.dist.plot,w2.after.home.dist.plot)
-ggsave("images/w1xw2.home.dist.AQ4.png",plot=grid.arrange(w1.after.home.dist.plot,w2.after.home.dist.plot))
-
-### Wave One to Wave Two comparison – perception of air quality in home (AQ4) by impact category 
-w1.after.home.impact.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_cat)) +
-  geom_bar(position="stack") +
-  labs(title = "I am confident that the air inside my home was \n safe to breathe",
-       subtitle = "Wave One",
-       x = NULL, fill ="") +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) 
-w2.after.home.impact.plot=ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_cat)) +
-  geom_bar(position="stack") +
-  labs(title = NULL,
-       subtitle = "Wave Two",
-       x = "Distance from fire perimeter", fill ="") +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) 
-grid.arrange(w1.after.home.impact.plot,w2.after.home.impact.plot)
-ggsave("images/w1xw2.home.impact.AQ4.png",plot=grid.arrange(w1.after.home.impact.plot,w2.after.home.impact.plot))
-
-# Map
-mapwave1=read.csv("/Volumes/research/Marshall Fire Health/marshall_w1.csv")
-# fixes:
-mapwave1[mapwave1$mailingaddr1=="553 GRANT ST",]$mailingaddr1 = "553 GRANT AVE"
-
-#geocoding - assigning lats and longs via Google API - will need key
-# ~5 errors
+## geocoding - assigning lats and longs via Google API - will need key: ~5 errors
 geo_marshall=mapwave1%>% #geocoding only completed surveys and those with lat and long
   mutate(mailingcity=recode_factor(mailingcity, 'Superior'='SUPERIOR', 'UNINCORPORATED'='BOULDER')) %>%
   mutate(across(air_quality_1:air_quality_4, as.factor)) %>%
@@ -568,11 +394,304 @@ geo_marshall=mapwave1%>% #geocoding only completed surveys and those with lat an
   mutate(full_address = paste0(.$mailingaddr1,", ",.$mailingcity,", ", .$mailingstate,", ",.$mailingzip)) %>% 
   mutate_geocode(full_address, output="latlona") 
 
-## impact_cat
+geo_marshall_1=filter(geo_marshall,!is.na(air_quality_1)) %>% 
+  st_as_sf(coords=c("lon","lat"), crs = 4326)
+marshall.sp.aq1 = as(geo_marshall_1,"Spatial")
+
+geo_marshall_2=filter(geo_marshall,!is.na(air_quality_2)) %>% 
+  st_as_sf(coords=c("lon","lat"), crs = 4326)
+marshall.sp.aq2 = as(geo_marshall_2,"Spatial")
+
+geo_marshall_3=filter(geo_marshall,!is.na(air_quality_3)) %>% 
+  st_as_sf(coords=c("lon","lat"), crs = 4326)
+marshall.sp.aq3 = as(geo_marshall_3,"Spatial")
+
+geo_marshall_4=filter(geo_marshall,!is.na(air_quality_4)) %>% 
+  st_as_sf(coords=c("lon","lat"), crs = 4326)
+marshall.sp.aq4 = as(geo_marshall_4,"Spatial")
+
+# Survey Data
+## Number of respondants
+# nrow(waveone)
+# nrow(wavetwo)
+
+## Number of respondants who completed the survey
+# Respondants = c(nrow(wave.one),nrow(wave.two))
+# Wave=c("One","Two")
+# df1 = cbind(Wave,Respondants) %>% 
+#   as.data.frame()
+# # save_kable(knitr::kable(df1),"images/w1w2_counts.png")
+
+#Percent male and Female -> There is Binary/Decl
+# save_kable(tblFun(wave.one$Gender3),"images/w1.gender.table.png")
+# save_kable(tblFun(wave.two$Gender3),"images/w2.gender.table.png")
+
+# Education attainment
+# save_kable(tblFun(wave.one$education),"images/w1.edu.table.png")
+# save_kable(tblFun(wave.two$education),"images/w2.edu.table.png")
+
+### Income for each wave 
+# save_kable(tblFun(wave.one$income),"images/w1.income.table.png")
+# save_kable(tblFun(wave.two$income),"images/w2.income.table.png")
+
+### Race/ethnicity
+# save_kable(tblFun(wave.one$RaceEthn2),"images/w1.ethn.table.png")
+# save_kable(tblFun(wave.two$RaceEthn2),"images/w2.ethn.table.png")
+
+### Owner/Renter 
+# save_kable(tblFun(wave.one$ownership_status),"images/w1.ownrent.table.png")
+# save_kable(tblFun(wave.two$renterowner),"images/w2.ownrent.table.png")
+
+### Impact category 
+# save_kable(tblFun(wave.one$impact_cat),"images/w1.impact.table.png")
+# save_kable(tblFun(wave.two$impact_cat),"images/w2.impact.table.png")
+
+### Distance category 
+# save_kable(tblFun(wave.one$group),"images/w1.dist.table.png")
+# save_kable(tblFun(wave.two$group),"images/w2.dist.table.png")
+
+# Air Quality Perceptions
+
+## Wave One:
+
+### Wave One only: compare before and after the fire – perception of air quality in their neighborhood 
+#trying a vertical graph
+w1.before.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1,x="Before the Fire")) +
+  geom_bar(position="stack") +
+  labs(title = "I am confident that the air in my \n neighborhood is safe to breathe") +
+  xlab(NULL) +
+  ylab(NULL) +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,x="After the Fire")) +
+  geom_bar(position="stack") +
+  xlab(NULL) +
+  ylab("Count") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+grid.arrange(w1.before.neigh.plot,w1.after.neigh.plot)
+# ggsave("images/wave1.neigh.AQ1_2.png",plot=grid.arrange(w1.before.neigh.plot,w1.after.neigh.plot))
+
+### Wave One only: compare before and after the fire – perception of air quality in their neighborhood by distance 
+w1.before.neigh.dist.plot = ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1, x=group)) +
+  geom_bar(position="stack") +
+  labs(title = "Before the Marshall Fire, I was confident that the air \n in my neighborhood was safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+  scale_fill_manual(values = ryg.palette)+
+  theme(plot.title = element_text(hjust = 0.5))
+w1.after.neigh.dist.plot = ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2, x=group)) +
+  geom_bar(position="stack") +
+  labs(title = "Currently, I am confident that the air in my neighborhood \n is safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+  scale_fill_manual(values = ryg.palette)+
+  theme(plot.title = element_text(hjust = 0.5))
+grid.arrange(w1.before.neigh.dist.plot,w1.after.neigh.dist.plot)
+# ggsave("images/wave1.neigh.dist.AQ1_2.png",plot=grid.arrange(w1.before.neigh.dist.plot,w1.after.neigh.dist.plot))
+
+### Wave One only: compare before and after the fire – perception of air quality in their neighborhood by impact category 
+w1.before.neigh.impact.plot=ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1, x=impact_cat)) +
+  geom_bar(position="stack") +
+  labs(title = "Before the Marshall Fire, I was confident that the air in \n my neighborhood was safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5))
+w1.after.neigh.impact.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_cat)) +
+  geom_bar(position="stack") +
+  labs(title = "Currently, I am confident that the air in my neighborhood \n is safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+  scale_fill_manual(values = ryg.palette)+
+  theme(plot.title = element_text(hjust = 0.5))
+grid.arrange(w1.before.neigh.impact.plot,w1.after.neigh.impact.plot)
+# ggsave("images/wave1.neigh.impact.AQ1_2.png",plot=grid.arrange(w1.before.neigh.impact.plot,w1.after.neigh.impact.plot))
+
+### Wave One only: compare before and after the fire – perception of air quality in their home 
+#trying a horizontal graph
+w1.before.home.plot=ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3,y="Before the Fire")) +
+  geom_bar(position="stack") +
+  labs(title = "I am confident that the air inside my home is safe to breathe") +
+  ylab(NULL) +
+  xlab(NULL) +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+w1.after.home.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4,y="After the Fire")) +
+  geom_bar(position="stack") +
+  ylab(NULL) +
+  xlab("Count") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+grid.arrange(w1.before.home.plot,w1.after.home.plot)
+# ggsave("images/wave1.home.AQ3_4.png",plot=grid.arrange(w1.before.home.plot,w1.after.home.plot))
+
+### Wave One only: compare before and after the fire – perception of air quality in their home by distance 
+w1.before.home.dist.plot=ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3, x=group)) +
+  geom_bar(position="stack") +
+  labs(title = "Before the Marshall Fire, I was confident that the air inside \n my home was safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+  scale_fill_manual(values = ryg.palette)
+w1.after.home.dist.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=group)) +
+  geom_bar(position="stack") +
+  labs(title = "Currently, I am confident that the air inside my home is \n safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+  scale_fill_manual(values = ryg.palette)
+grid.arrange(w1.before.home.dist.plot,w1.after.home.dist.plot)
+# ggsave("images/wave1.home.dist.AQ3_4.png",plot=grid.arrange(w1.before.home.dist.plot,w1.after.home.dist.plot))
+
+### Wave One only: compare before and after the fire – perception of air quality in their home by impact category
+w1.before.home.impact.plot=ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3, x=impact_cat)) +
+  geom_bar(position="stack") +
+  labs(title = "Before the Marshall Fire, I was confident that the air inside my home was \n safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+  scale_fill_manual(values = ryg.palette)+
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+w1.after.home.impact.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_cat)) +
+  geom_bar(position="stack") +
+  labs(title = "Currently, I am confident that the air inside my home is \n safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+  scale_fill_manual(values = ryg.palette)+
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+grid.arrange(w1.before.home.impact.plot,w1.after.home.impact.plot)
+# ggsave("images/wave1.home.impact.AQ3_4.png",plot=grid.arrange(w1.before.home.impact.plot,w1.after.home.impact.plot))
+
+## Wave One and Two:
+### Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) 
+w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave One")) +
+  geom_bar(position="stack") +
+  labs(title = "I am confident that the air in my neighborhood is safe to breathe") +
+  ylab(NULL) +
+  xlab(NULL) +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+w2.after.neigh.plot=ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave Two")) +
+  geom_bar(position="stack") +
+  ylab(NULL) +
+  xlab("Count") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+grid.arrange(w1.after.neigh.plot,w2.after.neigh.plot)
+# ggsave("images/w1xw2.neigh.AQ2.png",plot=grid.arrange(w1.after.neigh.plot,w2.after.neigh.plot))
+
+### Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) by distance 
+w1.after.neigh.dist.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,y=group)) +
+  geom_bar(position="stack") +
+  labs(title = "I am confident that the air in my neighborhood is safe to breathe") +
+  ylab(NULL) +
+  xlab(NULL) +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+w2.after.neigh.dist.plot=ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_quality_2,y=group)) +
+  geom_bar(position="stack") +
+  ylab(NULL) +
+  xlab("Count") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+grid.arrange(w1.after.neigh.dist.plot,w2.after.neigh.dist.plot)
+# ggsave("images/w1xw2.neigh.dist.AQ2.png",plot=grid.arrange(w1.after.neigh.dist.plot,w2.after.neigh.dist.plot))
+
+### Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) by impact category 
+w1.after.neigh.impact.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_cat)) +
+  geom_bar(position="stack") +
+  labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+  scale_fill_manual(values = ryg.palette)
+w2.after.neigh.impact.plot=ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_cat)) +
+  geom_bar(position="stack") +
+  labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
+       x = "Distance from fire perimeter", fill ="") +
+  scale_fill_manual(values = ryg.palette)
+grid.arrange(w1.after.neigh.impact.plot,w2.after.neigh.impact.plot)
+# ggsave("images/w1xw2.neigh.impact.AQ2.png",plot=grid.arrange(w1.after.neigh.impact.plot,w2.after.neigh.impact.plot))
+
+### Wave One to Wave Two comparison – perception of air quality in home (AQ4) 
+w1.after.home.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4,y="Wave One")) +
+  geom_bar(position="stack") +
+  labs(title = "I am confident that the air inside my home is safe to breathe") +
+  ylab(NULL) +
+  xlab(NULL) +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+w2.after.home.plot=ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4,y="Wave Two")) +
+  geom_bar(position="stack") +
+  ylab(NULL) +
+  xlab("Count") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) +
+  guides(fill=guide_legend(title=NULL))
+grid.arrange(w1.after.home.plot,w2.after.home.plot)
+# ggsave("images/w1xw2.home.AQ4.png",plot=grid.arrange(w1.after.home.plot,w2.after.home.plot))
+
+### Wave One to Wave Two comparison – perception of air quality in home (AQ4) by distance 
+w1.after.home.dist.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=group)) +
+  geom_bar(position="stack") +
+  labs(title = "I am confident that the air inside my home is \n safe to breathe",
+       subtitle = "Wave One",
+       x = NULL, fill ="") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) 
+w2.after.home.dist.plot=ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4, x=group)) +
+  geom_bar(position="stack") +
+  labs(title = NULL,
+       subtitle = "Wave Two",
+       x = "Distance from fire perimeter", fill ="") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) 
+grid.arrange(w1.after.home.dist.plot,w2.after.home.dist.plot)
+# ggsave("images/w1xw2.home.dist.AQ4.png",plot=grid.arrange(w1.after.home.dist.plot,w2.after.home.dist.plot))
+
+### Wave One to Wave Two comparison – perception of air quality in home (AQ4) by impact category 
+w1.after.home.impact.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_cat)) +
+  geom_bar(position="stack") +
+  labs(title = "I am confident that the air inside my home was \n safe to breathe",
+       subtitle = "Wave One",
+       x = NULL, fill ="") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) 
+w2.after.home.impact.plot=ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_cat)) +
+  geom_bar(position="stack") +
+  labs(title = NULL,
+       subtitle = "Wave Two",
+       x = "Distance from fire perimeter", fill ="") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),   
+        plot.subtitle = element_text(hjust = 0.5)) 
+grid.arrange(w1.after.home.impact.plot,w2.after.home.impact.plot)
+# ggsave("images/w1xw2.home.impact.AQ4.png",plot=grid.arrange(w1.after.home.impact.plot,w2.after.home.impact.plot))
+
+# Map
+
+## Impact Category
+
 # geo_marshall_impact=filter(geo_marshall,!is.na(impact_cat)) %>% 
 #   st_as_sf(coords=c("lon","lat"), crs = 4326)
 # marshall.sp.impact = as(geo_marshall_impact,"Spatial")
-# factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), c("Complete loss", "Damaged, living there","Damaged, not living there","No damage, living there","No damage, not living there"))
+# factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), 
+#                        c("Complete loss", "Damaged, living there","Damaged, not living there",
+#                          "No damage, living there","No damage, not living there"))
 # 
 # marshall_pts_impact_map_w1_leaf = leaflet(marshall.sp.impact) %>% 
 #   addTiles() %>% 
@@ -599,12 +718,9 @@ geo_marshall=mapwave1%>% #geocoding only completed surveys and those with lat an
 #         plot.subtitle = element_text(hjust=0.5)) +
 #   guides(colour=guide_legend(title="Impact Level"))
 # ggsave("images/map1.impact.cat.png", height = 7.5, width = 7.5)
+
 ### Map of perception of air quality in one’s neighborhood  - color from stacked plot colors 
 #### Before the Fire
-geo_marshall_1=filter(geo_marshall,!is.na(air_quality_1)) %>% 
-  st_as_sf(coords=c("lon","lat"), crs = 4326)
-marshall.sp.aq1 = as(geo_marshall_1,"Spatial")
-factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), c("Strongly disagree","Somewhat disagree", "Neither agree nor disagree","Somewhat agree","Strongly agree"))
 
 # leaflet(marshall.sp.aq1) %>%
 #   addTiles() %>%
@@ -630,13 +746,9 @@ ggplot(filter(geo_marshall_1,!is.na(air_quality_1))) +
         plot.subtitle = element_text(hjust=0.5),
         plot.caption = element_text(hjust=0.5)) +
   guides(colour=guide_legend(title=""))
-ggsave("images/map1.AQ1.png", height = 7.5, width = 7.5)
+# ggsave("images/map1.AQ1.png", height = 7.5, width = 7.5)
 
 #### After the fire
-geo_marshall_2=filter(geo_marshall,!is.na(air_quality_2)) %>% 
-  st_as_sf(coords=c("lon","lat"), crs = 4326)
-marshall.sp.aq2 = as(geo_marshall_2,"Spatial")
-factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), c("Strongly disagree","Somewhat disagree", "Neither agree nor disagree","Somewhat agree","Strongly agree"))
 
 # leaflet(marshall.sp.aq2) %>%
 #   addTiles() %>%
@@ -662,14 +774,10 @@ ggplot(filter(geo_marshall_2,!is.na(air_quality_2))) +
         plot.subtitle = element_text(hjust=0.5),
         plot.caption = element_text(hjust=0.5)) +
   guides(colour=guide_legend(title=""))
-ggsave("images/map1.AQ2.png", height = 7.5, width = 7.5)
+# ggsave("images/map1.AQ2.png", height = 7.5, width = 7.5)
 
 ### Map of perception of air quality in one’s home - color from stacked plot colors 
 #### Before the Fire
-geo_marshall_3=filter(geo_marshall,!is.na(air_quality_3)) %>% 
-  st_as_sf(coords=c("lon","lat"), crs = 4326)
-marshall.sp.aq3 = as(geo_marshall_3,"Spatial")
-factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), c("Strongly disagree","Somewhat disagree", "Neither agree nor disagree","Somewhat agree","Strongly agree"))
 
 # leaflet(marshall.sp.aq3) %>%
 #   addTiles() %>%
@@ -695,13 +803,9 @@ ggplot(filter(geo_marshall_3,!is.na(air_quality_3))) +
         plot.subtitle = element_text(hjust=0.5),
         plot.caption = element_text(hjust=0.5)) +
   guides(colour=guide_legend(title=""))
-ggsave("images/map1.AQ3.png", height = 7.5, width = 7.5)
+# ggsave("images/map1.AQ3.png", height = 7.5, width = 7.5)
 
 #### After the Fire
-geo_marshall_4=filter(geo_marshall,!is.na(air_quality_4)) %>% 
-  st_as_sf(coords=c("lon","lat"), crs = 4326)
-marshall.sp.aq4 = as(geo_marshall_4,"Spatial")
-factpal <- colorFactor(c("#d7191c","#fdae61","#ffffbf","#a6d96a","#1a9641"), c("Strongly disagree","Somewhat disagree", "Neither agree nor disagree","Somewhat agree","Strongly agree"))
 
 # leaflet(marshall.sp.aq4) %>%
 #   addTiles() %>%
@@ -727,56 +831,133 @@ ggplot(filter(geo_marshall_4,!is.na(air_quality_4))) +
         plot.subtitle = element_text(hjust=0.5),
         plot.caption = element_text(hjust=0.5)) +
   guides(colour=guide_legend(title=""))
-ggsave("images/map1.AQ4.png", height = 7.5, width = 7.5)
+# ggsave("images/map1.AQ4.png", height = 7.5, width = 7.5)
 
 # Moran's I - Basic
-# remotes::install_github('mcooper/moranfast') #citation probably needed
-library(moranfast)
-marshall.dists = as.matrix(dist(cbind(marshall.sp.aq1@coords[,1], marshall.sp.aq1@coords[,2])))
-marshall.dists.inv = 1/marshall.dists
-diag(marshall.dists.inv) = 0
-plot(geo_marshall_1$geometry)
-marshall.aq1.spac=st_buffer(geo_marshall_1,dist=25)
-plot(marshall.aq1.spac$geometry)
-marshall.rook=poly2nb(marshall.aq1.spac)
 
 moranfast(marshall.sp.aq1$air_quality_1, marshall.sp.aq1@coords[,1],marshall.sp.aq1@coords[,2])
+calc_moran(marshall.sp.aq1$air_quality_1, marshall.sp.aq1@coords[,1],marshall.sp.aq1@coords[,2])
 moranfast(marshall.sp.aq2$air_quality_2, marshall.sp.aq2@coords[,1],marshall.sp.aq2@coords[,2])
+calc_moran(marshall.sp.aq3$air_quality_3, marshall.sp.aq3@coords[,1],marshall.sp.aq3@coords[,2])
 moranfast(marshall.sp.aq3$air_quality_3, marshall.sp.aq3@coords[,1],marshall.sp.aq3@coords[,2])
+calc_moran(marshall.sp.aq3$air_quality_3, marshall.sp.aq3@coords[,1],marshall.sp.aq3@coords[,2])
 moranfast(marshall.sp.aq4$air_quality_4, marshall.sp.aq4@coords[,1],marshall.sp.aq4@coords[,2])
+calc_moran(marshall.sp.aq4$air_quality_4, marshall.sp.aq4@coords[,1],marshall.sp.aq4@coords[,2])
 
-# Moran's I - Veroni
-bb=st_bbox(marshall.sp.aq1) %>% 
-  st_as_sfc(crs=st_crs(marshall.sp.aq1)) %>% 
-  as.data.frame() %>% 
-  mutate(var=1) %>% 
-  dplyr::select(var,geometry)
+# Moran's I - Voroni
+##### Using BB Boundary
+vp <- voronoipolygons(marshall.sp.aq1)
+proj4string(vp) = proj4string(marshall.sp.aq1)
+# gDifference(vp, marshall.sp.aq1)
+v2 <- vp %>%
+  st_as_sf(4326)
+coords = vp %>% 
+  st_as_sf(4326) %>% 
+  mutate(dummy=1) %>% 
+  st_centroid()
 
-bb=as(bb$geometry,"Spatial")
-marshall_pts_neigh_aq1_w1_mapleaf=leaflet(bb) %>%
-  addTiles() %>%
-  addPolygons(color="red",
-              opacity=0.5) %>%
-  addCircleMarkers(color = ~factpal(marshall.sp.aq1$air_quality_1),
-                   radius = 1,
-                   opacity = 1,
-                   lng = marshall.sp.aq1@coords[,1],
-                   lat = marshall.sp.aq1@coords[,2])
-# saveWidget(marshall_pts_neigh_aq1_w1_mapleaf, file="images/marshall_aq1_neigh_map_w1.html") #comment labels out
-co_co = st_read("../aqi_kriging/co_counties/geo_export_ecf55ab8-2f88-4a1f-b4fb-b21f58fb9432.shp") %>% 
-  st_transform(st_crs(marshall.sp))
-map2SpatialPolygons(marshall.sp.aq1, IDs=marshall.sp.aq1$surveyid)
-# Select only Denver metro counties and geometry
-den_co = co_co %>%
-  filter(county %in% c("BOULDER")) %>%
-  dplyr::select(county, geometry)
-den_co = as(den_co, "Spatial")
-e <- as(raster::extent(), "SpatialPolygons")
+plot(vp)
+plot(geo_marshall_1$geometry, col="red", add=T)
+plot(find, col="green", add=T)
+plot(coords$geometry, col="blue", add=T)
 
-# convert to a spatial object, reproject
-den_co = as(den_co, "Spatial")#%>% st_transform(crs = st_crs(prg))
-st_crs(marshall.sp)
-geo_mar.queen <- poly2nb(marshall_ver, queen=T)
+split=over(vp,marshall.sp.aq1)
+find=marshall.sp.aq1[which(marshall.sp.aq1$surveyid %in% split$surveyid),]
+marshall.vor.q=poly2nb(vp, queen=T)
+marshall.vor.r=poly2nb(vp, queen=F)
+listw.queen <- nb2listw(marshall.vor.q)
+find$air_quality_1 = as.integer(find$air_quality_1)
+globalMoran <- moran.test(find$air_quality_1, listw.queen)
+localMoran <- localmoran(find$air_quality_1, listw.queen)
+globalMoran 
+localMoran
+
+moran.plot(find$air_quality_1, listw.queen, 
+           xlab="Perceptions of Air Quality", 
+           ylab="Spatially Lagged Variable", 
+           main="Moran Plot")
+
+moran.map <- cbind(v2, localMoran)
+
+ggplot(data = moran.map) +
+  geom_sf(aes(fill= Ii)) +
+  scale_fill_gradient(low="white", high="blue") +
+  geom_sf(data=geo_marshall_1,aes(color=air_quality_1), pch=4)  +
+  scale_color_manual(values = c("Strongly disagree"="#d7191c",
+                                "Somewhat disagree"="#fdae61",
+                                "Neither agree nor disagree"="#ffffbf",
+                                "Somewhat agree"= "#a6d96a",
+                                "Strongly agree" = "#1a9641")) +
+  labs(title='Local Moran\'s I based on Air Quality Perceptions \n Before the Fire')
+
+mapClustered.moran = function(data, var, local_moran, case){
+  #add TryCatch() to make sure var is a character string or find diff work around
+  quadrant <- vector(mode="numeric",length=nrow(local_moran))
+  
+  mean=(lapply(data[,var], mean, na.rm = TRUE)[var]) #not sure why mean() wouldn't work by it self
+  m.qualification <- data[,var] - mean  
+  
+  m.local <- local_moran[,1] - mean(local_moran[,1])    
+  
+  signif <- 0.1 
+  
+  quadrant[m.qualification[,1] > 0 & m.local> 0] <- 4  
+  quadrant[m.qualification[,1] < 0 & m.local< 0] <- 1      
+  quadrant[m.qualification[,1] < 0 & m.local> 0] <- 2
+  quadrant[m.qualification[,1] > 0 & m.local< 0] <- 3
+  quadrant[local_moran[,5]>signif] <- 0   
+  
+  
+  # #plot side-by-side
+  # par(mfrow=c(1,2)) not working :((((((
+  
+  # plot clusters
+  data_sp = as(data, "Spatial")
+  brks <- c(0,1,2,3,4)
+  colors <- c("white","blue",rgb(0,0,1,alpha=0.4),rgb(1,0,0,alpha=0.4),"red")
+  plot(data_sp,border="lightgray",
+       col=colors[findInterval(quadrant,brks,all.inside=FALSE)],
+       main="Local Clusters Identified using Moran's I",
+       sub = paste0(case,"\'s Case"))
+  box()
+  legend("bottomleft", legend = c("insignificant","low-low","low-high","high-low","high-high"),
+         fill=colors,bty="n")
+}
+
+mapLocal.moran = function(data, local_moran){
+  moran.map <- cbind(data, local_moran)
+  ggplot(data = moran.map) +
+    geom_sf(aes(fill= Ii)) +
+    scale_fill_gradient(low='red', high='green') +
+    ggtitle('Local Moran\'s I Map')+
+    theme(plot.title = element_text(hjust = 0.5),
+          plot.subtitle = element_text(hjust = 0.5))
+}
+
+local_LE <- localmoran(x = nepal$LE, listw=listw.queen)
+
+mapClustered.moran(find, "air_quality_1", localMoran, "Queen")
+mapLocal.moran(v2,localMoran)
+# plot(vp)
+# plot(marshall.vor.q, coords$geometry, col='red', add=T)
+# title(main="Voroni Neighbor Links: Queen's Case")
+ 
+# plot(vp)
+# plot(marshall.vor.r, coords, col='blue', add=T)
+# title(main="Voroni Neighbor Links: Rooks Case")
+
+# marshall.vor.diff=diffnb(marshall.vor.q,marshall.vor.r)
+# plot(vp)
+# plot(marshall.vor.diff, coords, col='purple', add=T)
+# title(main="Voroni Neighbor Links: Difference")
+
+# We can also expand the neighborhood into a higher order of contiguity
+# more.vor.q<-nblag(marshall.vor.q,3)
+# plot(vp)
+# plot(more.vor.q[[2]], coords$geometry, col='red', add=T)
+# title(main="Cont. 2")
+
+####### Difference shows no new connections
 
 # Physical Health Symptoms
 
@@ -805,7 +986,7 @@ b=barplot(df_sym$Count, names.arg=df_sym$Symptom, las=2,
           main="Wave One - Count of Symptoms")
 text(b, df_sym$Count-10, df_sym$Count, font=2)
 #save("images/symptom_barchart.png")
-#save_kable(knitr::kable(df_sym), "images/symptoms_count.png")
+## save_kable(knitr::kable(df_sym), "images/symptoms_count.png")
 
 ### Wave One table of symptom counts by distance category 
 count.dist=v=wave.one %>% 
@@ -875,9 +1056,7 @@ df_sym2=cbind(wave2.symptoms,count2,rnames) %>%
   dplyr::select(rnames,count2)
 df_sym2$count2=as.integer(df_sym2$count2)
 colnames(df_sym2)=c("Symptom","Count")
-knitr::kable(df_sym2)
-# final_df = df %>% 
-#   mutate(Percent=round(Count/nrow(wave.one)*100,2))
+# knitr::kable(df_sym2)
 b=barplot(df_sym2$Count, names.arg=df_sym2$Symptom, las=2,
           main="Count of Symptoms")
 text(b, df_sym2$Count+15, df_sym2$Count, font=2)
@@ -939,25 +1118,6 @@ ggplot(data=count2.impact, aes(x=Symptom,y=Count,fill=Impact_Category)) +
        subtitle = "I can change the colors of these graphs")
 
 ### Wave One to Wave Two comparison – physical symptoms (maybe select to only be the people who responded to both waves) 
-Number <- c(1,2,3,4)
-Yresult <- c(1233,223,2223,4455)
-Xresult <- c(1223,334,4421,0)
-nyx <- data.frame(Number, Yresult, Xresult)
-# load needed libraries
-library(reshape2)
-library(ggplot2)
-
-# reshape your data into long format
-nyxlong <- melt(nyx, id=c("Number"))
-
-# make the plot
-ggplot(nyxlong) +
-  geom_bar(aes(x = Number, y = value, fill = variable), 
-           stat="identity", position = "dodge", width = 0.7) +
-  scale_fill_manual("Result\n", values = c("red","blue"), 
-                    labels = c(" Yresult", " Xresult")) +
-  labs(x="\nNumber",y="Result\n") +
-  theme_bw(base_size = 14)
 
 compare = left_join(df_sym,df_sym2, by="Symptom")
 colnames(compare)=c("Symptom","Wave_One","Wave_Two")
@@ -970,7 +1130,8 @@ ggplot(df) +
   labs(x="\nNumber",y="Result\n") +
   theme_bw(base_size = 14)
 
-### Map of Wave One symptoms – do a separate map for each type of symptom with a color for yes and a different color for no on that symptom 
+### Map of Wave One symptoms 
+##### Do a separate map for each type of symptom with a color for yes and a different color for no on that symptom 
 geo_marshall_sym = geo_marshall %>%
   filter(impact_cat!="") %>% 
   st_as_sf(coords=c("lon","lat"), crs = 4326) %>% 
@@ -987,14 +1148,6 @@ geo_marshall_sym = geo_marshall %>%
          symptoms_11=ifelse(is.na(symptoms_11),0,symptoms_11),
          symptoms_12=ifelse(is.na(symptoms_12),0,symptoms_12),
          symptoms_13=ifelse(is.na(symptoms_13),0,symptoms_13))
-  
-# qk_ft <- function(dataframe,symptoms) {
-#   plt=geo_marshall_sym[,symptoms] %>% 
-#     mutate(highlight=ifelse(.[,symptoms]==1,"green","red"))
-#   plt
-# } 
-#   guides(colour=guide_legend(title=NULL))
-# ggsave("images/map1.AQ4.png", height = 7.5, width = 7.5)
   
 test_1=geo_marshall_sym %>% 
   dplyr::select(symptoms_1,geometry) %>% 
@@ -1195,7 +1348,7 @@ test12=ggplot(test_12)  +
 test13=ggplot(test_13)  +
   annotation_map_tile() +
   annotation_scale() +
-  geom_sf(aes(fill=symptoms_13), col=test_13$highlight) +
+  geom_sf(aes(fill=as.factor(symptoms_13)), col=test_13$highlight) +
   #  gghighlight::gghighlight(symptoms_13==1, unhighlighted_colour = "red")  +
   labs(title=NULL, #paste0("Marshall Fire Survey, Wave One: ")
        subtitle=paste0("Symptom - ", rnames[13],"\nNumber of Cases: ",sum(test_13$symptoms_13==1)),
@@ -1204,30 +1357,10 @@ test13=ggplot(test_13)  +
   theme(plot.title = element_text(hjust=0.5),
         plot.subtitle = element_text(hjust=0.5),
         plot.caption = element_text(hjust=0.5),
-        legend.position = "none")
+        legend.position = "right",
+        legend.title = element_blank())
 grid.arrange(test1,test2,test3,test4,test5,test6,test7,test8,test9,test10,test11,test12,test13,ncol=4)
-### Map of Wave Two symptoms – do a separate map for each type of symptom with a color for yes and a different color for no on that symptom 
-
-ggplot(data = df, aes(x = Symptom, y = Count, fill = Wave)) +
-  geom_bar(stat = "identity", position = position_dodge())
-
-library(ggplot2)
-library(reshape2)
-
-x <- c(5,17,31,9,17,10,30,28,16,29,14,34)
-y <- c(1,2,3,4,5,6,7,8,9,10,11,12)
-day <- c(1,2,3,4,5,6,7,8,9,10,11,12)
-
-
-
-df1 <- data.frame(x, y, day)
-df2 <- melt(df1, id.vars='day')
-head(df2)
-
-ggplot(df2, aes(x=day, y=value, fill=variable)) +
-  geom_bar(stat='identity', position='dodge')
-
+### Map of Wave Two symptoms
+##### Do a separate map for each type of symptom with a color for yes and a different color for no on that symptom 
 
 ### Predictors of Physical Health Symptoms 
-
-
