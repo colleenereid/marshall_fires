@@ -6,7 +6,7 @@ output: html_document
 ---
 
 # Libraries
-```{r}
+```{r, message=FALSE, warning=FALSE,error=FALSE}
 library(dplyr)
 library(tidyverse)
 library(raster)
@@ -29,15 +29,69 @@ library(ggResidpanel)
 library(ape)
 library(reshape2)
 library(ggpubr)
+library(ggh4x)
 ```
 
-```{r, echo=FALSE}
-# function junction
+# Function Junction
+```{r}
+
 tblFun <- function(x, l){
   tbl <- table(x)
   res <- cbind(tbl,round(prop.table(tbl)*100,2))
   colnames(res) <- c('Count','Percentage')
   knitr::kable(res, caption=l)
+}
+
+dist_func = function(df, aq) { 
+  t=df %>%
+    filter(impact_cat!="Complete loss") %>% 
+    filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+    filter(!is.na(.[,aq])) %>% 
+    group_by(group, .[,aq]) %>%
+    summarise(n=n()) %>%
+    mutate(aq.perc = n/sum(n)*100) %>%
+    ungroup %>%
+    mutate(total=sum(n), total.perc=n/total*100) #%>%
+  #group_by(air_quality_1, impact_cat) #%>%
+  #subset(select=c("impact_cat","air_quality_1","percent"),)
+  #spread(impact_cat, percent)
+  names(t)=c("group", "response", "count", "aq.perc", "total","total.perc")
+  t
+}
+
+impact_func = function(df, aq) { 
+  l=df %>%
+    filter(impact_cat!="Complete loss") %>% 
+    filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+    filter(!is.na(.[,aq])) %>% 
+    group_by(impact_cat, .[,aq]) %>%
+    summarise(n=n()) %>%
+    mutate(aq.perc = n/sum(n)*100) %>%
+    ungroup %>%
+    mutate(total=sum(n), total.perc=n/total*100) #%>%
+  #group_by(air_quality_1, impact_cat) #%>%
+  #subset(select=c("impact_cat","air_quality_1","percent"),)
+  #spread(impact_cat, percent)
+  names(l)=c("group", "response", "count", "aq.perc", "total","total.perc")
+  l
+}
+
+stack_plot = function(df, gp, vr, wv, type) {
+  if(type==1){ti="Before the Fire"}
+  if(type==2){ti="After the Fire"}
+  if(type==3){ti="Wave One"}
+  if(type==4){ti="Wave Two"}
+  
+  ggplot(df,aes(fill=response, x=aq.perc, y=group, width=.5)) +
+    geom_bar(position="stack", stat="identity") +
+    labs(title = paste0(ti, "\n N = ", df$total),
+         subtitle = paste0("Area: ",vr,"\n Group By Cat: ",gp),
+         y = paste0(wv),
+         x = "Percent",
+         fill ="") +
+    scale_fill_manual(values = ryg.palette) +
+    theme(plot.title = element_text(hjust = 0.5),
+          plot.subtitle = element_text(hjust = 0.5))
 }
 ```
 
@@ -52,9 +106,10 @@ ryg.palette.short<-c("#EDA247", "#E6E1BC","#57C4AD", "#006164")
 # API Key for Geocoding:
 api_key = "AIzaSyAeoVaM_45SQ4G-lHeci1RhRNbhpxO3BDc"
 register_google(key = api_key) 
-
-waveone<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w1_deID.csv")
-wavetwo<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w2_deID.csv")
+waveone=read.csv("../data/marshall_w1_deID.csv")
+wavetwo<-read.csv("../data/marshall_w2_deID.csv")
+# waveone<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w1_deID.csv")
+# wavetwo<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w2_deID.csv")
 ```
 
 ```{r}
@@ -365,7 +420,7 @@ special=wave.one %>%
   summarise(n=n()) %>%
   ungroup() %>%   
   mutate(aq.perc = n/sum(n)*100,
-         t="Before the fire")
+         t=paste0("Before the fire: \n N = ",sum(n)))
 special2=wave.one %>%
   filter(impact_cat!="Complete loss") %>% 
   filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
@@ -374,7 +429,7 @@ special2=wave.one %>%
   summarise(n=n()) %>%
   ungroup() %>%   
   mutate(aq.perc = n/sum(n)*100,
-         t="After the fire")
+         t=paste0("After the fire: \n N = ",sum(n)))
 names(special)=c("response", "count", "aq.perc", "t")
 names(special2)=c("response", "count", "aq.perc","t")
 
@@ -382,7 +437,199 @@ special.df=rbind(special,special2) %>%
   group_by(t) %>% 
   mutate(lab=cumsum(aq.perc))
 
-ggplot(special.df, aes(x = t, y = aq.perc, fill = response)) +
+ggplot(special.df, aes(y = t, x = aq.perc, fill = response)) +
+  geom_col() +
+  labs(title = paste0("I am confident that the air in my neighborhood is safe to breathe"),
+       subtitle = paste0("Need to fix labels still"),
+       x = paste0("Percent"), 
+       y = "", 
+       fill ="") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        axis.text.x = element_text())
+#+ geom_text(aes(y = desc(lab)+100, label = round(aq.perc)))
+
+special3=wave.one.only2 %>%
+  filter(impact_cat!="Complete loss") %>% 
+  filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+  filter(!is.na(.[,"air_quality_1"])) %>% 
+  group_by(.["air_quality_1"]) %>%
+  summarise(n=n()) %>%
+  ungroup() %>%   
+  mutate(aq.perc = n/sum(n)*100,
+         t=paste0("Before the fire: \n N = ",sum(n)))
+special4=wave.one.only2 %>%
+  filter(impact_cat!="Complete loss") %>% 
+  filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+  filter(!is.na(.[,"air_quality_2"])) %>% 
+  group_by(.["air_quality_2"]) %>%
+  summarise(n=n()) %>%
+  ungroup() %>%   
+  mutate(aq.perc = n/sum(n)*100,
+         t=paste0("After the fire: \n N = ",sum(n)))
+names(special3)=c("response", "count", "aq.perc", "t")
+names(special4)=c("response", "count", "aq.perc","t")
+
+special.df2=rbind(special3,special4) %>% 
+  group_by(t) %>% 
+  mutate(lab=cumsum(aq.perc))
+
+ggplot(special.df2, aes(y = t, x = aq.perc, fill = response)) +
+  geom_col() +
+  labs(title = paste0("I am confident that the air in my neighborhood is safe to breathe \n Respondents in Both Waves"),
+       subtitle = paste0("Need to fix labels still"),
+       caption = "There seems to be different numbers of complete \n loss and those that left impact category unanswered",
+       x = paste0("Percent"), 
+       y = "", 
+       fill ="") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        axis.text.x = element_text())
+#+ geom_text(aes(y = desc(lab)+100, label = round(aq.perc)))
+chisq.test(wave.one.only2$air_quality_1, wave.one.only2$air_quality_2)
+
+# #trying a vertical graph
+# w1.before.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1,x="Before the Fire",y=)) +
+#   geom_bar(position="stack") +
+#   labs(title = NULL) +
+#   xlab(NULL) +
+#   ylab("Count") +
+#   scale_fill_manual(values = ryg.palette) +
+#   theme(plot.title = element_text(hjust = 0.5),   
+#         plot.subtitle = element_text(hjust = 0.5)) +
+#   guides(fill=guide_legend(title=NULL))
+# 
+# w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3,x="After the Fire")) +
+#   geom_bar(position="stack") +
+#   xlab(NULL) +
+#   ylab(NULL) +
+#   scale_fill_manual(values = ryg.palette) +
+#   theme(plot.title = element_text(hjust = 0.5),   
+#         plot.subtitle = element_text(hjust = 0.5)) +
+#   guides(fill=guide_legend(title=NULL))
+# ggarrange(w1.before.neigh.plot,w1.after.neigh.plot, ncol=2, common.legend = T, align = "v")
+```
+
+Survey participates were asked how safe they felt breathing the air in their neighborhood both before and after the fire. Of the participants who participated in both waves of questionnaires, it seems there was only one person who did not populate this field after the Marshall fire. In addition, slightly more people strongly disagreed that the air was safe to breath, although more people seemed to strongly agree with this statement as well. There were about the same amount of resppondents that neither agreed nor disagreed with the statement. Perceptions of air quality before and after the Marshall fire are dependent on each other, and from the $\chi$^2 test we can deduce that these variables are statistically significant to each other in this study. 
+
+### Wave One only: compare before and after the fire – perception of air quality in their neighborhood by distance 
+
+```{r}
+# t99=ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1, y=group)) +
+#     geom_bar(position="stack") +
+#   labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
+#        y = "Distance from fire perimeter", fill ="") +
+#    scale_fill_manual(values = ryg.palette)
+# 
+# t991=ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3, y=group)) +
+#     geom_bar(position="stack") +
+#   labs(title = "Currently, I am confident that the air in my neighborhood is \n safe to breathe",
+#        y = "Distance from fire perimeter", fill ="") +
+#    scale_fill_manual(values = ryg.palette)
+# ggarrange(t99,t991, ncol=2, common.legend = T)
+
+AQ_1.w1.dist=dist_func(wave.one,"air_quality_1")
+AQ_2.w1.dist=dist_func(wave.one,"air_quality_2")
+
+AQ_1.w1.dist.plot=stack_plot(AQ_1.w1.dist,"Distance","Neighborhood","Proximity",1)
+AQ_2.w1.dist.plot=stack_plot(AQ_2.w1.dist,"Distance","Neighborhood","Proximity",2)
+
+annotate_figure(ggarrange(AQ_1.w1.dist.plot,AQ_2.w1.dist.plot, legend = "top", common.legend = T, nrow=2), top = "Wave One \n I am confident that the air in my neighborhood is safe to breath")
+
+AQ_1.w1f.dist=dist_func(wave.one.only2,"air_quality_1")
+AQ_2.w1f.dist=dist_func(wave.one.only2,"air_quality_2")
+
+AQ_1.w1f.dist.plot=stack_plot(AQ_1.w1f.dist,"Distance","Neighborhood","Proximity",1)
+AQ_2.w1f.dist.plot=stack_plot(AQ_2.w1f.dist,"Distance","Neighborhood","Proximity",2)
+
+annotate_figure(ggarrange(AQ_1.w1f.dist.plot,AQ_2.w1f.dist.plot, legend = "top", common.legend = T, nrow=2), top = "Wave One \n I am confident that the air in my neighborhood is safe to breath \n Respondents in Both Waves")
+```
+
+### Wave One only: compare before and after the fire – perception of air quality in their neighborhood by impact category 
+
+```{r}
+# ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1, x=impact_cat)) +
+#     geom_bar(position="stack") +
+#   labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
+#        x = "Distance from fire perimeter", fill ="") +
+#    scale_fill_manual(values = ryg.palette)
+# 
+# ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3, x=impact_cat)) +
+#     geom_bar(position="stack") +
+#   labs(title = "Currently, I am confident that the air in my neighborhood is \n safe to breathe",
+#        x = "Distance from fire perimeter", fill ="") +
+#    scale_fill_manual(values = ryg.palette)
+
+AQ_1.w1.impact=impact_func(wave.one,"air_quality_1")
+AQ_2.w1.impact=impact_func(wave.one,"air_quality_2")
+
+AQ_1.w1.impact.plot=stack_plot(AQ_1.w1.impact,"Impact Category","Neighborhood","",1)
+AQ_2.w1.impact.plot=stack_plot(AQ_2.w1.impact,"Impact Category","Neighborhood","",2)
+
+annotate_figure(ggarrange(AQ_1.w1.impact.plot,AQ_2.w1.impact.plot, legend = "top", common.legend = T, nrow=2), top = "Wave One \n I am confident that the air in my neighborhood is safe to breath")
+
+AQ_1.w1f.impact=impact_func(wave.one.only2,"air_quality_1")
+AQ_2.w1f.impact=impact_func(wave.one.only2,"air_quality_2")
+
+AQ_1.w1f.impact.plot=stack_plot(AQ_1.w1f.impact,"Impact Category","Neighborhood","",1)
+AQ_2.w1f.impact.plot=stack_plot(AQ_2.w1f.impact,"Impact Category","Neighborhood","",2)
+
+annotate_figure(ggarrange(AQ_1.w1f.impact.plot,AQ_2.w1f.impact.plot, legend = "top", common.legend = T, nrow=2), top = "Wave One \n I am confident that the air in my neighborhood is safe to breath \n Respondents in Both Waves")
+```
+
+### Wave One only: compare before and after the fire – perception of air quality in their home 
+
+```{r}
+# #trying a horizontal graph
+# w1.before.home.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Before the Fire")) +
+#   geom_bar(position="stack") +
+#   labs(title = "I am confident that the air inside my home is safe to breathe") +
+#   ylab(NULL) +
+#   xlab(NULL) +
+#   scale_fill_manual(values = ryg.palette) +
+#   theme(plot.title = element_text(hjust = 0.5),   
+#         plot.subtitle = element_text(hjust = 0.5)) +
+#   guides(fill=guide_legend(title=NULL))
+# 
+# w1.after.home.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4,y="After the Fire")) +
+#   geom_bar(position="stack") +
+#   ylab(NULL) +
+#   xlab("Count") +
+#   scale_fill_manual(values = ryg.palette) +
+#   theme(plot.title = element_text(hjust = 0.5),   
+#         plot.subtitle = element_text(hjust = 0.5)) +
+#   guides(fill=guide_legend(title=NULL))
+# 
+# grid.arrange(w1.before.home.plot,w1.after.home.plot)
+
+special5=wave.one %>%
+  filter(impact_cat!="Complete loss") %>% 
+  filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+  filter(!is.na(.[,"air_quality_3"])) %>% 
+  group_by(.["air_quality_3"]) %>%
+  summarise(n=n()) %>%
+  ungroup() %>%   
+  mutate(aq.perc = n/sum(n)*100,
+         t=paste0("Before the fire: \n N = ",sum(n)))
+special6=wave.one %>%
+  filter(impact_cat!="Complete loss") %>% 
+  filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+  filter(!is.na(.[,"air_quality_4"])) %>% 
+  group_by(.["air_quality_4"]) %>%
+  summarise(n=n()) %>%
+  ungroup() %>%   
+  mutate(aq.perc = n/sum(n)*100,
+         t=paste0("After the fire: \n N = ",sum(n)))
+names(special5)=c("response", "count", "aq.perc", "t")
+names(special6)=c("response", "count", "aq.perc","t")
+
+special.df3=rbind(special5,special6) %>% 
+  group_by(t) %>% 
+  mutate(lab=cumsum(aq.perc))
+
+ggplot(special.df3, aes(x = t, y = aq.perc, fill = response)) +
   geom_col() +
   labs(title = paste0("I am confident that the air in my neighborhood is safe to breathe"),
        subtitle = paste0("Need to fix labels still"),
@@ -392,152 +639,99 @@ ggplot(special.df, aes(x = t, y = aq.perc, fill = response)) +
   scale_fill_manual(values = ryg.palette) +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5),
-        axis.text.x = element_text()) + 
-  geom_text(aes(y = desc(lab)+100, label = round(aq.perc)))
+        axis.text.x = element_text())
+#+ geom_text(aes(y = desc(lab)+100, label = round(aq.perc)))
 
-#trying a vertical graph
-w1.before.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1,x="Before the Fire",y=)) +
-  geom_bar(position="stack") +
-  labs(title = NULL) +
-  xlab(NULL) +
-  ylab("Count") +
+special7=wave.one.only2 %>%
+  filter(impact_cat!="Complete loss") %>% 
+  filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+  filter(!is.na(.[,"air_quality_3"])) %>% 
+  group_by(.["air_quality_3"]) %>%
+  summarise(n=n()) %>%
+  ungroup() %>%   
+  mutate(aq.perc = n/sum(n)*100,
+         t=paste0("Before the fire: \n N = ",sum(n)))
+special8=wave.one.only2 %>%
+  filter(impact_cat!="Complete loss") %>% 
+  filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+  filter(!is.na(.[,"air_quality_4"])) %>% 
+  group_by(.["air_quality_4"]) %>%
+  summarise(n=n()) %>%
+  ungroup() %>%   
+  mutate(aq.perc = n/sum(n)*100,
+         t=paste0("After the fire: \n N = ",sum(n)))
+names(special7)=c("response", "count", "aq.perc", "t")
+names(special8)=c("response", "count", "aq.perc","t")
+
+special.df4=rbind(special7,special8) %>% 
+  group_by(t) %>% 
+  mutate(lab=cumsum(aq.perc))
+
+ggplot(special.df4, aes(x = t, y = aq.perc, fill = response)) +
+  geom_col() +
+  labs(title = paste0("I am confident that the air in my neighborhood is safe to breathe \n Respondents in Both Waves"),
+       subtitle = paste0("Need to fix labels still"),
+       caption = "There seems to be different numbers of complete \n loss and those that left impact category unanswered",
+       y = paste0("Percent"), 
+       x = "", 
+       fill ="") +
   scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
-
-w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3,x="After the Fire")) +
-  geom_bar(position="stack") +
-  xlab(NULL) +
-  ylab(NULL) +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
-ggarrange(w1.before.neigh.plot,w1.after.neigh.plot, ncol=2, common.legend = T, align = "v")
-
-dist_func = function(df, gp, aq) { 
-  t=wave.one %>%
-    filter(impact_cat!="Complete loss") %>% 
-    filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
-    filter(!is.na(.[,aq])) %>% 
-    group_by(.[,gp], .[,aq]) %>%
-    summarise(n=n()) %>%
-    mutate(aq.perc = n/sum(n)*100) %>%
-    ungroup %>%
-    mutate(total=sum(n), total.perc=n/total*100) #%>%
-    #group_by(air_quality_1, impact_cat) #%>%
-    #subset(select=c("impact_cat","air_quality_1","percent"),)
-    #spread(impact_cat, percent)
-  names(t)=c("group", "response", "count", "aq.perc", "total","total.perc")
-  t
-}
-AQ_1.w1.dist=dist_func(wave.one,"group","air_quality_1")
-# dist_plot = function(df, )ggplot(AQ_1.w1.dist,aes(fill=response, y=aq.perc, x=group)) +
-#   geom_bar(position="stack", stat="identity") +
-#   labs(title = paste0("Variable: ","air_quality_1"),
-#        subtitle = paste0("Group By Cat: ","group"),
-#        x = paste0("Wave ","One"), 
-#        y = "Percent", 
-#        fill ="") +
-#   scale_fill_manual(values = ryg.palette) +
-#   theme(plot.title = element_text(hjust = 0.5),
-#         plot.subtitle = element_text(hjust = 0.5),
-#         axis.text.x = element_text(angle = 45, hjust = 1))
-# }+geom_text(position=position_stack(0.5), label=round(.$aq.perc))
-head(AQ_1.w1.dist)
-```
-
-### Wave One only: compare before and after the fire – perception of air quality in their neighborhood by distance 
-
-```{r}
-t99=ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1, y=group)) +
-    geom_bar(position="stack") +
-  labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
-       y = "Distance from fire perimeter", fill ="") +
-   scale_fill_manual(values = ryg.palette)
-
-t991=ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3, y=group)) +
-    geom_bar(position="stack") +
-  labs(title = "Currently, I am confident that the air in my neighborhood is \n safe to breathe",
-       y = "Distance from fire perimeter", fill ="") +
-   scale_fill_manual(values = ryg.palette)
-
-ggarrange(t99,t991, ncol=2, common.legend = T)
-```
-
-### Wave One only: compare before and after the fire – perception of air quality in their neighborhood by impact category 
-
-```{r}
-ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1, x=impact_cat)) +
-    geom_bar(position="stack") +
-  labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-   scale_fill_manual(values = ryg.palette)
-
-ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3, x=impact_cat)) +
-    geom_bar(position="stack") +
-  labs(title = "Currently, I am confident that the air in my neighborhood is \n safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-   scale_fill_manual(values = ryg.palette)
-```
-
-### Wave One only: compare before and after the fire – perception of air quality in their home 
-
-```{r}
-#trying a horizontal graph
-w1.before.home.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Before the Fire")) +
-  geom_bar(position="stack") +
-  labs(title = "I am confident that the air inside my home is safe to breathe") +
-  ylab(NULL) +
-  xlab(NULL) +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
-
-w1.after.home.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4,y="After the Fire")) +
-  geom_bar(position="stack") +
-  ylab(NULL) +
-  xlab("Count") +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
-
-grid.arrange(w1.before.home.plot,w1.after.home.plot)
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        axis.text.x = element_text())
+#+ geom_text(aes(y = desc(lab)+100, label = round(aq.perc)))
+chisq.test(wave.one.only2$air_quality_3, wave.one.only2$air_quality_4)
 ```
 
 ### Wave One only: compare before and after the fire – perception of air quality in their home by distance 
 
 ```{r}
-ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2, x=group)) +
-    geom_bar(position="stack") +
-  labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-   scale_fill_manual(values = ryg.palette)
+AQ_3.w1.dist=dist_func(wave.one,"air_quality_3")
+AQ_4.w1.dist=dist_func(wave.one,"air_quality_4")
 
-ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=group)) +
-    geom_bar(position="stack") +
-  labs(title = "Currently, I am confident that the air in my neighborhood is \n safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-   scale_fill_manual(values = ryg.palette)
+AQ_3.w1.dist.plot=stack_plot(AQ_1.w1.dist,"Distance","Home","Proximity",1)
+AQ_4.w1.dist.plot=stack_plot(AQ_2.w1.dist,"Distance","Home","Proximity",2)
+
+annotate_figure(ggarrange(AQ_3.w1.dist.plot,AQ_4.w1.dist.plot, legend = "top", common.legend = T, nrow=2), top = "Wave One \n I am confident that the air inside my home is safe to breath")
+
+AQ_3.w1f.dist=dist_func(wave.one.only2,"air_quality_3")
+AQ_4.w1f.dist=dist_func(wave.one.only2,"air_quality_4")
+
+AQ_3.w1f.dist.plot=stack_plot(AQ_1.w1f.dist,"Distance","Home","Proximity",1)
+AQ_4.w1f.dist.plot=stack_plot(AQ_2.w1f.dist,"Distance","Home","Proximity",2)
+
+annotate_figure(ggarrange(AQ_3.w1f.dist.plot,AQ_4.w1f.dist.plot, legend = "top", common.legend = T, nrow=2), top = "Wave One \n I am confident that the air inside my home is safe to breath \n Respondents in Both Waves")
 ```
 
 ### Wave One only: compare before and after the fire – perception of air quality in their home by impact category
 
 ```{r}
-ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_cat)) +
-    geom_bar(position="stack") +
-  labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-   scale_fill_manual(values = ryg.palette)
+# ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_cat)) +
+#     geom_bar(position="stack") +
+#   labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
+#        x = "Distance from fire perimeter", fill ="") +
+#    scale_fill_manual(values = ryg.palette)
+# 
+# ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_cat)) +
+#     geom_bar(position="stack") +
+#   labs(title = "Currently, I am confident that the air in my neighborhood is \n safe to breathe",
+#        x = "Distance from fire perimeter", fill ="") +
+#    scale_fill_manual(values = ryg.palette)
+AQ_3.w1.impact=impact_func(wave.one,"air_quality_3")
+AQ_4.w1.impact=impact_func(wave.one,"air_quality_4")
 
-ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_cat)) +
-    geom_bar(position="stack") +
-  labs(title = "Currently, I am confident that the air in my neighborhood is \n safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-   scale_fill_manual(values = ryg.palette)
+AQ_3.w1.impact.plot=stack_plot(AQ_3.w1.impact,"Impact Category","Neighborhood","",1)
+AQ_4.w1.impact.plot=stack_plot(AQ_4.w1.impact,"Impact Category","Neighborhood","",2)
+
+annotate_figure(ggarrange(AQ_3.w1.impact.plot,AQ_4.w1.impact.plot, legend = "top", common.legend = T, nrow=2), top = "Wave One \n I am confident that the air in my neighborhood is safe to breath")
+
+AQ_3.w1f.impact=impact_func(wave.one.only2,"air_quality_3")
+AQ_4.w1f.impact=impact_func(wave.one.only2,"air_quality_4")
+
+AQ_3.w1f.impact.plot=stack_plot(AQ_3.w1f.impact,"Impact Category","Neighborhood","",1)
+AQ_4.w1f.impact.plot=stack_plot(AQ_4.w1f.impact,"Impact Category","Neighborhood","",2)
+
+annotate_figure(ggarrange(AQ_3.w1f.impact.plot,AQ_4.w1f.impact.plot, legend = "top", common.legend = T, nrow=2), top = "Wave One \n I am confident that the air in my neighborhood is safe to breath \n Respondents in Both Waves")
 ```
 
 ## Wave One and Two:
@@ -545,133 +739,332 @@ ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_
 ### Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) 
 
 ```{r}
-w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave One")) +
-  geom_bar(position="stack") +
-  labs(title = "I am confident that the air in my neighborhood is safe to breathe") +
-  ylab(NULL) +
-  xlab(NULL) +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
+# w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave One")) +
+#   geom_bar(position="stack") +
+#   labs(title = "I am confident that the air in my neighborhood is safe to breathe") +
+#   ylab(NULL) +
+#   xlab(NULL) +
+#   scale_fill_manual(values = ryg.palette) +
+#   theme(plot.title = element_text(hjust = 0.5),   
+#         plot.subtitle = element_text(hjust = 0.5)) +
+#   guides(fill=guide_legend(title=NULL))
+# 
+# w2.after.neigh.plot=ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave Two")) +
+#   geom_bar(position="stack") +
+#   ylab(NULL) +
+#   xlab("Count") +
+#   scale_fill_manual(values = ryg.palette) +
+#   theme(plot.title = element_text(hjust = 0.5),   
+#         plot.subtitle = element_text(hjust = 0.5)) +
+#   guides(fill=guide_legend(title=NULL))
+# 
+# grid.arrange(w1.after.neigh.plot,w2.after.neigh.plot)
+special.w1=wave.one %>%
+  filter(impact_cat!="Complete loss") %>% 
+  filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+  filter(!is.na(.[,"air_quality_2"])) %>% 
+  group_by(.["air_quality_2"]) %>%
+  summarise(n=n()) %>%
+  ungroup() %>%   
+  mutate(aq.perc = n/sum(n)*100,
+         t=paste0("Wave One: \n N = ",sum(n)))
+names(special.w1)=c("response", "count", "aq.perc","t")
 
-w2.after.neigh.plot=ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave Two")) +
-  geom_bar(position="stack") +
-  ylab(NULL) +
-  xlab("Count") +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
+special.w2=wave.two %>%
+  filter(impact_cat!="Complete loss") %>% 
+  filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+  filter(!is.na(.[,"air_quality_2"])) %>% 
+  group_by(.["air_quality_2"]) %>%
+  summarise(n=n()) %>%
+  ungroup() %>%   
+  mutate(aq.perc = n/sum(n)*100,
+         t=paste0("Wave Two: \n N = ",sum(n)))
+names(special.w2)=c("response", "count", "aq.perc", "t")
+special.df=rbind(special.w1,special.w2) %>% 
+  group_by(t) %>% 
+  mutate(lab=cumsum(aq.perc))
 
-grid.arrange(w1.after.neigh.plot,w2.after.neigh.plot)
+ggplot(special.df, aes(y = t, x = aq.perc, fill = response)) +
+  geom_col() +
+  labs(title = paste0("Currently, I am confident that the \n air in my neighborhood is safe to breathe"),
+       subtitle = paste0("Need to fix labels still"),
+       x = paste0("Percent"), 
+       y = "", 
+       fill ="") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        axis.text.x = element_text())
+
+special.w1f=wave.one.only2 %>%
+  filter(impact_cat!="Complete loss") %>% 
+  filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+  filter(!is.na(.[,"air_quality_2"])) %>% 
+  group_by(.["air_quality_2"]) %>%
+  summarise(n=n()) %>%
+  ungroup() %>%   
+  mutate(aq.perc = n/sum(n)*100,
+         t=paste0("Wave One: \n N = ",sum(n)))
+names(special.w1f)=c("response", "count", "aq.perc","t")
+special.w2f=wave.two.only1 %>%
+  filter(impact_cat!="Complete loss") %>% 
+  filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+  filter(!is.na(.[,"air_quality_2"])) %>% 
+  group_by(.["air_quality_2"]) %>%
+  summarise(n=n()) %>%
+  ungroup() %>%   
+  mutate(aq.perc = n/sum(n)*100,
+         t=paste0("Wave Two: \n N = ",sum(n)))
+names(special.w2f)=c("response", "count", "aq.perc", "t")
+special.df=rbind(special.w1f,special.w2f) %>% 
+  group_by(t) %>% 
+  mutate(lab=cumsum(aq.perc))
+
+ggplot(special.df, aes(y = t, x = aq.perc, fill = response)) +
+  geom_col() +
+  labs(title = paste0("Currently, I am confident that the \n air in my neighborhood is safe to breathe"),
+       subtitle = paste0("Respondents in Both Waves \n Need to fix labels still"),
+       x = paste0("Percent"), 
+       y = "", 
+       fill ="") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        axis.text.x = element_text())
+
+chisq.test(wave.one.only2$air_quality_2, wave.two.only1$air_quality_2)
 ```
 
 ### Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) by distance 
 
 ```{r}
-w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave One")) +
-  geom_bar(position="stack") +
-  labs(title = "I am confident that the air in my neighborhood is safe to breathe") +
-  ylab(NULL) +
-  xlab(NULL) +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
+# w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave One")) +
+#   geom_bar(position="stack") +
+#   labs(title = "I am confident that the air in my neighborhood is safe to breathe") +
+#   ylab(NULL) +
+#   xlab(NULL) +
+#   scale_fill_manual(values = ryg.palette) +
+#   theme(plot.title = element_text(hjust = 0.5),   
+#         plot.subtitle = element_text(hjust = 0.5)) +
+#   guides(fill=guide_legend(title=NULL))
+# 
+# w2.after.neigh.plot=ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave Two")) +
+#   geom_bar(position="stack") +
+#   ylab(NULL) +
+#   xlab("Count") +
+#   scale_fill_manual(values = ryg.palette) +
+#   theme(plot.title = element_text(hjust = 0.5),   
+#         plot.subtitle = element_text(hjust = 0.5)) +
+#   guides(fill=guide_legend(title=NULL))
+# 
+# grid.arrange(w1.after.neigh.plot,w2.after.neigh.plot)
 
-w2.after.neigh.plot=ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_quality_2,y="Wave Two")) +
-  geom_bar(position="stack") +
-  ylab(NULL) +
-  xlab("Count") +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
+AQ_2.w2.dist=dist_func(wave.two,"air_quality_2")
+AQ_2.w2f.dist=dist_func(wave.two.only1,"air_quality_2")
 
-grid.arrange(w1.after.neigh.plot,w2.after.neigh.plot)
+AQ_2.w1.dist.plot2=stack_plot(AQ_2.w1.dist,"Distance","Neighborhood","Proximity",3)
+AQ_2.w1f.dist.plot2=stack_plot(AQ_2.w1f.dist,"Distance","Neighborhood","Proximity",3)
+
+AQ_2.w2.dist.plot=stack_plot(AQ_2.w2.dist,"Distance","Neighborhood","Proximity",4)
+AQ_2.w2f.dist.plot=stack_plot(AQ_2.w2f.dist,"Distance","Neighborhood","Proximity",4)
+
+
+annotate_figure(ggarrange(AQ_2.w1.dist.plot2,AQ_2.w2.dist.plot, legend = "right", common.legend = T, nrow=2), top = "Waves One and Two\n I am confident that the air in my neighborhood is safe to breath")
+annotate_figure(ggarrange(AQ_2.w1f.dist.plot2,AQ_2.w2f.dist.plot, legend = "right", common.legend = T, nrow=2), top = "Waves One and Two\n I am confident that the air in my neighborhood is safe to breath\n Respondents in Both Waves")
 ```
 
 ### Wave One to Wave Two comparison – perception of air quality in neighborhood (AQ2) by impact category 
 
 ```{r}
-ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_cat)) +
-    geom_bar(position="stack") +
-  labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-   scale_fill_manual(values = ryg.palette)
+# ggplot(filter(wave.one,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_cat)) +
+#     geom_bar(position="stack") +
+#   labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
+#        x = "Distance from fire perimeter", fill ="") +
+#    scale_fill_manual(values = ryg.palette)
+# 
+# ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_cat)) +
+#     geom_bar(position="stack") +
+#   labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
+#        x = "Distance from fire perimeter", fill ="") +
+#    scale_fill_manual(values = ryg.palette)
 
-ggplot(filter(wave.two,!is.na(air_quality_2)), aes(fill=air_quality_2, x=impact_cat)) +
-    geom_bar(position="stack") +
-  labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
-   scale_fill_manual(values = ryg.palette)
+AQ_2.w2.impact=impact_func(wave.two,"air_quality_2")
+AQ_2.w2f.impact=impact_func(wave.two.only1,"air_quality_2")
+
+AQ_2.w1.impact.plot2=stack_plot(AQ_2.w1.impact,"Impact Category","Neighborhood","",3)
+AQ_2.w1f.impact.plot2=stack_plot(AQ_2.w1f.impact,"Impact Category","Neighborhood","",3)
+
+AQ_2.w2.impact.plot=stack_plot(AQ_2.w2.impact,"Impact Category","Neighborhood","",4)
+AQ_2.w2f.impact.plot=stack_plot(AQ_2.w2f.impact,"Impact Category","Neighborhood","",4)
+
+
+annotate_figure(ggarrange(AQ_2.w1.impact.plot2,AQ_2.w2.impact.plot, legend = "right", common.legend = T, nrow=2), top = "Waves One and Two\n I am confident that the air in my neighborhood is safe to breath")
+annotate_figure(ggarrange(AQ_2.w1f.impact.plot2,AQ_2.w2f.impact.plot, legend = "right", common.legend = T, nrow=2), top = "Waves One and Two\n I am confident that the air in my neighborhood is safe to breath\n Respondents in Both Waves")
 ```
 
 ### Wave One to Wave Two comparison – perception of air quality in home (AQ4) 
 
 ```{r}
-w1.after.home.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4,y="Wave One")) +
-  geom_bar(position="stack") +
-  labs(title = "I am confident that the air in my neighborhood is safe to breathe") +
-  ylab(NULL) +
-  xlab(NULL) +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
+# w1.after.home.plot=ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4,y="Wave One")) +
+#   geom_bar(position="stack") +
+#   labs(title = "I am confident that the air in my neighborhood is safe to breathe") +
+#   ylab(NULL) +
+#   xlab(NULL) +
+#   scale_fill_manual(values = ryg.palette) +
+#   theme(plot.title = element_text(hjust = 0.5),   
+#         plot.subtitle = element_text(hjust = 0.5)) +
+#   guides(fill=guide_legend(title=NULL))
+# 
+# w2.after.home.plot=ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4,y="Wave Two")) +
+#   geom_bar(position="stack") +
+#   ylab(NULL) +
+#   xlab("Count") +
+#   scale_fill_manual(values = ryg.palette) +
+#   theme(plot.title = element_text(hjust = 0.5),   
+#         plot.subtitle = element_text(hjust = 0.5)) +
+#   guides(fill=guide_legend(title=NULL))
+# 
+# grid.arrange(w1.after.neigh.plot,w2.after.neigh.plot)
+special.w1.v2=wave.one %>%
+  filter(impact_cat!="Complete loss") %>% 
+  filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+  filter(!is.na(.[,"air_quality_4"])) %>% 
+  group_by(.["air_quality_4"]) %>%
+  summarise(n=n()) %>%
+  ungroup() %>%   
+  mutate(aq.perc = n/sum(n)*100,
+         t=paste0("Wave One: \n N = ",sum(n)))
+names(special.w1.v2)=c("response", "count", "aq.perc","t")
 
-w2.after.home.plot=ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4,y="Wave Two")) +
-  geom_bar(position="stack") +
-  ylab(NULL) +
-  xlab("Count") +
-  scale_fill_manual(values = ryg.palette) +
-  theme(plot.title = element_text(hjust = 0.5),   
-        plot.subtitle = element_text(hjust = 0.5)) +
-  guides(fill=guide_legend(title=NULL))
+special.w2.v2=wave.two %>%
+  filter(impact_cat!="Complete loss") %>% 
+  filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+  filter(!is.na(.[,"air_quality_4"])) %>% 
+  group_by(.["air_quality_4"]) %>%
+  summarise(n=n()) %>%
+  ungroup() %>%   
+  mutate(aq.perc = n/sum(n)*100,
+         t=paste0("Wave Two: \n N = ",sum(n)))
+names(special.w2.v2)=c("response", "count", "aq.perc", "t")
+special.df3=rbind(special.w1.v2,special.w2.v2) %>% 
+  group_by(t) %>% 
+  mutate(lab=cumsum(aq.perc))
 
-grid.arrange(w1.after.neigh.plot,w2.after.neigh.plot)
+ggplot(special.df3, aes(y = t, x = aq.perc, fill = response)) +
+  geom_col() +
+  labs(title = paste0("Currently, I am confident that the \n air inside my home is safe to breathe"),
+       subtitle = paste0("Need to fix labels still"),
+       x = paste0("Percent"), 
+       y = "", 
+       fill ="") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        axis.text.x = element_text())
+
+special.w1.v2f=wave.one.only2 %>%
+  filter(impact_cat!="Complete loss") %>% 
+  filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+  filter(!is.na(.[,"air_quality_4"])) %>% 
+  group_by(.["air_quality_4"]) %>%
+  summarise(n=n()) %>%
+  ungroup() %>%   
+  mutate(aq.perc = n/sum(n)*100,
+         t=paste0("Wave One: \n N = ",sum(n)))
+names(special.w1.v2f)=c("response", "count", "aq.perc","t")
+special.w2.v2f=wave.two.only1 %>%
+  filter(impact_cat!="Complete loss") %>% 
+  filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+  filter(!is.na(.[,"air_quality_4"])) %>% 
+  group_by(.["air_quality_4"]) %>%
+  summarise(n=n()) %>%
+  ungroup() %>%   
+  mutate(aq.perc = n/sum(n)*100,
+         t=paste0("Wave Two: \n N = ",sum(n)))
+names(special.w2.v2f)=c("response", "count", "aq.perc", "t")
+special.df4=rbind(special.w1.v2f,special.w2.v2f) %>% 
+  group_by(t) %>% 
+  mutate(lab=cumsum(aq.perc))
+
+ggplot(special.df4, aes(y = t, x = aq.perc, fill = response)) +
+  geom_col() +
+  labs(title = paste0("Currently, I am confident that the \n air inside my home is safe to breathe"),
+       subtitle = paste0("Respondents in Both Waves \n Need to fix labels still"),
+       x = paste0("Percent"), 
+       y = "", 
+       fill ="") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        axis.text.x = element_text())
+chisq.test(wave.one.only2$air_quality_4, wave.two.only1$air_quality_4)
 ```
 
 ### Wave One to Wave Two comparison – perception of air quality in home (AQ4) by distance 
 
 ```{r}
-ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=group)) +
-    geom_bar(position="stack") +
-  labs(title = "I am confident that the air inside my home was \n safe to breathe",
-       subtitle = "Wave One",
-       x = "Distance from fire perimeter", fill ="") +
-   scale_fill_manual(values = ryg.palette)
+# ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=group)) +
+#     geom_bar(position="stack") +
+#   labs(title = "I am confident that the air inside my home was \n safe to breathe",
+#        subtitle = "Wave One",
+#        x = "Distance from fire perimeter", fill ="") +
+#    scale_fill_manual(values = ryg.palette)
+# 
+# ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4, x=group)) +
+#     geom_bar(position="stack") +
+#   labs(title = "I am confident that the air inside my home was \n safe to breathe",
+#        subtitle = "Wave Two",
+#        x = "Distance from fire perimeter", fill ="") +
+#    scale_fill_manual(values = ryg.palette)
 
-ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4, x=group)) +
-    geom_bar(position="stack") +
-  labs(title = "I am confident that the air inside my home was \n safe to breathe",
-       subtitle = "Wave Two",
-       x = "Distance from fire perimeter", fill ="") +
-   scale_fill_manual(values = ryg.palette)
+AQ_4.w2.dist=dist_func(wave.two,"air_quality_4")
+AQ_4.w2f.dist=dist_func(wave.two.only1,"air_quality_4")
+
+AQ_4.w1.dist.plot2=stack_plot(AQ_4.w1.dist,"Distance","Neighborhood","Proximity",3)
+AQ_4.w1f.dist.plot2=stack_plot(AQ_4.w1f.dist,"Distance","Neighborhood","Proximity",3)
+
+AQ_4.w2.dist.plot=stack_plot(AQ_4.w2.dist,"Distance","Neighborhood","Proximity",4)
+AQ_4.w2f.dist.plot=stack_plot(AQ_4.w2f.dist,"Distance","Neighborhood","Proximity",4)
+
+
+annotate_figure(ggarrange(AQ_4.w1.dist.plot2,AQ_4.w2.dist.plot, legend = "right", common.legend = T, nrow=2), top = "Waves One and Two\n I am confident that the air inside my home is safe to breath")
+annotate_figure(ggarrange(AQ_4.w1f.dist.plot2,AQ_4.w2f.dist.plot, legend = "right", common.legend = T, nrow=2), top = "Waves One and Two\n I am confident that the air inside my home is safe to breath\n Respondents in Both Waves")
 ```
 
 ### Wave One to Wave Two comparison – perception of air quality in home (AQ4) by impact category 
 
 ```{r}
-ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_cat)) +
-    geom_bar(position="stack") +
-  labs(title = "I am confident that the air inside my home was \n safe to breathe",
-       subtitle = "Wave One",
-       x = "Distance from fire perimeter", fill ="") +
-   scale_fill_manual(values = ryg.palette)
+# ggplot(filter(wave.one,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_cat)) +
+#     geom_bar(position="stack") +
+#   labs(title = "I am confident that the air inside my home was \n safe to breathe",
+#        subtitle = "Wave One",
+#        x = "Distance from fire perimeter", fill ="") +
+#    scale_fill_manual(values = ryg.palette)
+# 
+# ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_cat)) +
+#     geom_bar(position="stack") +
+#   labs(title = "I am confident that the air inside my home was \n safe to breathe",
+#        subtitle = "Wave Two",
+#        x = "Distance from fire perimeter", fill ="") +
+#    scale_fill_manual(values = ryg.palette)
 
-ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_cat)) +
-    geom_bar(position="stack") +
-  labs(title = "I am confident that the air inside my home was \n safe to breathe",
-       subtitle = "Wave Two",
-       x = "Distance from fire perimeter", fill ="") +
-   scale_fill_manual(values = ryg.palette)
+AQ_4.w2.impact=impact_func(wave.two,"air_quality_4")
+AQ_4.w2f.impact=impact_func(wave.two.only1,"air_quality_4")
+
+AQ_4.w1.impact.plot2=stack_plot(AQ_2.w1.impact,"Impact Category","Neighborhood","",3)
+AQ_4.w1f.impact.plot2=stack_plot(AQ_2.w1f.impact,"Impact Category","Neighborhood","",3)
+
+AQ_4.w2.impact.plot=stack_plot(AQ_2.w2.impact,"Impact Category","Neighborhood","",4)
+AQ_4.w2f.impact.plot=stack_plot(AQ_2.w2f.impact,"Impact Category","Neighborhood","",4)
+
+
+annotate_figure(ggarrange(AQ_4.w1.impact.plot2,AQ_4.w2.impact.plot, legend = "right", common.legend = T, nrow=2), top = "Waves One and Two\n I am confident that the air in my neighborhood is safe to breath")
+annotate_figure(ggarrange(AQ_4.w1f.impact.plot2,AQ_4.w2f.impact.plot, legend = "right", common.legend = T, nrow=2), top = "Waves One and Two\n I am confident that the air in my neighborhood is safe to breath\n Respondents in Both Waves")
 ```
 
 
 # Maps:
-## Maps Data:
+#### Data for Maps Section:
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
 mapwave1=read.csv("/Volumes/research/Marshall Fire Health/marshall_w1.csv")
 
@@ -784,6 +1177,12 @@ geo_marshall=mapwave1%>% #geocoding only completed surveys and those with lat an
   filter(mailingcity=="BOULDER"|mailingcity=="SUPERIOR"|mailingcity=="LOUISVILLE") %>% 
   mutate(full_address = paste0(.$mailingaddr1,", ",.$mailingcity,", ", .$mailingstate,", ",.$mailingzip)) %>% 
   mutate_geocode(full_address, output="latlona") 
+```
+
+#### Data for Exposure Assingments:
+
+```{r}
+
 ```
 
 ### Map of perception of air quality in one’s neighborhood  - color from stacked plot colors 

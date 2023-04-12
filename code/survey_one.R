@@ -455,6 +455,66 @@ marshall.sp.aq4 = as(geo_marshall_4,"Spatial")
 ## Wave One:
 
 ### Wave One only: compare before and after the fire – perception of air quality in their neighborhood 
+
+dist_func = function(df, gp, aq) { 
+  t=df %>%
+    filter(impact_cat!="Complete loss") %>% 
+    filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+    filter(!is.na(.[,aq])) %>% 
+    group_by(.[,gp], .[,aq]) %>%
+    summarise(n=n()) %>%
+    mutate(aq.perc = n/sum(n)*100) %>%
+    ungroup %>%
+    mutate(total=sum(n), total.perc=n/total*100) #%>%
+  #group_by(air_quality_1, impact_cat) #%>%
+  #subset(select=c("impact_cat","air_quality_1","percent"),)
+  #spread(impact_cat, percent)
+  names(t)=c("group", "response", "count", "aq.perc", "total","total.perc")
+  t
+}
+
+impact_func = function(df, gp, aq) { 
+  t=df %>%
+    filter(impact_cat!="Complete loss") %>% 
+    filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+    filter(!is.na(.[,aq])) %>% 
+    group_by(.[,gp], .[,aq]) %>%
+    summarise(n=n()) %>%
+    mutate(aq.perc = n/sum(n)*100) %>%
+    ungroup %>%
+    mutate(total=sum(n), total.perc=n/total*100) #%>%
+  #group_by(air_quality_1, impact_cat) #%>%
+  #subset(select=c("impact_cat","air_quality_1","percent"),)
+  #spread(impact_cat, percent)
+  names(t)=c("group", "response", "count", "aq.perc", "total","total.perc")
+  t
+}
+
+stack_plot = function(df, gp, vr, wv) {
+  ggplot(df,aes(fill=response, y=aq.perc, x=group)) +
+  geom_bar(position="stack", stat="identity") +
+  labs(title = paste0("Variable: ",vr),
+       subtitle = paste0("Group By Cat: ",gp),
+       x = paste0("Wave ",wv,"\n N = ", df$total),
+       y = "Percent",
+       fill ="") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        axis.text.x = element_text(angle = 45, hjust = 1))
+}
+
+AQ_1.w1.dist=dist_func(wave.one,"group","air_quality_1")
+AQ_1.w1.impact=dist_func(wave.one,"impact_cat","air_quality_1")
+AQ_1.w1.dist.plot=dist_plot(AQ_1.w1.dist,"group","air_quality_1","One")
+AQ_1.w1.impact.plot=dist_plot(AQ_1.w1.impact,"impact_cat","air_quality_1","One")
+
+
+
++geom_text(position=position_stack(0.5), label=round(.$aq.perc))
+head(AQ_1.w1.dist)
+
+
 #trying a vertical graph
 w1.before.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1,x="Before the Fire")) +
   geom_bar(position="stack") +
