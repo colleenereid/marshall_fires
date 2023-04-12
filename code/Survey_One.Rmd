@@ -28,15 +28,16 @@ library(performance)
 library(ggResidpanel)
 library(ape)
 library(reshape2)
+library(ggpubr)
 ```
 
 ```{r, echo=FALSE}
 # function junction
-tblFun <- function(x){
+tblFun <- function(x, l){
   tbl <- table(x)
   res <- cbind(tbl,round(prop.table(tbl)*100,2))
   colnames(res) <- c('Count','Percentage')
-  knitr::kable(res)
+  knitr::kable(res, caption=l)
 }
 ```
 
@@ -52,11 +53,8 @@ ryg.palette.short<-c("#EDA247", "#E6E1BC","#57C4AD", "#006164")
 api_key = "AIzaSyAeoVaM_45SQ4G-lHeci1RhRNbhpxO3BDc"
 register_google(key = api_key) 
 
-#waveone<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w1_deID.csv")
-#wavetwo<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w2_deID.csv")
-waveone<-read.csv("../data/marshall_w1_deID.csv")
-wavetwo<-read.csv("../data/marshall_w2_deID.csv")
-mapwave1<-read.csv("../data/marshall_w1.csv")
+waveone<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w1_deID.csv")
+wavetwo<-read.csv("/Volumes/research/Marshall Fire Health/marshall_w2_deID.csv")
 ```
 
 ```{r}
@@ -249,7 +247,7 @@ Respondants = c(nrow(wave.one),nrow(wave.two), nrow(wave.one.only2))
 Wave=c("One","Two","Both")
 df1 = cbind(Wave,Respondants) %>%
   as.data.frame()
-knitr::kable(df1)
+knitr::kable(df1, caption="Total Respondents")
 # save_kable(knitr::kable(df1),"../images/w1w2_counts.png")
 ```
 
@@ -258,75 +256,100 @@ We utilized survey results of people whom completed the entire survey for accura
 ### % male/female 
 ```{r}
 #### Wave One
-tblFun(wave.one$Gender3)
+tblFun(wave.one$Gender3, "Wave One - Gender")
 
 #### Wave Two
-tblFun(wave.two$Gender3)
+tblFun(wave.two$Gender3, "Wave Two - Gender")
 # table(wave.one.only2$Gender3, wave.two.only1$Gender3)
+tblFun(wave.one.only2$Gender3, "Respondents in Both Waves - Gender")
 chisq.test(wave.one.only2$Gender3, wave.two.only1$Gender3)
 ```
+
+Both waves had a total of 350 (61.62%) people select female and 201 (35.39%) people select male, with 17 (3.91%) people selecting other or declining to state their gender. A majority of respondents were female, with 58.98% of the respondents selecting female in wave one compared to 60.94% in wave two, seeing a slight increase in female. Similarly, there was an increase of people in wave one (3.87%) than in wave two (4.17%) whom selected other or declined to state their gender. 37.16% of respondents selected male in wave one and 34.90% of them selected male in wave two. The \chi^2 test revealed that gender is a dependent variable and is statistically significant across both waves. 
 
 ### Educational attainment for each wave 
 ```{r}
 #### Wave One
-tblFun(wave.one$education)
+tblFun(wave.one$education, "Wave One - Education")
+
 #### Wave Two
-tblFun(wave.two$education)
+tblFun(wave.two$education, "Wave Two - Education")
 # table(wave.one.only2$education, wave.two.only1$education)
+tblFun(wave.one.only2$education, "Respondents in Both Waves - Education")
 chisq.test(wave.one.only2$education, wave.two.only1$education)
 ```
+
+We categorized the education levels of each respondent into seven categories: high school degree, GED or equivalent degree, some college education, associate’s degree, bachelor’s degree, masters’s degree, and doctoral degree. The most common degree for wave one was a bachelor's degree, with 39.34% of respondents having this level of education. For wave two, the most common level of education was a master's degree with 38.23%. The GED or equivalent category had the least amount of respondents in general. This was the same for respondents who responded to both waves, althought slightly less with 38.12% of respondents attaining a master's degree. The \chi^2 test revealed that education is a dependent variable and is statistically significant across both waves.
 
 ### Income for each wave 
 ```{r}
 #### Wave One
-tblFun(wave.one$income)
+tblFun(wave.one$income, "Wave One - Income")
 
 #### Wave Two
-tblFun(wave.two$income)
-# table(wave.one.only2$income, wave.two.only1$income)
+tblFun(wave.two$income, "Wave Two - Income")
+# table(wave.one.only2$education, wave.two.only1$education)
+tblFun(wave.one.only2$income, "Respondents in Both Waves - Income")
 chisq.test(wave.one.only2$income, wave.two.only1$income)
 ```
+
+Income was categorized nine different bins: Less than \$20,000,	\$20,000 to \$34,999, \$35,000 to \$49,999, \$50,000 to \$79,999, \$80,000 to \$99,999, \$100,000 to \$149,999, \$150,000 to \$199,999, \$200,000 or more, and Prefer not to answer. The most income level for wave one was the \$200,000 or more range, with 39.34% of respondents making this much. This was the same for wave two as well as for respondents who responded to both waves, 26.60% and 26.32 respectively. The \chi^2 test also revealed that income is a dependent variable and statistically significant across both waves. 
 
 ### Race/ethnicity
 ```{r}
 #### Wave One
-tblFun(wave.one$RaceEthn2)
+tblFun(wave.one$RaceEthn2, "Wave One - Race/Ethnicity")
+
 #### Wave Two
-tblFun(wave.two$RaceEthn2)
-# table(wave.one.only2$RaceEthn2, wave.two.only1$RaceEthn2)
+tblFun(wave.two$RaceEthn2, "Wave Two - Race/Ethnicity")
+# table(wave.one.only2$education, wave.two.only1$education)
+tblFun(wave.one.only2$RaceEthn2, "Respondents in Both Waves - Race/Ethnicity")
 chisq.test(wave.one.only2$RaceEthn2, wave.two.only1$RaceEthn2)
 ```
 
+For ease of comparison amongst the two groups, we only categorized race and ethnicity into two different categories, white and person of color (POC). A majority of people in wave one, wave two, and of respondents who completed both waves were white, being 86.16%, 88.02%, and 89.09 respectively. The \chi^2 test showed that income is a dependent variable and is statistically significant across both waves. 
+
 ### Owner/Renter
-```{r} 
+```{r}
 #### Wave One
-tblFun(wave.one$ownership_status)
+tblFun(wave.one$ownership_status, "Wave One - Ownership Status")
+
 #### Wave Two
-tblFun(wave.two$renterowner)
-# table(wave.one.only2$ownership_status, wave.two.only1$renterowner)
+tblFun(wave.two$renterowner, "Wave Two - Ownership Status")
+# table(wave.one.only2$education, wave.two.only1$education)
+tblFun(wave.one.only2$ownership_status, "Respondents in Both Waves - Ownership Status")
 chisq.test(wave.one.only2$ownership_status, wave.two.only1$renterowner)
 ```
 
+Wave one and wave two had different categories of ownership. Wave one was categorized into Owned, Rented, Owned but Not Living, Purchased after Dec. 30, 2021, and Other. Wave two was only categorized into Owned and Rented. A majority of people in wave one, wave two, and of respondents who completed both waves owned their homes during the Marshal Fire, with 93.12%, 96.18%, and 94.01% respectively. The \chi^2 test revealed that ownership status is a dependent variable and is statistically significant across both waves
+ 
 ### Impact category 
 ```{r}
 #### Wave One
-tblFun(wave.one$impact_cat)
+tblFun(filter(wave.one,wave.one$impact_cat!="")$impact_cat, "Wave One - Impact Category")
+
 #### Wave Two
-tblFun(wave.two$impact_cat)
-# table(wave.one.only2$impact_cat, wave.two.only1$impact_cat)
+tblFun(wave.two$impact_cat, "Wave Two - Impact Category")
+# table(wave.one.only2$education, wave.two.only1$education)
+tblFun(wave.one.only2$impact_cat, "Respondents in Both  - Impact Category")
 chisq.test(wave.one.only2$impact_cat, wave.two.only1$impact_cat)
 ```
+
+Each participant recorded the amount of damage to their property and whether or not they lived at the current address. These were combined to create the impact category, which was seperated into 5 levels; Complete loss; Damaged, living there; Damaged, not living there; No damage, living there; No damage, not living there. Most respondents in wave one, wave two, and of respondents who completed both waves were living at thier current address while sustaining damage to the property from the Marshal Fire, with 44.65%, 43.23%, and 43.13% respectively. The \chi^2 test revealed that these impact categories are both dependent variable and statistically significant across both waves.
 
 ### Distance category
 ```{r} 
 #### Wave One
-tblFun(wave.one$group)
+tblFun(wave.one$group, "Wave One - Distance Category")
+
 #### Wave Two
-tblFun(wave.two$group)
-# table(wave.one.only2$group, wave.two.only1$group)
+tblFun(wave.two$group, "Wave Two - Distance Category")
+# table(wave.one.only2$education, wave.two.only1$education)
+tblFun(wave.one.only2$group, "Respondents in Both Waves - Distance Category")
 chisq.test(wave.one.only2$group, wave.two.only1$group)
 ```
 
+The proximity of each participant's property to the Marshall fire was split into four categories, within the fire perimeter within a 1/2 mile of the fire, within 1/2 to 1 mile of the fire, and within 1 to 2 miles of the fire. Most respondents in wave one, wave two, and of respondents who completed both waves were within the fire perimeter with 57.96%, 59.55%, and 59.33% respectively. The \chi^2 test revealed that income is also a dependent variable and is statistically significant across both waves.
 
 # Air Quality Perceptions
 
@@ -334,12 +357,50 @@ chisq.test(wave.one.only2$group, wave.two.only1$group)
 
 ### Wave One only: compare before and after the fire – perception of air quality in their neighborhood 
 ```{r}
+special=wave.one %>%
+  filter(impact_cat!="Complete loss") %>% 
+  filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+  filter(!is.na(.[,"air_quality_1"])) %>% 
+  group_by(.["air_quality_1"]) %>%
+  summarise(n=n()) %>%
+  ungroup() %>%   
+  mutate(aq.perc = n/sum(n)*100,
+         t="Before the fire")
+special2=wave.one %>%
+  filter(impact_cat!="Complete loss") %>% 
+  filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+  filter(!is.na(.[,"air_quality_2"])) %>% 
+  group_by(.["air_quality_2"]) %>%
+  summarise(n=n()) %>%
+  ungroup() %>%   
+  mutate(aq.perc = n/sum(n)*100,
+         t="After the fire")
+names(special)=c("response", "count", "aq.perc", "t")
+names(special2)=c("response", "count", "aq.perc","t")
+
+special.df=rbind(special,special2) %>% 
+  group_by(t) %>% 
+  mutate(lab=cumsum(aq.perc))
+
+ggplot(special.df, aes(x = t, y = aq.perc, fill = response)) +
+  geom_col() +
+  labs(title = paste0("I am confident that the air in my neighborhood is safe to breathe"),
+       subtitle = paste0("Need to fix labels still"),
+       y = paste0("Percent"), 
+       x = "", 
+       fill ="") +
+  scale_fill_manual(values = ryg.palette) +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        axis.text.x = element_text()) + 
+  geom_text(aes(y = desc(lab)+100, label = round(aq.perc)))
+
 #trying a vertical graph
 w1.before.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1,x="Before the Fire",y=)) +
   geom_bar(position="stack") +
-  labs(title = "I am confident that the air in my neighborhood is safe to breathe") +
+  labs(title = NULL) +
   xlab(NULL) +
-  ylab(NULL) +
+  ylab("Count") +
   scale_fill_manual(values = ryg.palette) +
   theme(plot.title = element_text(hjust = 0.5),   
         plot.subtitle = element_text(hjust = 0.5)) +
@@ -348,29 +409,61 @@ w1.before.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air
 w1.after.neigh.plot=ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3,x="After the Fire")) +
   geom_bar(position="stack") +
   xlab(NULL) +
-  ylab("Count") +
+  ylab(NULL) +
   scale_fill_manual(values = ryg.palette) +
   theme(plot.title = element_text(hjust = 0.5),   
         plot.subtitle = element_text(hjust = 0.5)) +
   guides(fill=guide_legend(title=NULL))
+ggarrange(w1.before.neigh.plot,w1.after.neigh.plot, ncol=2, common.legend = T, align = "v")
 
-ggarrange(w1.before.neigh.plot,w1.after.neigh.plot, nrow=2, common.legend = T)
+dist_func = function(df, gp, aq) { 
+  t=wave.one %>%
+    filter(impact_cat!="Complete loss") %>% 
+    filter(!is.na(group)) %>% #removing all in complete loss because they were not given these questions to answer
+    filter(!is.na(.[,aq])) %>% 
+    group_by(.[,gp], .[,aq]) %>%
+    summarise(n=n()) %>%
+    mutate(aq.perc = n/sum(n)*100) %>%
+    ungroup %>%
+    mutate(total=sum(n), total.perc=n/total*100) #%>%
+    #group_by(air_quality_1, impact_cat) #%>%
+    #subset(select=c("impact_cat","air_quality_1","percent"),)
+    #spread(impact_cat, percent)
+  names(t)=c("group", "response", "count", "aq.perc", "total","total.perc")
+  t
+}
+AQ_1.w1.dist=dist_func(wave.one,"group","air_quality_1")
+# dist_plot = function(df, )ggplot(AQ_1.w1.dist,aes(fill=response, y=aq.perc, x=group)) +
+#   geom_bar(position="stack", stat="identity") +
+#   labs(title = paste0("Variable: ","air_quality_1"),
+#        subtitle = paste0("Group By Cat: ","group"),
+#        x = paste0("Wave ","One"), 
+#        y = "Percent", 
+#        fill ="") +
+#   scale_fill_manual(values = ryg.palette) +
+#   theme(plot.title = element_text(hjust = 0.5),
+#         plot.subtitle = element_text(hjust = 0.5),
+#         axis.text.x = element_text(angle = 45, hjust = 1))
+# }+geom_text(position=position_stack(0.5), label=round(.$aq.perc))
+head(AQ_1.w1.dist)
 ```
 
 ### Wave One only: compare before and after the fire – perception of air quality in their neighborhood by distance 
 
 ```{r}
-ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1, x=group)) +
+t99=ggplot(filter(wave.one,!is.na(air_quality_1)), aes(fill=air_quality_1, y=group)) +
     geom_bar(position="stack") +
   labs(title = "Before the Marshall Fire, I was confident that the air in my neighborhood was \n safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
+       y = "Distance from fire perimeter", fill ="") +
    scale_fill_manual(values = ryg.palette)
 
-ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3, x=group)) +
+t991=ggplot(filter(wave.one,!is.na(air_quality_3)), aes(fill=air_quality_3, y=group)) +
     geom_bar(position="stack") +
   labs(title = "Currently, I am confident that the air in my neighborhood is \n safe to breathe",
-       x = "Distance from fire perimeter", fill ="") +
+       y = "Distance from fire perimeter", fill ="") +
    scale_fill_manual(values = ryg.palette)
+
+ggarrange(t99,t991, ncol=2, common.legend = T)
 ```
 
 ### Wave One only: compare before and after the fire – perception of air quality in their neighborhood by impact category 
@@ -580,7 +673,7 @@ ggplot(filter(wave.two,!is.na(air_quality_4)), aes(fill=air_quality_4, x=impact_
 # Maps:
 ## Maps Data:
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
-# mapwave1=read.csv("/Volumes/research/Marshall Fire Health/marshall_w1.csv")
+mapwave1=read.csv("/Volumes/research/Marshall Fire Health/marshall_w1.csv")
 
 # fixes:
 mapwave1[mapwave1$mailingaddr1=="553 GRANT ST",]$mailingaddr1 = "553 GRANT AVE"
