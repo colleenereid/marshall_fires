@@ -30,6 +30,7 @@ library(ape)
 library(reshape2)
 library(ggpubr)
 library(ggh4x)
+library(raster)
 ```
 
 # Function Junction
@@ -1182,7 +1183,46 @@ geo_marshall=mapwave1%>% #geocoding only completed surveys and those with lat an
 #### Data for Exposure Assingments:
 
 ```{r}
+path_p = "../../PM.2.5.data.cleaning/Colorado/"
+path_error = "../../PM.2.5.data.cleaning/CO_error/"
+rasters=list.files(path_p)
+rasters_error=list.files(path_error)
+pm2.5=raster(paste0(path_p,rasters[1]))
+pm2.5stack=raster(paste0(path_p,rasters[1])) #initialize pm2.5
+for(i in rasters[-1]) {
+  output=raster(paste0(path_p,i))
+  pm2.5stack = stack(pm2.5stack,output)
+}
+#Error
+pm2.5estack=raster(paste0(path_error,rasters_error[1])) #initialize error
+for(i in rasters_error[-1]) {
+  output=raster(paste0(path_error,i))
+  pm2.5estack = stack(pm2.5estack,output)
+}
 
+path_n = "../../denver_ndvi_creation/NDVI_pos_Landsat_"
+path_n2 = "den_ndvi_"
+
+#NDVI
+den_NDVI_2018 = raster(paste0(path_n,"2018/",path_n2,"2018.tif"))
+values(den_NDVI_2018)=ifelse(values(den_NDVI_2018)<0,0,values(den_NDVI_2018))
+den_NDVI_2018=projectRaster(den_NDVI_2018,pm2.5,res = res(pm2.5))
+values(den_NDVI_2018)=ifelse(is.na(values(den_NDVI_2018)),0,values(den_NDVI_2018))
+
+den_NDVI_2019 = raster(paste0(path_n,"2019/",path_n2,"2019.tif"))
+values(den_NDVI_2019)=ifelse(values(den_NDVI_2019)<0,0,values(den_NDVI_2019))
+den_NDVI_2019=projectRaster(den_NDVI_2019,pm2.5,res = res(pm2.5))
+values(den_NDVI_2019)=ifelse(is.na(values(den_NDVI_2019)),0,values(den_NDVI_2019))
+
+den_NDVI_2020 = raster(paste0(path_n,"2020/",path_n2,"2020.tif"))
+values(den_NDVI_2020)=ifelse(values(den_NDVI_2020)<0,0,values(den_NDVI_2020))
+den_NDVI_2020=projectRaster(den_NDVI_2020,pm2.5,res = res(pm2.5))
+values(den_NDVI_2020)=ifelse(is.na(values(den_NDVI_2020)),0,values(den_NDVI_2020))
+
+den_NDVI_2021 = raster(paste0(path_n,"2021/",path_n2,"2021.tif"))
+values(den_NDVI_2021)=ifelse(values(den_NDVI_2021)<0,0,values(den_NDVI_2021))
+den_NDVI_2021=projectRaster(den_NDVI_2021,pm2.5,res = res(pm2.5))
+values(den_NDVI_2021)=ifelse(is.na(values(den_NDVI_2021)),0,values(den_NDVI_2021))
 ```
 
 ### Map of perception of air quality in one’s neighborhood  - color from stacked plot colors 
