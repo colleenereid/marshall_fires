@@ -21,6 +21,7 @@ library(sp)
 library(gstat)
 library(raster)
 library(tidyverse)
+library(dplyr)
 library(spacetime)
 library(stringr)
 library(readr)
@@ -64,16 +65,16 @@ westminster_city = st_read("../GIS_inputs_destruction_fireboundary/Westminster_C
 
 # make all the precincts have the same columns (we don't need a lot of the data)
 boulder_precincts <- boulder_precincts %>%
-  select(c(OBJECTID, geometry, SHAPEarea, SHAPElen))
+   dplyr::select(c(OBJECTID, geometry, SHAPEarea, SHAPElen))
 broomfield_precincts <- broomfield_precincts %>%
-  mutate(SHAPEarea = Shape__Are,
+   dplyr::mutate(SHAPEarea = Shape__Are,
          SHAPElen = Shape__Len,
          OBJECTID = OBJECTID + 1000) %>% # add 1,000 to the broomfield precincts to get rid of overlapping labels
-  select(-c("GlobalID", "GIS_ID", "PRECINCT_N", "MAP_COLOR", "USER_COMME", "LAST_UPDAT", "Shape__Are", "Shape__Len"))
+   dplyr::select(-c("GlobalID", "GIS_ID", "PRECINCT_N", "MAP_COLOR", "USER_COMME", "LAST_UPDAT", "Shape__Are", "Shape__Len"))
 westminster_city <- westminster_city %>%
   mutate(SHAPEarea = ShapeSTAre,
          SHAPElen = ShapeSTLen) %>%
-  select(c(OBJECTID, geometry, SHAPEarea, SHAPElen))
+   dplyr::select(c(OBJECTID, geometry, SHAPEarea, SHAPElen))
 
 # save proj string for fire-affected counties to use for other transformations
 prg = raster::projection(fire_counties, asText=TRUE)
